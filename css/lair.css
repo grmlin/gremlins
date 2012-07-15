@@ -1,0 +1,163 @@
+@font-face {
+    font-family: 'RobotoRegular';
+    src: url('Roboto-Regular-webfont.eot');
+    src: url('Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'), url('Roboto-Regular-webfont.woff') format('woff'), url('Roboto-Regular-webfont.ttf') format('truetype'), url('Roboto-Regular-webfont.svg#RobotoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
+    background-color: #515151;
+    color: #eee;
+    font-family: 'RobotoRegular', Arial, sans-serif;
+}
+
+.clear {
+    clear: both;
+}
+
+h1 {
+    color: #00B4FF;
+    font-size: 36px;
+    float: left;
+}
+
+h1 span {
+    color: #eee;
+    font-size: 14px;
+    display: block;
+    text-align: right;
+}
+
+#main {
+    margin: 0 auto;
+    width: 600px;
+}
+
+#main .lair-form {
+
+    padding-top: 50px;
+}
+
+.lair-form label {
+    display: inline-block;
+    width: 230px;
+}
+.lair-form form p {
+    color: #cccccc;
+    font-size: 11px;
+    padding: 0 40px 15px 240px;
+    margin: 0;
+}
+.lair-form input {
+    font-size: 20px;
+    padding: 8px 10px;
+    display: inline-block;
+    width: 300px;
+    border: none;
+    margin-bottom: 5px;
+    border: 4px solid #404040;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.lair-form input:focus {
+    outline: none;
+    color: #00B4ff;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 180, 255, 0.4);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 180, 255, 0.4);
+    box-shadow: 0px 0px 10px 0px rgba(0, 180, 255, 0.4);
+}
+
+.lair-form button {
+    border: 4px solid #404040;
+    padding: 3px 5px;
+    background: #4a4a4a;
+    color: #eee;
+    font-size: 20px;
+    display: inline-block;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    cursor: pointer;
+    -webkit-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.4);
+    -webkit-transition: all 200ms ease-in;
+    -moz-transition: all 200ms ease-in;
+    -o-transition: all 200ms ease-in;
+    transition: all 200ms ease-in;
+    text-align: center;
+}
+
+.lair-form input[type=reset] {
+    text-decoration: underline;
+    float: right;
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: #eee;
+    cursor: pointer;
+    font-size: 12px;
+    width: auto;
+}
+
+.lair-form button:hover {
+    color: #00B4ff;
+    background: #404040;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.lair-form .download-file {
+    display: none;
+}
+
+.lair-form .gremlin-preview {
+    margin: 50px -100px;
+    font-family: Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    display: none;
+}
+
+.lair-form.submitted .gremlin-preview {
+    border-top: 5px solid #404040;
+}
+.lair-form .gremlin-preview h2 a,
+.lair-form .gremlin-preview h2 a:hover,
+.lair-form .gremlin-preview h2 a:active,
+.lair-form .gremlin-preview h2 a:visited {
+    color:#eee;
+
+}
+
+.lair-form .gremlin-preview > div {
+    float: left;
+    width: 350px;
+    padding: 0 25px;
+}
+.lair-form .gremlin-preview textarea {
+    font-family: Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    font-size: 14px;
+    overflow: auto;
+    width: 100%;
+    background: rgba(0,0,0,0.7);
+    color: #839496;
+    padding: 5px;
+    border: 4px solid #404040;
+}
+
+.lair-form .gremlin-preview textarea:focus {
+    outline: none;
+    color: #00B4ff;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.lair-form .gremlin-preview > div p {
+    font-size: 14px;
+    font-family: 'RobotoRegular', Arial, sans-serif;
+}

@@ -1,0 +1,982 @@
+@font-face {
+    font-family: 'RobotoRegular';
+    src: url('Roboto-Regular-webfont.eot');
+    src: url('Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'), url('Roboto-Regular-webfont.woff') format('woff'), url('Roboto-Regular-webfont.ttf') format('truetype'), url('Roboto-Regular-webfont.svg#RobotoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'RobotoBold';
+    src: url('Roboto-Bold-webfont.eot');
+    src: url('Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'), url('Roboto-Bold-webfont.woff') format('woff'), url('Roboto-Bold-webfont.ttf') format('truetype'), url('Roboto-Bold-webfont.svg#RobotoBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RobotoLight';
+    src: url('Roboto-Light-webfont.eot');
+    src: url('Roboto-Light-webfont.eot?#iefix') format('embedded-opentype'), url('Roboto-Light-webfont.woff') format('woff'), url('Roboto-Light-webfont.ttf') format('truetype'), url('Roboto-Light-webfont.svg#RobotoLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'WebSymbolsRegular';
+    src: url('WebSymbols-Regular-webfont.eot');
+    src: url('WebSymbols-Regular-webfont.eot?#iefix') format('embedded-opentype'), url('WebSymbols-Regular-webfont.woff') format('woff'), url('WebSymbols-Regular-webfont.ttf') format('truetype'), url('WebSymbols-Regular-webfont.svg#WebSymbolsRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    font-family: 'RobotoLight', Arial, sans-serif;
+    min-width: 690px;
+}
+
+.icon {
+    font-family: "WebSymbolsRegular";
+}
+
+header {
+    position: relative;
+    z-index: 2;
+    padding: 0 0 20px 20px;
+}
+
+header.detached {
+    /*position: fixed;
+    top: 0;
+    left: 0;*/
+    /* Rotate from top left corner (not default) */
+    margin-bottom: 40px;
+}
+
+header h1 {
+    color: #333333;
+    font-family: 'RobotoRegular', Arial, sans-serif;
+    font-size: 60px;
+    text-shadow: #fff 0 0 1px;
+    font-weight: normal;
+    margin: 0;
+    text-shadow: 0 1px 1px #fff, 0px 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+header h2 {
+    font-size: 14px;
+    text-shadow: none;
+    margin-bottom: 0;
+}
+
+header h2 a,
+header h2 a:hover,
+header h2 a:visited,
+header h2 a:active {
+    color: #000;
+    text-decoration: underline;
+
+}
+
+/*header.detached h1 {
+    position: fixed;
+    top: 50px;
+    left: 70px;
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+}
+
+header.detached h1 {
+    -webkit-animation: myanim 300ms 1;
+    -moz-animation: myanim 300ms 1;
+    -ms-animation: myanim 300ms 1;
+}
+
+header.detached h1 span {
+    display: none;
+}*/
+
+@-webkit-keyframes myanim {
+0%   { opacity: 0;top:0 }
+100% { opacity: 1.0;top:50px; }
+}
+@-moz-keyframes myanim {
+0%   { opacity: 0;top:0 }
+100% { opacity: 1.0;top:50px; }
+}
+@-ms-keyframes myanim {
+0%   { opacity: 0;top:0 }
+100% { opacity: 1.0;top:50px; }
+}
+
+nav {
+    padding: 10px 20px 20px;
+    vertical-align: top;
+    margin-top: -20px;
+    position: relative;
+    z-index: 3;
+    height: 20px;
+    background: rgba(50, 50, 50, 0);
+    -webkit-transition: background 150ms ease-in-out;
+    -moz-transition: background 150ms ease-in-out;
+    -o-transition: background 150ms ease-in-out;
+    transition: background 150ms ease-in-out;
+}
+
+nav.detached {
+    position: fixed;
+    margin-top: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+nav ul {
+    position: relative;
+}
+
+nav ul li {
+    display: inline-block;
+    position: relative;
+}
+
+nav ul li a,
+nav ul li a:visited,
+nav ul li a:active {
+    font-family: 'RobotoRegular', Arial, sans-serif;
+    padding: 3px 5px;
+    text-transform: uppercase;
+    font-size: 16px;
+    background: transparent;
+    display: block;
+    color: #000;
+    text-decoration: none;
+    border-bottom: 4px solid transparent;
+    margin-bottom: -4px;
+}
+
+nav ul li a:hover {
+    border-color: #00B4FF;
+}
+
+nav ul li a.current {
+    color: #eee;
+}
+
+nav ul li a .icon {
+    text-transform: none;
+}
+nav ul li a .icon.external {
+    position: absolute;
+    left: 100%;
+    top: -2px;
+    font-size: 10px;
+    margin-left: 0;
+}
+
+nav ul li.scroll-mark ~ li {
+    margin-right: 30px;
+}
+
+nav ul li.logo {
+    font-size: 16px;
+    float: right;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity = 0);
+    -moz-opacity: 0;
+    -khtml-opacity: 0;
+    opacity: 0;
+    -webkit-transition: all 150ms ease-in-out;
+    -moz-transition: all 150ms ease-in-out;
+    -o-transition: all 150ms ease-in-out;
+    transition: all 150ms ease-in-out;
+}
+
+nav.detached ul li.logo {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    filter: alpha(opacity = 100);
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    opacity: 1;
+}
+
+nav ul li.scroll-mark {
+    background: #00B4FF;
+    position: absolute;
+    width: 0;
+    height: 25px;
+    top: 0;
+    left: -50px;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: width 250ms ease-in, height 250ms ease-in, left 250ms ease-in;
+    -moz-transition: width 250ms ease-in, height 250ms ease-in, left 250ms ease-in;
+    -o-transition: width 250ms ease-in, height 250ms ease-in, left 250ms ease-in;
+    transition: width 250ms ease-in, height 250ms ease-in, left 250ms ease-in;
+
+    -webkit-box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.2);
+
+}
+
+nav.detached ul li.scroll-mark {
+    padding-bottom: 10px;
+    padding-top: 20px;
+    margin-top: -20px;
+}
+
+nav ul li.scroll-mark div {
+    background: transparent;
+    border-width: 20px;
+    border-style: solid;
+    border-color: #00B4FF transparent transparent;
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: -13px;
+    left: 50%;
+    margin-left: -20px;
+    -webkit-transition: all 250ms ease-in;
+    -moz-transition: all 250ms ease-in;
+    -o-transition: all 250ms ease-in;
+    transition: all 250ms ease-in;
+}
+
+nav.detached ul li.scroll-mark div {
+    bottom: -40px;
+}
+
+nav .belt {
+    height: 8px;
+    background: rgba(50, 50, 50, 0);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 8;
+    margin-top: -10px;
+}
+
+nav.detached .belt {
+    background: rgba(50, 50, 50, 0);
+}
+
+nav .belt .progress {
+    position: absolute;
+    height: 1px;
+    top: 50%;
+    left: 0;
+    width: 0;
+    padding-left: 20px;
+    background: rgba(0, 180, 255, 0);
+    -webkit-transition: all 90ms ease-in;
+    -moz-transition: all 90ms ease-in;
+    -o-transition: all 90ms ease-in;
+    transition: all 90ms ease-in;
+}
+
+nav.detached .belt .progress {
+    background: rgba(255, 255, 255, 0.8);
+    -webkit-box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.2);
+    -moz-box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.2);
+    box-shadow: 0px 0px 2px 2px rgba(50, 50, 50, 0.2);
+}
+
+.js div.subnavigation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.js div.subnavigation.detached {
+}
+
+.js div.subnavigation > div {
+    position: absolute;
+    right: 100%;
+    margin-right: 49px;
+    padding: 5px;
+    top: 100px;
+    bottom: 0;
+    -webkit-transition: -webkit-box-shadow 350ms ease-out;
+    -moz-transition: -moz-box-shadow 350ms ease-out;
+    -o-transition: box-shadow 350ms ease-out;
+    transition: box-shadow 350ms ease-out;
+    border: 2px solid #f5f5f5;
+
+}
+
+.js div.subnavigation.detached > div {
+    position: fixed;
+    right: 50%;
+    top: 0;
+    bottom: 0;
+    padding-top: 100px;
+    margin-right: 400px;
+    z-index: 2;
+    border-color: #f5f5f5;
+    -webkit-box-shadow: 20px 0px 20px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 20px 0px 20px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 20px 0px 20px 0px rgba(0, 0, 0, 0.3);
+}
+
+.js #main div.subnavigation > div > ul {
+    padding: 0;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.js #main div.subnavigation.detached > div > ul {
+    padding: 0;
+}
+
+.js #main div.subnavigation > div ul {
+    margin: 0;
+    padding-bottom: 0;
+}
+
+.js #main div.subnavigation > div ul li {
+    list-style: none;
+    margin-bottom: 0;
+    line-height: 18px;
+    padding: 3px 0;
+}
+
+.js #main div.subnavigation > div > ul > li > a,
+.js #main div.subnavigation > div > ul > li > span {
+    font-size: 14px;
+    line-height: 16px;
+}
+.js #main div.subnavigation > div > ul > li > ul a,
+.js #main div.subnavigation > div > ul > li > ul span {
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.js #main div.subnavigation > div ul li span,
+.js #main div.subnavigation > div ul li a {
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    padding-left: 5px;
+    white-space: nowrap;
+}
+
+.js #main div.subnavigation > div ul li a.current {
+    border-color: #00B4FF;
+    color: #00B4FF;
+}
+
+.js #main div.subnavigation > div ul li ul {
+    padding-bottom: 3px;
+}
+
+.js #main div.subnavigation > div ul li ul li {
+    padding: 0;
+}
+#main {
+    z-index: 1;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+nav.detached + #main {
+    margin-top: 31px;
+}
+
+#main > div {
+    margin: 0 auto;
+    width: 700px;
+    position: relative;
+    padding: 0 60px 40px;
+}
+
+#main > div > div {
+    margin-top: -7px;
+    -webkit-transition: all 400ms ease-in-out;
+    -moz-transition: all 400ms ease-in-out;
+    -o-transition: all 400ms ease-in-out;
+    transition: all 400ms ease-in-out;
+    position: relative;
+    z-index: 2;
+    padding: 10px 10px 20px;
+}
+
+#main > div > div + div {
+}
+
+.js #main > div > div {
+    xdisplay: none;
+}
+
+.js #main >div >div.current {
+    display: block;
+}
+
+.js #main > div > div.in,
+.js #main > div > div:target {
+    opacity: 1;
+}
+
+p {
+    margin: 0;
+    color: #eee;
+}
+
+#main > div > div > h2 {
+    color: #00B4FF;
+    left: 10px;
+    right: 0;
+    font-family: 'RobotoRegular', Arial, sans-serif;
+    font-size: 42px;
+    position: relative;
+    padding-top: 30px;
+    margin-bottom: 40px;
+    margin-left: -20px;
+    text-shadow: 1px 1px 0px #000000;
+    border-bottom: 1px solid #00b4ff;
+    line-height: 40px;
+}
+
+#main .why {
+    margin: 0 -40px 40px;
+    text-align: center;
+}
+
+#main .why > p:first-of-type {
+    color: #000;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: justify;
+    padding: 40px 0;
+    margin: 0 -20px;
+    text-shadow: 0 0 1px black;
+}
+
+#main .why > p:first-of-type a,
+#main .why > p:first-of-type a:visited,
+#main .why > p:first-of-type a:hover {
+    text-decoration: none;
+}
+
+#main .why > p:first-of-type a + .icon {
+    font-size: 10px;
+    position: absolute;
+    margin-top: -7px;
+    margin-left: 2px;
+}
+
+#main .why > p:first-of-type a:hover + .icon {
+    color: #00B4ff
+}
+
+#main .why > p:first-of-type strong {
+    color: #00B4ff;
+}
+
+#main .why > p:first-of-type strong + span {
+    color: #bbbbbb;
+}
+
+#main .why > p:first-of-type span > q {
+    font-size: 20px;
+    height: 0;
+    width: 0;
+    font-weight: normal;
+    position: absolute;
+    left: -0px;
+    right: -0px;
+    color: #eee;
+    padding: 0;
+    background: rgba(33, 33, 33, 0.9);
+    margin-top: -15px;
+    overflow: hidden;
+    opacity: 0;
+    -webkit-transition: opacity 200ms ease-in;
+    -moz-transition: opacity 200ms ease-in;
+    -o-transition: opacity 200ms ease-in;
+    transition: opacity 200ms ease-in;
+}
+
+#main .why > p:first-of-type span:hover > q {
+    height: auto;
+    width: auto;
+    opacity: 1;
+    border: 15px solid rgba(0, 180, 255, 0.4);
+    border-top: none;
+    -webkit-box-shadow: 0px 0px 40px 2px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0px 0px 40px 2px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 40px 2px rgba(0, 0, 0, 0.4);
+    padding: 0 20px 20px;
+}
+
+#main .why > p:first-of-type span > q > strong {
+    background: rgba(0, 180, 255, 0.4);
+    font-size: 24px;
+    font-weight: normal;
+    text-transform: uppercase;
+    display: block;
+    margin: -0px -20px 20px;
+    color: #eee;
+
+}
+
+#main .why div {
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+}
+
+#main .why h3 {
+    font-family: 'RobotoRegular', Arial, sans-serif;
+    font-size: 24px;
+    text-align: left;
+    border-bottom: none;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    text-shadow: -1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+#main .why div p {
+    padding: 5px 20px 5px 10px;
+    text-align: justify;
+}
+
+#main .why + hr {
+    background: #bbb;
+    height: 4px;
+    border: none;
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.4);
+}
+
+#main blockquote {
+    margin: 0 40px 20px;
+    padding-left: 10px;
+    font-size: 12px;
+    border-left: 5px solid #00B4FF;
+}
+
+#main blockquote strong {
+    font-family: 'RobotoRegular', Arial, sans-serif;
+    text-transform: uppercase;
+}
+
+#main h3 {
+    font-family: 'RobotoRegular', Arial, sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: left;
+    border-bottom: none;
+    margin-top: 60px;
+    margin-bottom: 35px;
+    text-shadow: -1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+#main h4 {
+    font-size: 24px;
+    font-family: 'RobotoRegular', Arial, sans-serif;
+    font-weight: bold;
+    padding-left: 0;
+    margin: 40px 0 20px;
+    font-weight: normal;
+}
+
+#main ul {
+    padding: 0 0 15px 20px;
+}
+
+#main ul li {
+    margin-bottom: 10px;
+}
+
+#main p {
+    margin-bottom: 15px;
+    line-height: 24px;
+}
+
+#main ul li,
+#main ol li {
+    line-height: 24px;
+}
+
+#main p,
+#main blockquote {
+    color: #333;
+}
+
+#main a,
+#main a:visited,
+#main a:active {
+    color: #222;
+    text-decoration: underline;
+}
+
+#main a:hover {
+    color: #00B4FF;
+}
+
+#main p.centered {
+    text-align: center;
+}
+
+#main p.download {
+    text-align: center;
+    padding: 25px 0;
+}
+
+#main p.download a {
+    font-size: 30px;
+    display: inline-block;
+    padding: 0;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+
+}
+
+#main p.download a:hover {
+}
+
+#main p.download + p + p.download {
+    padding: 10px 0;
+}
+
+#main p.download + p + p.download a {
+    font-size: 16px;
+}
+
+#main pre {
+    background: #fff;
+    padding: 15px 20px;
+}
+
+#main input[type=text] {
+    color: #666;
+    padding: 3px 5px;
+    font-size: 20px;
+    border: 4px solid #404040;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+#main input[type=text]:focus {
+    outline: none;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 180, 255, 0.4);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0, 180, 255, 0.4);
+    box-shadow: 0px 0px 10px 0px rgba(0, 180, 255, 0.4);
+}
+
+#main input + button {
+    border-radius: 0;
+    background: #EEE;
+    padding: 3px 5px;
+    font-size: 20px;
+    border: 4px solid #404040;
+    border-style: solid solid solid none;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+#main p + p {
+    margin-top: 20px;
+}
+
+#main p.notice {
+    font-size: 12px;
+    color: #bbb;
+}
+
+#main .gist-container {
+    position: relative;
+    min-height: 20px;
+}
+
+#main .gist-container .gist {
+    position: relative;
+    z-index: 2;
+    font-size: 12px;
+}
+
+#main .gist-container .loading {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin-top: -6px;
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    z-index: 1;
+}
+
+#main .gist a {
+    color: #666;
+}
+
+#main .example {
+    background: #fff;
+    padding: 4px 6px;
+    margin: 0 40px 20px;
+    -webkit-box-shadow: -1px -1px 2px 0px rgba(0, 180, 255, 0.2), 1px 1px 4px 0px rgba(0, 0, 0, 0.4);;
+    -moz-box-shadow: -1px -1px 2px 0px rgba(0, 180, 255, 0.2), 1px 1px 4px 0px rgba(0, 0, 0, 0.4);;
+    box-shadow: -1px -1px 2px 0px rgba(0, 180, 255, 0.2), 1px 1px 4px 0px rgba(0, 0, 0, 0.4);;
+}
+
+#main .example > code {
+    margin: 10px 0;
+    padding: 0 3px;
+    display: inline-block;
+}
+
+#main code {
+    color: #CC7833;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 0 2px;
+}
+
+#main code.file {
+    color: #969648;
+}
+
+#main code a,
+#main code a:visited{
+    text-decoration: none;
+    color: #969648;
+
+}
+#main code a:hover {
+    text-decoration: underline;
+    color: #cc7833;
+}
+#main .example p strong {
+    margin-bottom: 10px;
+    display: block;
+}
+
+#main p.success {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+#main .side-by-side {
+}
+
+#main .side-by-side > div {
+    float: right;
+    border-left: 4px solid #eee;
+}
+
+#main .side-by-side > div + div {
+    overflow: hidden;
+    float: none;
+    border-left: none;
+}
+
+#main p.sup {
+    font-size: 12px;
+    color: #aaaaaa;
+}
+
+#main code {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+#main ul.dirtree {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    margin: 10px 0 10px 20px;
+    padding: 0;
+}
+
+#main ul.dirtree ul {
+    margin: 10px 0 0 0;
+    padding: 0 0 0 15px;
+}
+
+#main ul.dirtree li {
+    list-style: none;
+    font-weight: normal;
+    line-height: 14px;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+#main ul.dirtree li + li {
+    margin-top: 5px;
+}
+
+#main ul.dirtree li.dir {
+    list-style-type: none;
+    margin-left: 0;
+    margin-top: 10px;
+}
+
+#main ul.dirtree li.dir > span {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+    font-weight: bold;
+    list-style-type: none;
+    background: #bbb;
+    color: #333;
+    padding-left: 2px;
+}
+
+#main ul.dirtree + p {
+    font-size: 12px;
+    text-align: right;
+}
+
+#main table.parameters {
+    border: none;
+    margin: 10px 0px 30px;
+}
+
+#main table.parameters th {
+    text-align: left;
+    font-size: 16px;
+    padding: 8px 0 8px 10px;
+}
+
+#main table.parameters tr td {
+    margin: 0;
+    list-style: none;
+    padding: 5px 10px 5px 10px;
+    vertical-align: top;
+}
+
+#main table.parameters tr td:first-child code {
+    background: transparent;
+    color: #CC7833;
+}
+
+#main table.parameters tr:nth-child(2n+1) td {
+    background: #fff;
+}
+
+#main table.parameters tr:nth-child(2n+2) td {
+    background: #eee;
+}
+
+/** gists **/
+#my-gremlin-html {
+}
+
+#my-gremlin-html .line {
+    opacity: 0.4;
+}
+
+#my-gremlin-html #LC4 {
+    font-size: 14px;
+    opacity: 1;
+}
+
+@media only screen and (max-width: 0px) {
+    /*@media only screen and (max-device-width: 1600px) {*/
+    body {
+        min-width: inherit;
+    }
+
+    header {
+        padding-left: 20px;
+    }
+
+    header h1 {
+        font-size: 40px;
+        text-shadow: #fff 0 0 1px;
+        font-weight: normal;
+    }
+
+    header h1 span {
+        display: block;
+        font-size: 12px;
+    }
+
+    nav {
+        padding-left: 20px;
+    }
+
+    nav ul li {
+        position: relative;
+        display: block;
+    }
+
+    nav ul li + li {
+        margin: 5px 0 0;
+    }
+
+    nav ul li a {
+        font-size: 14px;
+        display: inline-block;
+        padding: 4px 10px;
+        margin-right: 10px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -moz-background-clip: padding;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+    }
+
+    nav ul li a.current {
+        background: #eee;
+        color: #515151;
+    }
+
+    #main > div {
+        width: 100%;
+        position: relative;
+        padding: 0;
+        padding-bottom: 50px;
+    }
+
+    #main > div > div {
+        margin: 30px 10px 10px;
+        padding: 10px 10px;
+        background: #4d4d4d;
+
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+
+        -moz-background-clip: padding;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+
+        -webkit-box-shadow: 0px 1px 1px rgba(0, 180, 255, 0.3);
+        -moz-box-shadow: 0px 1px 1px rgba(0, 180, 255, 0.3);
+        box-shadow: 0px 1px 1px rgba(0, 180, 255, 0.3);
+
+    }
+
+    .js #main > div > div {
+        display: block;
+    }
+
+    #main > div > div > h2 {
+        margin-left: 0;
+        padding-top: 0;
+    }
+}

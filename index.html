@@ -1,74 +1,572 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>
+<html class="ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>
+<html class="ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Gremlinjs : A widget framework using jquery and requirejs" />
+    <title>GremlinJS</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <title>Gremlinjs</title>
-  </head>
+    <link rel="stylesheet" href="css/bp.css">
+    <link rel="stylesheet" href="css/site.css">
 
-  <body>
+    <script type="text/javascript">document.documentElement.className += " js";</script>
+</head>
+<body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/grmlin/gremlinjs">View on GitHub</a>
+<header id="header" class="" data-gremlin-name="Detachable" data-detach-bottom="true">
+    <hgroup>
+        <h1>GremlinJS</h1>
 
-          <h1 id="project_title">Gremlinjs</h1>
-          <h2 id="project_tagline">A widget framework using jquery and requirejs</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/grmlin/gremlinjs/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/grmlin/gremlinjs/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+        <h2>A widget framework using <a href="http://jquery.com">jQuery</a> and <a
+                href="http://requirejs.org">requirejs</a></h2>
+    </hgroup>
+</header>
+<nav id="navigation" class="gremlin" data-gremlin-name="Detachable,Navigation">
+    <ul>
+        <li class="scroll-mark">
+            <div></div>
+        </li>
+        <li><a class="jumper" href="#about">About</a></li>
+        <li><a class="jumper" href="#download">Get it</a></li>
+        <li><a class="jumper" href="#quick">Quick guide</a></li>
+        <li><a href="doc.html">API</a></li>
+        <li><a href="lair.html" target="_blank">Generate <span class="icon external">D</span></a>
+        <!--li><a href="api_documentation/index.html" target="_blank">API Documentation <span class="icon">d</span></a-->
+        </li>
+        <li class="logo">GremlinJS</li>
+    </ul>
+    <div class="belt">
+        <div class="progress"></div>
     </div>
+</nav>
+<div id="main" role="main">
+<div>
+<div id="about">
+    <div class="why">
+        <p>
+            <strong>GremlinJS</strong>, a lightweight and fast widget framework using
+            <a href="http://jquery.com">jQuery</a><span class="icon">D</span>&nbsp; and <a href="http://requirejs.org">requirejs</a><span
+                class="icon">D</span>&nbsp;.
+            Create <strong><span>gremlins<!--
+            --><q>
+                <strong>gremlin</strong>kleines Monster, das Webseiten heimsucht und bevölkert. Gremlins ernähren
+                sich im allgemeinen von Javascript und HTML, werden nie satt und können nur durch Disziplin und Ordnung
+                im Zaum gehalten werden.
+            </q><!--
+        --></span></strong><span>widgets</span> for your website and
+            let GremlinJS do all the glue work for you.
+        </p>
+        <div>
+            <h3>Fast and clean Javascript</h3>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>Welcome to GitHub Pages.</h3>
+            <p>
+                <em>GremlinJS</em> is lightweight, about 4kb minified/zipped, and it's fast. Create jQuery-rich Websites
+                without slowing everything down. All scripts are loaded asynchronously, website loads first, javascript
+                afterwards.
+            </p>
+        </div><!--
+        --><div>
+            <h3>AMD modules</h3>
+            <p>
+                Every gremlin has to be built as a web module. Head over to the requirejs homepage, learn
+                <a href="http://requirejs.org/docs/why.html">what web modules are</a> and why the Asynchronous Module
+                Definition (AMD) is an <a href="http://requirejs.org/docs/whyamd.html">awesome way</a> to load your
+                javascript.
+            </p>
+        </div><!--
+        --><div>
+            <h3>Efficient jQuery</h3>
+            <p>
+                There will be only <strong>one</strong> jQuery selector traversing the dom to discover the gremlins.
+                <br>
+                Less traversals <span class="icon">j</span> better performance.
+            </p>
+        </div><!--
+        --><div>
+            <h3>Uncluttered HTML</h3>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
+            <p>
+                Add a classname identifying your gremlins and the gremlin's name to the html-tag of your choice.
+                Filenames, dependencies and object construction are nothing you have to care about.
+            </p>
+        </div><!--
+        --><div>
+            <h3>Notifications and jQuery helper</h3>
+            <p>
+                One Gremlin wants to talk to another? A notification system is built in!<br>
+                Tired of typing dozens of lines adding jQuery-objects and events to your classes. GremlinJS fixes that.
+            </p>
+        </div><!--
+        --><div>
+            <h3>Lazy loading</h3>
+            <p>
+                You placed some heavy javascript at the end of the page? GremlinJS won't load it until the user scrolls
+                the gremlin into the viewport.
+            </p>
+        </div>
     </div>
+    <hr>
+    <h3>How it works</h3>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Gremlinjs maintained by <a href="https://github.com/grmlin">grmlin</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
+    <h4>1. Create the gremlin's javascript module</h4>
+
+    <div class="example" title="More on that later"><code class="file">js/gremlins/HelloWorld.js</code></div>
+    <h4>2. Add the gremlin to your HTML</h4>
+
+    <div class="example">
+        <code>
+            &lt;div class=&quot;gremlin&quot; data-gremlin-name=&quot;HelloWorld&quot;&gt;&lt;/div&gt;
+        </code>
     </div>
+    <h4>3. Start the gremlin loader</h4>
 
-    
+    <div class="example"><code>gremlinjs.getLoader("js/gremlins/","gremlin").load();</code></div>
+    <h4>That's it</h4>
+    <p class="success">
+        The gremlin loader will find the <code>Gist</code> gremlin in your HTML, loads the file
+        <code class="file">js/gremlins/Gist.js</code> and calls the gremlin's constructor function.
+    </p>
 
-  </body>
+    <h3>When should I use GremlinJS?</h3>
+
+    <ul>
+        <li>
+            You don't like the typical javascript/jQuery mess. GremlinJS forces you to organize your code.
+        </li>
+        <li>
+            You are in a project with tons of javascript widgets acting independently.
+        </li>
+        <li>
+            You are in a project with tons of javascript widgets interacting with each other.
+        </li>
+        <li>
+            You are using a CMS and you hate to scatter the javascript code (inline) across the HTML because you don't know
+            what you'll need on a page and it's not an option to load all the javascript always and everywhere.
+        </li>
+        <li>
+            You are happy if your website responds as quick as possible and jQuery is used efficiently.
+        </li>
+    </ul>
+    <p><strong>What it's not?</strong><br>
+        GremlinJS is none of those fancy MVC-Frameworks like JavascriptMVC, Spine, Backbone or Sproutcore we love so
+        much to build awesome webapps.<br>
+        No one is stopping you from using MVC patterns for complex gremlins, of course...</p>
+</div>
+<div id="download">
+    <h2>Get it!</h2>
+
+    <p>Download the latest release of GremlinJS at github:</p>
+
+    <p class="download">
+        <a href="https://github.com/grmlin/gremlinjs">Download</a>
+    </p>
+
+    <p>There is also a sample project available, to get started with GremlinJS. </p>
+    <p class="download">
+        <a href="https://github.com/grmlin/gremlinjs_sample">Go to the sample project</a> or <a
+            href="https://github.com/grmlin/gremlinjs_sample/zipball/master">download it
+        directly</a>
+    </p>
+    <p>
+        <a href="https://github.com/grmlin/gremlinjs">Browse</a> or clone the sources with git
+    </p>
+
+    <pre>$ git clone git://github.com/grmlin/gremlinjs</pre>
+</div>
+<div id="quick">
+<h2>Quick guide</h2>
+
+<p>Learn how to get GremlinJS up and running. </p>
+
+<div class="subnavigation gremlin" data-gremlin-name="Detachable,Navigation" data-reattach="true">
+    <div>
+        <ul class="toc">
+            <li><a class="jumper" href="#quick-pre">Prerequisites</a>
+                <ul>
+                    <li><a class="jumper" href="#quick-pre-req">RequireJS</a></li>
+                    <li><a class="jumper" href="#quick-pre-jq">jQuery</a></li>
+                </ul>
+            </li>
+            <li><a class="jumper" href="#quick-prepare">Prepare</a></li>
+            <li>
+                <a class="jumper" href="#quick-configure">Configuration</a>
+                <ul>
+                    <li><a class="jumper" href="#quick-configure-mainjs">The <code class="file">main.js</code></a></li>
+                    <li><a class="jumper" href="#quick-configure-load-main">Load RequireJS</a></li>
+                </ul>
+            </li>
+            <li>
+                <a class="jumper" href="#quick-add-gremlin">Create a gremlin</a>
+                <ul>
+                    <li><a class="jumper" href="#quick-add-gremlin-html">HTML</a></li>
+                    <li><a class="jumper" href="#quick-add-gremlin-js">Javascript</a></li>
+                </ul>
+            </li>
+            <li><a class="jumper" href="#quick-summary">Summary</a></li>
+        </ul>
+    </div>
+</div>
+<h3 id="quick-pre">Prerequisites</h3>
+<h4 id="quick-pre-req">requirejs</h4>
+
+<p><a href="http://requirejs.org/">RequireJS</a> is the underlying AMD loader GremlinJS uses to load the gremlin
+    classes.
+    You have to download requirejs from their site, you'll need it later. <br>
+    Moreover, it's a good idea to learn how requirejs works. They have plenty of articles about requirejs and AMD, so
+    take
+    the time and read them.</p>
+<h4 id="quick-pre-jq">jQuery</h4>
+
+<p>Currently, GremlinJS uses <a href="http://jquery.com/">jQuery</a> to find gremlins in the dom, so go get it.
+    <br>
+    There may be support for other, more lightweight, frameworks in the future...
+</p>
+
+<h3 id="quick-prepare">Prepare</h3>
+
+<div class="side-by-side">
+    <div>
+        <ul class="dirtree">
+            <li class="dir"><span>/</span>
+                <ul>
+                    <li><code class="file">index.html</code></li>
+                    <li class="dir"><span>js/</span>
+                        <ul>
+                            <li><code class="file">gremlin.min.js</code></li>
+                            <li><code class="file">jquery.js</code></li>
+                            <li><code class="file">require.js</code></li>
+                            <li><code class="file">main.js</code></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <ul>
+            <li>
+                <a href="#download">Download</a> GremlinJS and place the file inside your javascript's asset folder.
+            </li>
+            <li>
+                Place requirejs and jQuery in your asset folder, too.
+            </li>
+            <li>
+                Create a <code class="file">main.js</code>, this will be your site's bootstrap.
+            </li>
+            <li>
+                Add the HTML file that uses GremlinJS
+            </li>
+        </ul>
+    </div>
+</div>
+<h3 id="quick-configure">Configuration</h3>
+
+<p>
+    You have to tell requirejs where it finds jQuery and GremlinJS. For jQuery, GremlinJS expects it with the reference
+    name <code>jquery</code>, as it's provided by newer jQuery versions itself.
+<br>
+    GremlinJS consists of multiple modules, the one your'e interested in is called <code>gremlinjs</code>. This module
+    offers you easy access to GremlinJS' core features.
+    <br>
+    I use the root of the site as the <code>baseUrl</code> for the requirejs config most of the time.
+</p>
+<p class="sup">
+    A list of all available GremlinJS modules and path-variables for requirejs can be found in the sources
+</p>
+<p>
+Change the requirejs configuration wherever you want. Here it's done inside the <code class="file">main.js</code>
+</p>
+
+<div id="quick-configure-mainjs" class="example">
+    <code class="file">main.js</code>
+    <div class="gist-container gremlin"
+         data-gremlin-name="Gist"
+         data-gist-src="https://gist.github.com/1895176.js?file=main.js"
+         data-lazy-load="true"
+         style="min-height: 165px;">
+        <span class="loading">Loading gist...</span>
+    </div>
+</div>
+<p>
+    If requirejs is ready to go, require <code>gremlinjs</code>, request a loader for your gremlins, and load them.
+</p>
+<div class="example">
+    <code class="file">main.js</code>
+    <div class="gist-container gremlin"
+         data-gremlin-name="Gist"
+         data-gist-src="https://gist.github.com/3107596.js?file=main.js"
+         data-lazy-load="true"
+         style="min-height: 92px;">
+        <span class="loading">Loading gist...</span>
+    </div>
+</div>
+<h4 id="quick-configure-load-main">Include requirejs</h4>
+
+<div class="example">
+    <code class="file">index.html</code>
+
+    <div class="gist-container gremlin"
+         data-gremlin-name="Gist"
+         data-gist-src="https://gist.github.com/1895176.js?file=index.html"
+         data-lazy-load="true"
+         style="min-height: 185px;">
+        <span class="loading">Loading gist...</span>
+    </div>
+</div>
+<p>Load requirejs and tell requirejs with the <code>data-main</code> attribute where to start.</p>
+
+<h3 id="quick-add-gremlin">Add a gremlin</h3>
+
+<p>
+    Now we have GremlinJS up and running. It searches the site for all gremlins with the classname <code>gremlin</code>
+    and loads them from the directory <code class="file">js/gremlins/</code>. So what's missing? A gremlin, of course
+</p>
+<h4 id="quick-add-gremlin-html">The HTML</h4>
+
+<p>
+    Adding a gremlin to your site is easy.
+</p>
+<ol>
+    <li>Add a new element to your html. (this will be the gremlin)</li>
+    <li>Add a class to that new element identifying it as a gremlin</li>
+    <li>Add the name of the gremlin</li>
+</ol>
+<p>Extending the <code class="file">index.html</code> from above, you'll get this:</p>
+
+<div id="my-gremlin-html" class="example">
+    <code class="file">index.html</code>
+
+    <div class="gist-container gremlin"
+         data-gremlin-name="Gist"
+         data-gist-src="https://gist.github.com/1895176.js?file=gistfile1.html"
+         data-lazy-load="true"
+         style="min-height: 184px;">
+        <span class="loading">Loading gist...</span>
+    </div>
+</div>
+<p>
+    The classname <code>gremlin</code> is the default classname GremlinJS uses to find gremlins in the site. You can
+    override the default class when you instantiate the <code>Loader</code>. The gremlin's name is set in the
+    <code>data-gremlin-name</code>-attribute.
+</p>
+
+<p>If you try to load the page now two things will happen.</p>
+<ol>
+    <li>A HTTP 404 error occurs, because there is no gremlin javascript file with this name</li>
+    <li>RequireJS throws an exception (with some delay), because it couldn't load the gremlin</li>
+</ol>
+<p>The good: something happens and GremlinJS works. The bad: obviously some javascript is missing here.</p>
+
+
+<h4 id="quick-add-gremlin-js">The Javascript</h4>
+
+<p>
+    So let's add the missing file, the gremlin class.
+</p>
+
+<div class="side-by-side">
+    <div>
+        <ul class="dirtree">
+            <li class="dir"><span>/</span>
+                <ul>
+                    <li><code class="file">index.html</code></li>
+                    <li class="dir"><span>js/</span>
+                        <ul>
+                            <li class="dir"><span>gremlins/</span>
+                                <ul>
+                                    <li><code class="file">MyGremlin.js</code></li>
+                                </ul>
+                            </li>
+                            <li><code class="file">gremlinjs_min.js</code></li>
+                            <li><code class="file">jquery.js</code></li>
+                            <li><code class="file">require.js</code></li>
+                            <li><code class="file">main.js</code></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <p>
+            We told the Loader to use <code>js/gremlins/</code> as the root path for our gremlins, that's why we
+            have to create a subdirectory called <code class="file">gremlins</code> inside our <code
+                class="file">js</code>
+            directory.
+        </p>
+
+        <p>
+            The gremlin's js filename has to be the one you used in the <code>data-gremlin-name</code>-attribute.
+            For the gremlin <code>MyGremlin</code> we added to the HTML before, GremlinJS will try to load a file called
+            <code class="file">js/gremlins/MyGremlin.js</code>
+        </p>
+
+    </div>
+</div>
+
+<p style="clear:both;">
+    Every gremlin has to be defined as a requirejs-module as it's loaded on demand when it appears on the site.
+    <br>
+    GremlinJS provides an easy way to create new gremlins, call <code>gremlinjs.create("name",{mixin})</code> and
+    you're fine.
+</p>
+
+<p>See this most basic gremlin <code>HelloWorld</code> below:</p>
+
+<div class="example">
+    <code class="file">HelloWorld.js</code>
+    <div class="gist-container gremlin"
+         data-gremlin-name="Gist"
+         data-gist-src="https://gist.github.com/1895176.js?file=HelloWorld.js"
+         data-lazy-load="true"
+         style="min-height: 183px;">
+        <span class="loading">Loading gist...</span>
+    </div>
+</div>
+<p>
+    The gremlin is created using the <code>gremlinjs.create</code> method with two parameters, the name of the gremlin
+    and a mixin extending the basic gremlin class. <br>
+    <code>initialize</code> will be called, when the gremlin is instantiated.
+    You'll do everything you have to do to get the gremlin ready, in here.
+</p>
+
+<p>
+    If this <code>HelloWorld</code> gremlin is found the the gremlin's html element will print <em>Hello World!</em>
+</p>
+<h4>protected<sup>*</sup> properties of every gremlin instance</h4>
+<table class="parameters">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><code>view</code></td>
+        <td>jQuery</td>
+        <td>The jQuery object of the gremlin's dom element</td>
+    </tr>
+    <tr>
+        <td><code>data</code></td>
+        <td>Object</td>
+        <td>If you add custom data-attributes to the dom element, you'll find these in here. This data object is the
+            result of the jQuery <code>.data()</code> method without any parameters.
+            (see the <a href="http://api.jquery.com/data/#data-html5">jQuery data doc</a> for more information)<br>
+            <strong>eg.</strong>: If you add an attribute called <code>data-my-attribute</code> you can access it
+            with <code>data.myAttribute</code>.
+        </td>
+    </tr>
+    <tr>
+        <td><code>id</code></td>
+        <td>int</td>
+        <td>A unique ID given to every gremlin. This ID stays unique through multiple <code>Loader</code> instances.
+            IDs may be useful, if you have to add an dynamically generated ID to the dom element.
+        </td>
+    </tr>
+    <tr>
+        <td><code style="white-space: nowrap;">chatter(interest,notificationData)</code></td>
+        <td>method</td>
+        <td>Publish an event/interest/notification
+        </td>
+    </tr>
+    <tr>
+        <td><code style="white-space: nowrap;">triggerChange()</code></td>
+        <td>method</td>
+        <td>Call this method if you changed the HTML of the gremlin and new gremlins may appear. GremlinJS will search for
+            them this way!
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p class="sup">
+    <sup>*</sup>Protected means: don't overwrite them. For performance reasons I did not include any checks against it.
+</p>
+<h4>properties to override <sup>*</sup></h4>
+<table class="parameters">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><code>elements</code></td>
+        <td>Object</td>
+        <td>key/value pairs of a jquery selector and a instance property name it will be referenced by</td>
+    </tr>
+    <tr>
+        <td><code>events</code></td>
+        <td>Object</td>
+        <td>key/value pairs of an jquery event + selector and a callback method</td>
+    </tr>
+    <tr>
+        <td><code>interests</code></td>
+        <td>Array</td>
+        <td>List of all events the gremlin is interested in</td>
+    </tr>
+    <tr>
+        <td><code style="white-space: nowrap;">inform(interest,notificationData)</code></td>
+        <td>method</td>
+        <td><strong>Callback: </strong>If another gremlin on the site sends a notification the gremlin interested in,
+            this method will be called.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<p class="sup">
+    <sup>*</sup>Override means: define the properties/methods in the mixin passed into the <code>create</code> method. They
+    will be used from now on.
+</p>
+<h3 id="quick-summary">What we did</h3>
+<ol>
+    <li>Added jQuery, RequireJS and GremlinJS to the project</li>
+    <li>Created a <code class="file">main.js</code>, that functions as a bootstrap for the site. It creates a GremlinJS
+        Loader and than loads the gremlins in the page.
+    </li>
+    <li>Created an <code class="file">index.html</code> that includes requirejs using the <code
+            class="file">main.js</code>
+        as the requirejs main file.
+    </li>
+    <li>Added the gremlin <code>MyGremlin</code> to the <code class="file">index.html</code> and created the
+        corresponding
+        <code class="file">MyGremlin.js</code> requirejs module.
+    </li>
+</ol>
+<p>Don't forget to download the sample project to see the results of the steps above.</p>
+<h4>Complete reference</h4>
+
+<p>To learn all the details open the <a href="doc.html">detailed documentation</a></p>
+</div>
+</div>
+</div>
+<footer>
+
+</footer>
+<!--! end of #container -->
+
+<!--[if lt IE 7 ]>
+<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+<script>window.attachEvent("onload", function () {
+    CFInstall.check({mode: "overlay"})
+})</script>
+<![endif]-->
+
+<script data-main="js/main" src="js/require.js"></script>
+
+</body>
 </html>
