@@ -1,0 +1,14 @@
+{
+    "name":"GremlinJS",
+    "version":"0.3.0",
+    "main" : "./src/gremlinjs/main.coffee",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/grmlin/gremlinjs.git"
+    },
+    "dependencies":{
+        "requirejs":"latest",
+        "wrench":"latest"
+    }
+}

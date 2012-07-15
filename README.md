@@ -1,4 +1,3 @@
-gremlinjs
-=========
+#GremlinJS
+**A website widget framework using jQuery and requirejs**
 
-A widget framework using jquery and requirejs

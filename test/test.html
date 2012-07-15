@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gremlin JS Test</title>
+    <link rel="stylesheet" href="../vendor/qunit/qunit.css">
+    <script type="text/javascript"  src="../vendor/qunit/qunit.js"></script>
+</head>
+<body>
+<ol id="qunit-tests"></ol>
+<script data-main="/test/test" src="../vendor/require.js"></script>
+<script type="text/javascript">
+    // Configure the RequireJS paths to use an alias for the
+    // jQuery library.
+    require.config({
+        baseUrl: "/",
+        paths:{
+            "jquery":"vendor/jquery-1.7.1.min"
+        }
+    });
+</script>
+</body>
+</html>
