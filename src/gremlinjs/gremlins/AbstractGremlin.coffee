@@ -10,27 +10,23 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
   # add all jquery elements to the instance
   addElements = (elements) ->
     unless @elements is null
-      for own selector, propertyName of @elements
+      for own propertyName, selector of @elements
+        throw new TypeError "Elements have to be referenced by strings!" unless (helper.isString(propertyName) and helper.isString(selector))
         @[propertyName] = @view.find(selector)
 
   # add all event listeners to the instance
   addEvents = (events) ->
     unless @events is null
       # iterate over all given events
-      for own event, handlerName of @events
-        switch typeof handlerName
-        # functions are directly referenced
-          when "function" then handler = handlerName
-        # strings have to be an instance method
-          when "string" then do =>
-            if helper.isFunction @[handlerName]
-              handler = @[handlerName]
-            else throw new TypeError "Event '#{event}' can't be bound to '#{@name}.#{handlerName}', as the type is " + typeof @[handlerName]
-        # anything else isn't allowed
-          else
-            throw new TypeError "The event handler for '#{@name}.events[\"#{event}\”]' has to be a method or a string referencing an instance method of this class, currently its " + typeof handlerName
+      for own handlerName, event of @events
+        throw new TypeError "Event handler have to be referenced by strings!" unless (helper.isString(handlerName) and helper.isString(event))
 
-        # get the event type and the jquery selector
+        if helper.isFunction @[handlerName]
+          handler = @[handlerName]
+        else
+          throw new TypeError "Event '#{event}' can't be bound to '#{@name}.#{handlerName}', as the type is " + typeof @[handlerName]
+
+          # get the event type and the jquery selector
         firstWhitespace = event.indexOf(" ")
         eventType = event.substr(0, firstWhitespace)
         target = if event.length > firstWhitespace + 1 then event.substr(firstWhitespace + 1) else null
@@ -38,11 +34,11 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
         @view.on eventType, target, =>
           handler.apply(@, arguments)
           true
-        true
+      true
 
   # the Abstract gremlin class
   class AbstractGremlin
-    # Name of the gremlin, initially unknown
+  # Name of the gremlin, initially unknown
     name: "anonymous"
 
     # Gremlin chatter event
@@ -86,9 +82,9 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
     # and if any other gremlin on the site sends a notification your interested in, @handleNotification will be called
     inform: (interest, notificationData) ->
 
-    # Publish a gremlin event/interest/notification
-    # e.g.:
-    # @chatter("FOO",{})
+      # Publish a gremlin event/interest/notification
+      # e.g.:
+      # @chatter("FOO",{})
     chatter: (interest, notificationData = {}) ->
       @dispatch @NOTIFICATION, {interest: interest, notificationData: notificationData}
 
