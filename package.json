@@ -9,6 +9,7 @@
     },
     "dependencies":{
         "requirejs":"latest",
-        "wrench":"latest"
+        "wrench":"latest",
+        "handlebars":"latest"
     }
 }

@@ -11,6 +11,9 @@ define  ["cs!./Loader"], (Loader) ->
     # The internal cache
     cache = {}
 
+    # Used css classes
+    classes = {}
+
     # ## Public module members
 
     # the exported object
@@ -18,5 +21,7 @@ define  ["cs!./Loader"], (Loader) ->
       # Get a `gremlinjs/gremlins/Loader` instance
       getInstance: (namespace, cssClass) ->
         key = "#{namespace}_#{cssClass}"
+        throw new Error "Trying to use the same css class (#{cssClass}) with multiple namespaces. " if (typeof cache[key] is "undefined") and (classes[cssClass] is true)
+        classes[cssClass] = true
         cache[key] or (cache[key] = new Loader(namespace, cssClass))
 

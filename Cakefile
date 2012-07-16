@@ -36,11 +36,31 @@ task 'build', 'Compiles and minifies JavaScript file for production use', ->
 
 task 'docco', 'Building the docco files for GremlinJS', ->
   wrench = require "wrench"
-  wrench.readdirRecursive './src', (error, curFiles) ->
-    if curFiles
-      for own file in curFiles when (file.indexOf '.coffee') isnt -1
-        console.log("building documentation for #{file}")
-        exec "docco src/#{file}", (error, stdout, stderr) ->
-          console.log(stdout)
+  handlebars = require "Handlebars"
+  filesToDocco = []
+  filesFinished = 0
+  buildIndex = ->
+    if filesFinished is filesToDocco.length
+      doccos = wrench.readdirSyncRecursive "./docs"
+      doccos = doccos.filter( (file) ->
+        return (file.indexOf '.html') isnt -1
+      )
+      data = []
+      doccos.forEach (file) ->
+        data.push file: file, name: file.replace(".html","")
+      template = handlebars.compile(fs.readFileSync('./build/docco_index.html', 'utf8'));
+      result = template({files:data})
+      #fs.openSync("./docs/index.html", 'a')
+      fs.writeFileSync("./docs/index.html",result, "utf8")
 
+  files = wrench.readdirSyncRecursive "./src"
+  filesToDocco = files.filter (file) ->
+    (file.indexOf '.js') isnt -1 or (file.indexOf '.coffee') isnt -1
+
+  filesToDocco.forEach (file) ->
+    console.log("building documentation for #{file}")
+    exec "docco src/#{file}", (error, stdout, stderr) ->
+      filesFinished += 1
+      console.log stdout
+      buildIndex()
 
