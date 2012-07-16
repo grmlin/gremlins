@@ -176,13 +176,13 @@ Call this method if you changed the HTML of the gremlin and new gremlins may app
 
 A simple way to add jQuery event handler to the gremlins instance within it's context.
 
-The events object has to be of this format: `{'eventType selector':'method'}`, where the method may be a string referencing
-an instance method or a method
+The events object has to be of this format: `{'String "instanceMethod"':'String "eventType selector'}`, where the method
+has to reference an instance method of this class.
 
 #### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         events: {
-            "click div.content h1": "handleClick"
+            "handleClick": "click div.content h1"
         }
         handleClick:function () {
             alert("ouch");
@@ -195,18 +195,18 @@ an instance method or a method
 
 <span class="module-member">Object **elements**</span>
 
-Similar to the events object you can define jQuery elements in this object. It must have the format `{'selector':'name'}`,
-where name references an instance property of the gremlin.
+Similar to the events object you can define jQuery elements in this object. It must have the format `{'String instanceMember':'String selector'}`.
 
 #### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         elements: {
-            "div.content":"content"
+            "content":"div.content"
         }
         initialize:function () {
             content.html("Hello World!");
         }
     });
+
 
 
 <span class="module-member">Array **interests**</span>
