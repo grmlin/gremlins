@@ -29,6 +29,8 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory", "cs!./GremlinSwitc
   DEFAULT_GREMLIN_NAMESPACE = ""
   # css class added to every gremlin while it's loaded with requirejs
   GREMLIN_LOADING_CLASS = "gremlin-loading"
+  # css class added to every gremlin when it's created and instantiated
+  GREMLIN_READY_CLASS = "gremlin-ready"
   # array holding all gremlins in the site. These are all gremlins, independent of the loader instance
   allGremlins = []
   # ##The loader class
@@ -110,7 +112,7 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory", "cs!./GremlinSwitc
         allGremlins.push(gremlin)
         gremlin.bind gremlin.NOTIFICATION, (type, data) =>
           @load(gremlin.view) if data.interest is gremlin.CONTENT_CHANGED
-        $element.removeClass(GREMLIN_LOADING_CLASS)
+        $element.removeClass(GREMLIN_LOADING_CLASS).addClass(GREMLIN_READY_CLASS)
         Switchboard.register gremlin
         true
 

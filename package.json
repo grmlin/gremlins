@@ -1,6 +1,6 @@
 {
     "name":"GremlinJS",
-    "version":"0.3.0",
+    "version":"0.3.3",
     "main" : "./src/gremlinjs/main.coffee",
     "license": "MIT",
     "repository": {

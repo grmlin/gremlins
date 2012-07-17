@@ -26,7 +26,8 @@ define ['cs!../core/helper'], (helper) ->
         @__notify gremlin, interest, notificationData for gremlin in cache[interest]
 
     _addInterest: (gremlin, interest) ->
-      (cache[interest] = [] if helper.isUndefined cache[interest]).push gremlin
+      cache[interest] = [] if helper.isUndefined cache[interest]
+      cache[interest].push gremlin
 
     __notify: (gremlin, interest, data) ->
       gremlin.inform interest, data

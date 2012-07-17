@@ -28,8 +28,9 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
 
           # get the event type and the jquery selector
         firstWhitespace = event.indexOf(" ")
-        eventType = event.substr(0, firstWhitespace)
-        target = if event.length > firstWhitespace + 1 then event.substr(firstWhitespace + 1) else null
+        isDelegated = firstWhitespace isnt -1
+        eventType = if isDelegated then event.substr(0, firstWhitespace) else event
+        target = if isDelegated then event.substr(firstWhitespace + 1) else null
         # bind the event
         @view.on eventType, target, =>
           handler.apply(@, arguments)
@@ -62,7 +63,7 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
     # The pseudo constructor that will be called, when the instance is created. This method has to be overwritten by the
     # Gremlin class created in the lair below
     initialize: ->
-      helper.warn("Gremlin <#{@name}> does not implement an own #initialize method.")
+      #helper.warn("Gremlin <#{@name}> does not implement an own #initialize method.")
 
     # an object to store all the jquery objects the gremlin uses. The key/value pairs have to be *selector/instance property*
     # e.g.:

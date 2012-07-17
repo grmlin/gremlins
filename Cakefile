@@ -14,7 +14,7 @@ task 'build', 'Compiles and minifies JavaScript file for production use', ->
     baseUrl: './src/'
     name: 'gremlinMain'
     optimize: "uglify"
-    #    optimize: "none"
+    #optimize: "none"
     paths:
       "jquery": "../vendor/jquery-1.7.1.min"
       "cs": '../vendor/cs'
