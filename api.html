@@ -1,0 +1,541 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>api</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+/* 
+   This document has been created with Marked.app <http://markedapp.com>, Copyright 2011 Brett Terpstra
+   Please leave this notice in place, along with any additional credits below.
+   ---------------------------------------------------------------
+   Some simple Github-like styles, with syntax highlighting CSS via Pygments (requires custom processor).
+   via https://github.com/alampros/Docter
+*/
+html {
+	margin:0;
+	padding:1em;
+}
+body{
+    -webkit-font-smoothing: antialiased;
+	font: 13.34px helvetica,arial,freesans,clean,sans-serif;
+	line-height: 1.4em;
+	color: #333;
+	border: none;
+	line-height: 1.5;
+	margin: 0 auto;
+    max-width: 900px; 
+	text-align:left;
+	color:black;
+    background:#fff;
+}
+
+@media screen {
+    #wrapper { padding:9px; background:#F8F8F8;	border:1px solid #E9E9E9;}    
+    body.inverted, .inverted #wrapper {
+        color: #eee;
+        background:#333;
+        border-color:#555
+    }
+    .inverted h2 {
+        border-color:#555
+    }
+}
+h1 {
+	font-size: 170%;
+	border-top: 4px solid #aaa;
+	padding-top: .5em;
+	margin-top: 1.5em;
+}
+
+h1:first-child {
+	margin-top: 0 !important;
+	padding-top: .25em !important;
+	border-top: none !important;
+}
+
+h2 {
+	font-size: 150%;
+	margin-top: 1.5em;
+	border-top: 4px solid #e0e0e0;
+	padding-top: .5em;
+}
+
+h3 {
+	margin-top: 1em;
+}
+
+p {
+	margin: 1em 0!important;
+	line-height: 1.5em!important;
+}
+
+pre, code {
+    font: 12px 'Bitstream Vera Sans Mono','Courier',monospace;
+}
+pre {
+    -webkit-box-shadow: rgba(0, 0, 0, 0.0664062) 0px 1px 2px 0px inset;
+    background-color: #EEE;
+    border: #ddd 1px solid;
+    color: #444;
+    display: block;
+    margin: 12px 0;
+    overflow: auto;
+    padding: 5px;
+    white-space: pre;
+    max-width:100%;
+    overflow:auto;
+}
+code {
+    background-color: ghostWhite;
+    color: #444!important;
+    padding: 0 .2em;
+    border: 1px solid #DEDEDE;
+}
+pre code {
+    padding: 0!important;
+    font-size: 12px!important;
+    background-color: #EEE!important;
+    border: none!important;
+    overflow:visible;
+}
+a, a code {
+	color: #4183C4;
+	text-decoration:none;
+}
+
+table td {
+	border-bottom: 1px solid #DDD!important;
+	padding: .2em 1em!important;
+}
+
+.shadow{
+	-webkit-box-shadow:0 5px 15px #000;
+	-moz-box-shadow:0 5px 15px #000;
+	box-shadow:0 5px 15px #000;		
+}
+
+
+.c{color:#998;font-style:italic;}
+.err{color:#a61717;background-color:#e3d2d2;}
+.k{font-weight:bold;}
+.o{font-weight:bold;}
+.cm{color:#998;font-style:italic;}
+.cp{color:#999;font-weight:bold;}
+.c1{color:#998;font-style:italic;}
+.cs{color:#999;font-weight:bold;font-style:italic;}
+.gd{color:#000;background-color:#fdd;}
+.gd .x{color:#000;background-color:#faa;}
+.ge{font-style:italic;}
+.gr{color:#a00;}
+.gh{color:#999;}
+.gi{color:#000;background-color:#dfd;}
+.gi .x{color:#000;background-color:#afa;}
+.go{color:#888;}
+.gp{color:#555;}
+.gs{font-weight:bold;}
+.gu{color:#800080;font-weight:bold;}
+.gt{color:#a00;}
+.kc{font-weight:bold;}
+.kd{font-weight:bold;}
+.kn{font-weight:bold;}
+.kp{font-weight:bold;}
+.kr{font-weight:bold;}
+.kt{color:#458;font-weight:bold;}
+.m{color:#099;}
+.s{color:#d14;}
+.na{color:#008080;}
+.nb{color:#0086B3;}
+.nc{color:#458;font-weight:bold;}
+.no{color:#008080;}
+.ni{color:#800080;}
+.ne{color:#900;font-weight:bold;}
+.nf{color:#900;font-weight:bold;}
+.nn{color:#555;}
+.nt{color:#000080;}
+.nv{color:#008080;}
+.ow{font-weight:bold;}
+.w{color:#bbb;}
+.mf{color:#099;}
+.mh{color:#099;}
+.mi{color:#099;}
+.mo{color:#099;}
+.sb{color:#d14;}
+.sc{color:#d14;}
+.sd{color:#d14;}
+.s2{color:#d14;}
+.se{color:#d14;}
+.sh{color:#d14;}
+.si{color:#d14;}
+.sx{color:#d14;}
+.sr{color:#009926;}
+.s1{color:#d14;}
+.ss{color:#990073;}
+.bp{color:#999;}
+.vc{color:#008080;}
+.vg{color:#008080;}
+.vi{color:#008080;}
+.il{color:#099;}
+
+.poetry pre {
+    font-family:Georgia, Garamond, serif !important;
+    font-style:italic;
+    font-size:110% !important;
+    line-height:1.6em;
+    display:block;
+    margin-left:1em;
+}
+
+.poetry pre code {
+    font-family:Georgia, Garamond, serif !important;
+}
+
+sup,sub,a.footnote {
+	font-size: 1.4ex;
+	height: 0;
+	line-height: 1;
+	vertical-align: super;
+	position: relative;
+}
+sub {
+    vertical-align: sub;
+    top: -1px;
+}
+
+@media print {
+    body {
+        background:#fff;
+    }
+    #wrapper {
+        background: #fff;
+        border:none;
+    }
+    code {
+        background-color: #fff;
+        color: #444!important;
+        padding: 0 .2em;
+        border: 1px solid #DEDEDE;
+    }
+    pre code {
+        padding: 0!important;
+        font-size: 12px!important;
+        background-color: #fff!important;
+        border: none!important;
+        overflow:visible;
+    }
+    pre {
+        background: #fff;
+        white-space: pre-wrap;
+        white-space: pre-line;
+    }
+}
+</style>
+
+</head>
+<body class="normal">
+  <div id="wrapper">
+      <style type="text/css">
+.module-header {
+    font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
+    font-size: 1.2em;
+    color: #969648;
+    background: #fff;
+}
+.module-member {
+    font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
+    font-size: 1.2em;
+    color: #CC7833;
+}
+
+.property-name {
+    font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+</style>
+
+<h1 id="loader">Loader</h1>
+
+<p>The gremlins won&#8217;t be processed by simply including the script. You have to use the loader for that.</p>
+
+<p><span class="module-member">gremlinjs.<strong>getLoader</strong>(String <strong>namespace</strong> = &quot;&#8220;, String <strong>cssClass</strong> = &#8221;gremlin&quot;) : Loader</span></p>
+
+<p>Creates, or returns an existing, gremlin loader instance. Loader instances should <strong>always</strong> be created this way. It&#8217;s
+the only reliable way to create a single loader instance for a namespace/css class combination</p>
+
+<table>
+<tr>
+<td class="property-name">namespace</td>
+<td>The namespace tells Gremlinjs/requirejs where to look for the gremlin files. The parameter is optional and empty
+    by default.</td>
+</tr>
+<tr>
+<td class="property-name">cssClass</td>
+<td>GremlinJS uses a css class to find your gremlins inside the dom. The parameter is optional and *gremlin* by default.</td>
+</tr>
+</table>
+
+<h3 id="example">Example</h3>
+
+<pre><code>require([&quot;gremlinjs&quot;], function (gremlinjs) {
+    var loader = gremlinjs.getLoader(&quot;public/gremlins/&quot;, &quot;gremlin&quot;);
+    loader.load();
+});
+</code></pre>
+
+<p>You may ask yourself why an extra css class is needed and GremlinJS doesn&#8217;t use the gremlin-name attribute to find them.
+The answer is easy: speed. Modern browsers give you a native <code>getElementsByClassname()</code> method. Finding dom elements by attributes
+is much slower.</p>
+
+<p><strong>Take care not to use css classes for loader instances more than once. This will not work and throw an exception</strong></p>
+
+<h1 id="gremlins">Gremlins</h1>
+
+<p>GremlinJS is all about Gremlins. Whenever you have the feeling there is something that uses javascript create one</p>
+
+<ul>
+<li>Need a custom select box? Create a <code>SelectBox</code> gremlin</li>
+<li>Need a fancy tooltip? Create a <code>Tooltip</code> gremlin</li>
+<li>Need a fancy something? Create a <code>Something</code> gremlin</li>
+</ul>
+
+<p>I think it&#8217;s clear when to create gremlins: <strong>always</strong></p>
+
+<h2 id="html">HTML</h2>
+
+<p>Every HTML element is a possible gremlin.</p>
+
+<p>Add a unique css class and a name via the <code>data-gremlin-name</code> attribute to it and you are done.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>&lt;div class=&quot;gremlin&quot; data-gremlin-name=&quot;HelloWorld&quot;&gt;
+    &lt;span&gt;Loading Gremlin...&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+
+<h2 id="gremlincreation">Gremlin creation</h2>
+
+<p><span class="module-member">gremlinjs.<strong>create</strong>(String <strong>name</strong>, Object <strong>mixin</strong>) : AbstractGremlin</span></p>
+
+<p>Creates a gremlin class. It does <strong>not</strong> create an instance!
+<code>gremlinjs.create</code> is a shortcut to <a href="https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/GremlinLair.coffee#L12">GremlinLair#create</a>.</p>
+
+<p>It creates and returns a new class inherited from <a href="https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/AbstractGremlin.coffee">AbstractGremlin</a> and
+mixes <strong>mixin</strong> into the new class&#8217; prototype.</p>
+
+<table>
+<tr>
+<td class="property-name">name</td>
+<td>Pass a name into the create method. The name will be used for debugging/logging.
+</td>
+</tr>
+<tr>
+<td class="property-name">mixin</td>
+<td>The mixin describes your gremlin and may come with any property you need.
+
+    However, there are some predefined properties used by the AbstractGremlin the new gremlin inherits from, you should be aware of.
+    </td>
+</tr>
+</table>
+
+<h4 id="example">Example</h4>
+
+<pre><code>define(['gremlinjs'], function (gremlinjs) {
+    var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+        initialize:function () {
+            this.view.html(&quot;&lt;h1&gt;Hello World!&lt;/h1&gt;&quot;);
+        }
+    });
+    return HelloWorld;
+});
+</code></pre>
+
+<h2 id="creationdetails">Creation details</h2>
+
+<h3 id="initializationpseudoconstructor">Initialization / pseudo constructor</h3>
+
+<p><span class="module-member">method <strong>initialize()</strong></span></p>
+
+<p>initialize() will always be called automatically when a gremlin is instantiated. Use it as your gremlins constructor.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code> var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    initialize:function () {
+        //do constructor work here
+    }
+});
+</code></pre>
+
+<h3 id="jquerytoolkit">jQuery toolkit</h3>
+
+<p><span class="module-member">Object <strong>events</strong></span></p>
+
+<p>A simple way to delegate jQuery event handler to the gremlins instance or it&#8217;s children within it&#8217;s context.</p>
+
+<p>The events object has to be of this format: <code>{'String &quot;instanceMethod&quot;':'String &quot;eventType selector'}</code>, where the method
+has to reference an instance method of this class.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    events: {
+        &quot;handleClick&quot;: &quot;click div.content h1&quot;
+    }
+    handleClick:function () {
+        alert(&quot;ouch&quot;);
+    }
+});
+</code></pre>
+
+<p>Omitting the target selector, the gremlin&#8217;s main dom element (<code>this.view</code>) will be used as a target</p>
+
+<pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    events: {
+        &quot;handleClick&quot;: &quot;click&quot;
+    }
+    handleClick:function () {
+        alert(&quot;ouch&quot;);
+    }
+});
+</code></pre>
+
+<p><span class="module-member">Object <strong>elements</strong></span></p>
+
+<p>Similar to the events object you can define jQuery elements in this object. It must have the format <code>{'String instanceMember':'String selector'}</code>.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    elements: {
+        &quot;content&quot;:&quot;div.content&quot;
+    }
+    initialize:function () {
+        content.html(&quot;Hello World!&quot;);
+    }
+});
+</code></pre>
+
+<p><span class="module-member">jQuery <strong>view</strong></span></p>
+
+<p>jQuery object of the gremlin&#8217;s dom element</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    initialize:function () {
+        this.view.html(&quot;Hello World!&quot;);
+    }
+});
+</code></pre>
+
+<h3 id="settinggremlinoptions">Setting Gremlin Options</h3>
+
+<p><span class="module-member">Object <strong>data</strong></span></p>
+
+<p>Every gremlin automatically provides data-attributes to it&#8217;s instance with the <a href="#gremlin.data"><code>data</code></a> property.
+All custom data-attributes you add to your gremlins tag can be found in there.</p>
+
+<h5 id="example">Example</h5>
+
+<pre><code>&lt;div class=&quot;gremlin&quot; data-gremlin-name=&quot;HelloWorld&quot; data-foo=&quot;bar&quot;&gt;
+    &lt;span&gt;Loading Gremlin...&lt;/span&gt;
+&lt;/div&gt;
+
+
+var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    initialize:function () {
+        console.log(this.data.foo);//bar
+    }
+});
+</code></pre>
+
+<p>see <a href="http://api.jquery.com/data/#data-html5">jQuery API</a> for more details</p>
+
+<h1 id="gremlinjsmodules">GremlinJS modules</h1>
+
+<h3 id="readonlyinstanceproperties">&#8220;read only&#8221; instance properties</h3>
+
+<p><strong>Use but never overwrite them! For performance reasons I didn&#8217;t include any tests to prevent someone from doing so.</strong></p>
+
+<p><span id="gremlin.data" class="module-member">Object <strong>data</strong></span></p>
+
+<p>If you add custom data-attributes to the dom element, you&#8217;ll find them in here.
+<code>data</code> is the result of <code>view.data()</code> method without any parameters. (see the jQuery data doc for more information)</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>var attr = this.data.myAttribute; // value of data-my-attribute
+</code></pre>
+
+<p><span class="module-member">Number <strong>id</strong></span></p>
+
+<p>A unique ID bound to every gremlin. This ID stays unique through multiple Loader instances.
+IDs may be useful, if you have to add an dynamically generated ID to the dom element.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>this.view.attr(&quot;id&quot;,this.id);
+</code></pre>
+
+<p><span class="module-member">method <strong>chatter(interest,notificationData = {})</strong></span></p>
+
+<p>Publish an event/interest/notification. The method expects the interest and an optional notification data object.</p>
+
+<p>See <code>interests</code> for more details.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>this.chatter(&quot;OUCH&quot;,{foo:&quot;bar&quot;});
+</code></pre>
+
+<p><span class="module-member">method <strong>triggerChange()</strong></span></p>
+
+<p>Call this method if you changed the HTML of the gremlin and new gremlins may appear. GremlinJS will search for them this way!</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>this.view.html(content);
+this.triggerChange();
+</code></pre>
+
+<hr />
+
+<h3 id="rewritableinstanceproperties">&#8220;rewritable&#8221; instance properties</h3>
+
+<p><span class="module-member">Array <strong>interests</strong></span></p>
+
+<p>Some words on notifications. There may be circumstances where you need two gremlins to communicate with each other.
+Notifications are a way to do this respecting the lose coupled nature of GremlinJS.</p>
+
+<p>Every gremlin can use <code>chatter()</code> to publish a notification. All other gremlins listing the interest name in their <code>interests</code>
+array will be informed of the event as <code>inform()</code> is called.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    interests: [&quot;FOO&quot;, &quot;BAR&quot;]
+ });
+</code></pre>
+
+<p><span class="module-member">method <strong>inform(interest, notificationData)</strong></span></p>
+
+<p><code>inform</code> is called, when a gremlin in the site published a notification, the gremlin is interested in (see <code>interests</code>)</p>
+
+<p>Both the interest and the notification data are passed into the inform method.</p>
+
+<h4 id="example">Example</h4>
+
+<pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
+    interests: [&quot;FOO&quot;, &quot;BAR&quot;]
+    inform:function (interest, data) {
+        console.log(interest);//FOO or BAR
+    }
+});
+</code></pre>
+
+    </div>
+</body>
+</html>
