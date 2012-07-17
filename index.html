@@ -479,6 +479,14 @@ Change the requirejs configuration wherever you want. Here it's done inside the 
 <![endif]-->
 
 <script data-main="js/main" src="js/require.js"></script>
-
+<script type="text/javascript">
+    require.config({
+        baseUrl : "./",
+        paths : {
+            "jquery" : "js/jquery-1.7.1.min",
+            "gremlinjs" : "js/gremlin.min"
+        }
+    });
+</script>
 </body>
 </html>
