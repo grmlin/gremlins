@@ -1,12 +1,12 @@
 require.config({
-    baseUrl : "./",
+    //baseUrl : "./",
     paths : {
-        "jquery" : "js/jquery-1.7.1.min",
-        "gremlinjs" : "js/gremlin.min"
+        "jquery" : "jquery-1.7.1.min",
+        "gremlinjs" : "gremlin.min"
     }
 });
 
 require(["gremlinjs"], function (gremlinjs) {
     'use strict';
-    gremlinjs.getLoader("js/gremlins/").load();
+    gremlinjs.getLoader("gremlins/").load();
 });
