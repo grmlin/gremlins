@@ -1,5 +1,5 @@
 /*global define, window, screen, document*/
-define(['jquery', 'gremlinjs','gremlinjs/core/helper', './navigation/NavigationItem'], function ($, gremlinjs, helper, NavigationItem) {
+define(['jquery', 'gremlinjs', 'gremlinjs/core/helper', './navigation/NavigationItem'], function ($, gremlinjs, helper, NavigationItem) {
     'use strict';
 
 
@@ -11,10 +11,10 @@ define(['jquery', 'gremlinjs','gremlinjs/core/helper', './navigation/NavigationI
         SCROLL_TO_FILL = SCROLL_PUFFER - 80,
         Navigation = gremlinjs.create("Navigation", {
             elements : {
-                ".jumper" : "_$navigationItems",
-                ".scroll-mark" : "_$marker",
-                ".scroll-mark > div" : "_$markerHighlight",
-                ".progress" : "_$progress"
+                "_$navigationItems" : ".jumper",
+                "_$marker" : ".scroll-mark",
+                "_$markerHighlight" : ".scroll-mark > div",
+                "_$progress" : ".progress"
             },
             events : {
             },
