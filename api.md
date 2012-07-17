@@ -9,6 +9,8 @@
     font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
     font-size: 1.2em;
     color: #8A9B0F;
+    display: inline-block;
+    padding-top: 30px;
 }
 
 .property-name {
@@ -112,8 +114,7 @@ mixes **mixin** into the new class' prototype.
         return HelloWorld;
     });
 
-## Creation details
-### Initialization / pseudo constructor
+## Initialization / pseudo constructor
 <span class="module-member">method **initialize()**</span>
 
 initialize() will always be called automatically when a gremlin is instantiated. Use it as your gremlins constructor.
@@ -126,19 +127,7 @@ initialize() will always be called automatically when a gremlin is instantiated.
         }
     });
 
-<span class="module-member">Number **id**</span> <sup class="read-only">read-only</sup>
-
-A unique ID bound to every gremlin. This ID stays unique through multiple Loader instances.
-IDs may be useful, if you have to add an dynamically generated ID to the dom element.
-
-#### Example
-    var HelloWorld = gremlinjs.create("HelloWorld", {
-        initialize:function () {
-           this.view.attr("id",this.id);
-        }
-    });
-
-### jQuery toolkit
+## jQuery toolkit
 
 <span class="module-member">jQuery **view**</span> <sup class="read-only">read-only</sup>
 
@@ -194,7 +183,7 @@ Similar to the events object you can define jQuery elements in this object. It m
         }
     });
 
-### Setting Gremlin Options
+## Setting Gremlin Options
 <span class="module-member">Object **data**</span> <sup class="read-only">read-only</sup>
 
 Every gremlin automatically provides data-attributes to it's instance with the [`data`](#gremlin.data) property.
@@ -214,10 +203,10 @@ All custom data-attributes you add to your gremlins tag can be found in there.
 
 see [jQuery API](http://api.jquery.com/data/#data-html5) for more details
 
-### Notifications
+## Notifications
 
 Inspired by the notifications used in PureMVC, gremlin instances can trigger and catch notifications/events. This is build
-in and you only have to
+in and all you have to do is:
 
 * define interests, events the gremlin will be informed of
 * implement the inform-method called when notifications are incoming
@@ -297,7 +286,19 @@ Both the interest and the notification data are  passed into the inform method.
     });
 
 
-### MISC
+## MISC
+<span class="module-member">Number **id**</span> <sup class="read-only">read-only</sup>
+
+A unique ID bound to every gremlin. This ID stays unique through multiple Loader instances.
+IDs may be useful, if you have to add an dynamically generated ID to the dom element.
+
+#### Example
+    var HelloWorld = gremlinjs.create("HelloWorld", {
+        initialize:function () {
+           this.view.attr("id",this.id);
+        }
+    });
+
 <span class="module-member">method **triggerChange()**</span>
 
 Call this method if you changed the HTML of the gremlin and new gremlins may appear in it.
