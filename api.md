@@ -22,8 +22,9 @@ GremlinJS is all about Gremlins. Whenever you have the feeling there is somethin
 I think it's clear when to create gremlins: **always**
 
 # HTML
-Every HTML-tag is a possible gremlin.
+Every HTML element is a possible gremlin.
 
+## Markup
 Add a unique css class and a name via the `data-gremlin-name` attribute to it and you are done.
 
 #### Example
@@ -32,7 +33,7 @@ Add a unique css class and a name via the `data-gremlin-name` attribute to it an
         <span>Loading Gremlin...</span>
     </div>
 
-### options
+## Options
 Every gremlin will have a [`data`](#gremlin.data) instance property. All custom data-attributes you add to your gremlins
 tag can be found in there.
 
@@ -45,6 +46,9 @@ tag can be found in there.
 ###### Javascript
     this.data.foo === "bar"; //true
 
+# Loader
+
+The gremlins won't be processed by simply including the script. You have to load them with the
 
 # GremlinJS modules
 
