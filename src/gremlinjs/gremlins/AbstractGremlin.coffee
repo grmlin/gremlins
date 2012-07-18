@@ -19,22 +19,23 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
     unless @events is null
       # iterate over all given events
       for own handlerName, event of @events
-        throw new TypeError "Event handler have to be referenced by strings!" unless (helper.isString(handlerName) and helper.isString(event))
+        do (handlerName, event) =>
+          throw new TypeError "Event handler have to be referenced by strings!" unless (helper.isString(handlerName) and helper.isString(event))
 
-        if helper.isFunction @[handlerName]
-          handler = @[handlerName]
-        else
-          throw new TypeError "Event '#{event}' can't be bound to '#{@name}.#{handlerName}', as the type is " + typeof @[handlerName]
+          if helper.isFunction @[handlerName]
+            handler = @[handlerName]
+          else
+            throw new TypeError "Event '#{event}' can't be bound to '#{@name}.#{handlerName}', as the type is " + typeof @[handlerName]
 
-          # get the event type and the jquery selector
-        firstWhitespace = event.indexOf(" ")
-        isDelegated = firstWhitespace isnt -1
-        eventType = if isDelegated then event.substr(0, firstWhitespace) else event
-        target = if isDelegated then event.substr(firstWhitespace + 1) else null
-        # bind the event
-        @view.on eventType, target, =>
-          handler.apply(@, arguments)
-          true
+            # get the event type and the jquery selector
+          firstWhitespace = event.indexOf(" ")
+          isDelegated = firstWhitespace isnt -1
+          eventType = if isDelegated then event.substr(0, firstWhitespace) else event
+          target = if isDelegated then event.substr(firstWhitespace + 1) else null
+          # bind the event
+          @view.on eventType, target, =>
+            handler.apply(@, arguments)
+            true
       true
 
   # the Abstract gremlin class
