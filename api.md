@@ -5,10 +5,15 @@
     color: #969648;
     background: #fff;
 }
+.toc-code a {
+   font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
+   color: rgb(255,185,250);
+   text-decoration: none;
+}
 .module-member {
     font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
     font-size: 1.2em;
-    color: #8A9B0F;
+    color: rgb(255,185,250);
     display: inline-block;
     padding-top: 30px;
 }
@@ -17,6 +22,7 @@
     font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
     font-size: 1.1em;
     font-weight: bold;
+
 }
 
 .read-only {
@@ -25,11 +31,43 @@
 }
 </style>
 
+[Loader](#loader)
+
+
+* <span class="toc-code">[gremlinjs.getLoader()](#getloader)</span>
+
+---
+
+[Gremlins](#gremlins)
+
+
+* [HTML](#html)
+* [Gremlin creation](#gremlincreation)
+    * <span class="toc-code">[gremlinjs.create()](#create)</span>
+* [Initialization / pseudo constructor](#initializationpseudoconstructor)
+    * <span class="toc-code">[this.initialize()](#initialize)</span>
+* [jQuery toolkit](#jquerytoolkit)
+    * <span class="toc-code">[this.view](#view)</span>
+    * <span class="toc-code">[this.events](#events)</span>
+    * <span class="toc-code">[this.elements](#elements)</span>
+* [Setting gremlin options](#settinggremlinoptions)
+    * <span class="toc-code">[this.data](#data)</span>
+* [Notifications](#notifications)
+    * <span class="toc-code">[this.interests](#interests)</span>
+    * <span class="toc-code">[this.chatter()](#chatter)</span>
+    * <span class="toc-code">[this.inform()](#inform)</span>
+* [MISC](#misc)
+    * <span class="toc-code">[this.id](#id)</span>
+    * <span class="toc-code">[this.triggerChange()](#triggerChange)</span>
+
+
+---
+
 # Loader
 
 The gremlins won't be processed by simply including the script. You have to use the loader for that.
 
-<span class="module-member">gremlinjs.**getLoader**(String **namespace** = "", String **cssClass** = "gremlin") : Loader</span>
+<span id="getloader" class="module-member">gremlinjs.**getLoader**(String **namespace** = "", String **cssClass** = "gremlin") : Loader</span>
 
 Creates, or returns an existing, gremlin loader instance. Loader instances should **always** be created this way. It's
 the only reliable way to create a single loader instance for a namespace/css class combination
@@ -80,7 +118,8 @@ Add a unique css class and a name via the `data-gremlin-name` attribute to it an
 
 
 ## Gremlin creation
-<span class="module-member">gremlinjs.**create**(String **name**, Object **mixin**) : AbstractGremlin</span>
+
+<span id="create" class="module-member">gremlinjs.**create**(String **name**, Object **mixin**) : AbstractGremlin</span>
 
 Creates a gremlin class. It does **not** create an instance!
 `gremlinjs.create` is a shortcut to [GremlinLair#create](https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/GremlinLair.coffee#L12).
@@ -115,7 +154,7 @@ mixes **mixin** into the new class' prototype.
     });
 
 ## Initialization / pseudo constructor
-<span class="module-member">method **initialize()**</span>
+<span id="initialize" class="module-member">method **initialize()**</span>
 
 initialize() will always be called automatically when a gremlin is instantiated. Use it as your gremlins constructor.
 
@@ -129,7 +168,7 @@ initialize() will always be called automatically when a gremlin is instantiated.
 
 ## jQuery toolkit
 
-<span class="module-member">jQuery **view**</span> <sup class="read-only">read-only</sup>
+<span id="view" class="module-member">jQuery **view**</span> <sup class="read-only">read-only</sup>
 
 jQuery object of the gremlin's dom element
 
@@ -140,7 +179,7 @@ jQuery object of the gremlin's dom element
         }
     });
 
-<span class="module-member">Object **events**</span>
+<span id="events" class="module-member">Object **events**</span>
 
 A simple way to delegate jQuery event handler to the gremlins instance or it's children within it's context.
 
@@ -169,7 +208,7 @@ Omitting the target selector, the gremlin's main dom element (`this.view`) will 
     });
 
 
-<span class="module-member">Object **elements**</span>
+<span id="elements" class="module-member">Object **elements**</span>
 
 Similar to the events object you can define jQuery elements in this object. It must have the format `{'String instanceMember':'String selector'}`.
 
@@ -184,7 +223,7 @@ Similar to the events object you can define jQuery elements in this object. It m
     });
 
 ## Setting Gremlin Options
-<span class="module-member">Object **data**</span> <sup class="read-only">read-only</sup>
+<span id="data" class="module-member">Object **data**</span> <sup class="read-only">read-only</sup>
 
 Every gremlin automatically provides data-attributes to it's instance with the [`data`](#gremlin.data) property.
 All custom data-attributes you add to your gremlins tag can be found in there.
@@ -212,7 +251,7 @@ in and all you have to do is:
 * implement the inform-method called when notifications are incoming
 * trigger the chatter-method if your gremlin has something to say
 
-<span class="module-member">Array **interests**</span>
+<span id="interests" class="module-member">Array **interests**</span>
 
 List of all interests. If any gremlin triggers on of the events in the list, `inform` will be called.
 
@@ -221,7 +260,7 @@ List of all interests. If any gremlin triggers on of the events in the list, `in
         interests: ["FOO", "BAR"]
      });
 
-<span class="module-member">method **chatter**(String **interest**, Object **notificationData** = {})</span> <sup class="read-only">read-only</sup>
+<span id="chatter" class="module-member">method **chatter**(String **interest**, Object **notificationData** = {})</span> <sup class="read-only">read-only</sup>
 
 Publish an event/interest/notification. The method expects the interest and an optional notification data object.
 
@@ -246,7 +285,7 @@ Publish an event/interest/notification. The method expects the interest and an o
         this.chatter("OUCH",{foo:"bar"});
     }
 
-<span class="module-member">method **inform**(**interest**, **notificationData**)</span>
+<span id="inform" class="module-member">method **inform**(**interest**, **notificationData**)</span>
 
 `inform` is called, when a gremlin in the site published a notification, the gremlin is interested in (see `interests`)
 
@@ -287,7 +326,7 @@ Both the interest and the notification data are  passed into the inform method.
 
 
 ## MISC
-<span class="module-member">Number **id**</span> <sup class="read-only">read-only</sup>
+<span id="id" class="module-member">Number **id**</span> <sup class="read-only">read-only</sup>
 
 A unique ID bound to every gremlin. This ID stays unique through multiple Loader instances.
 IDs may be useful, if you have to add an dynamically generated ID to the dom element.
@@ -299,7 +338,7 @@ IDs may be useful, if you have to add an dynamically generated ID to the dom ele
         }
     });
 
-<span class="module-member">method **triggerChange()**</span>
+<span id="triggerChange" class="module-member">method **triggerChange()**</span>
 
 Call this method if you changed the HTML of the gremlin and new gremlins may appear in it.
 
