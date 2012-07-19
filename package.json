@@ -10,6 +10,7 @@
     "dependencies":{
         "requirejs":"latest",
         "wrench":"latest",
-        "handlebars":"latest"
+        "handlebars":"latest",
+        "colors": "*"
     }
 }
