@@ -106,7 +106,7 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory", "cs!./GremlinSwitc
       # Call the factory and request a new gremlin
       GremlinFactory.createGremlin name, $element, (gremlin) =>
         # - Add the gremlin to the stack
-        # - listen to the content change event of each gremlin and reload the gremlins view when it fires
+        # - listen to the content change event of each gremlin and rescan the gremlins view for gremlins when it fires
         # - gremlin is loaded now, remove the loading css class
         # - register the gremlin in the switchboard for notifications
         allGremlins.push(gremlin)

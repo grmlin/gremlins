@@ -8,10 +8,11 @@ page.onConsoleMessage = (msg) ->
     # Exit when finished
     obj = JSON.parse msg.substr 9
     phantom.exit 0 if obj.name is 'done'
-
+  else
+    console.log("NON-Phantom: " + msg)
   return
 
-page.open "test/index.html", (status) ->
+page.open "http://grmlin-test:8888/test/index.html", (status) ->
   if status isnt "success"
     window.console.error "Could not open page"
     phantom.exit 1

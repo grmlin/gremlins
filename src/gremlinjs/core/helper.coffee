@@ -60,4 +60,6 @@ define ->
       console.warn.apply(console,arguments) if exports.isObject(console) and exports.isFunction(console.warn)
     # mix an object literal into a class/constructor function
     mixin: (targetClass, mixinObject) ->
+      throw new TypeError "target has to be a (constructor) function. Only prototypes will be extended" if (not exports.isFunction(targetClass))
+      throw new TypeError "object has to be used to extend prototype" if (not exports.isObject(mixinObject))
       extend targetClass::, mixinObject

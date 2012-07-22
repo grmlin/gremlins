@@ -8,8 +8,9 @@ catch error
   console.error 'Please run `npm install` first'
   process.exit 1
 
+option '-t', '--test [YESNO]', 'running test when building gremlinjs'
 
-task 'build', 'Compiles and minifies JavaScript file for production use', ->
+task 'build', 'Compiles and minifies JavaScript file for production use', (options) ->
   console.log "Compiling CoffeeScript"
   requirejs = require 'requirejs'
   packageInfo =  JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf8'))
@@ -40,7 +41,8 @@ task 'build', 'Compiles and minifies JavaScript file for production use', ->
 
   requirejs.optimize config, (buildResponse) ->
     console.log(buildResponse)
-#contents = fs.readFileSync(config.out, 'utf8')
+    exec "cp -f build/gremlinjs/gremlin-#{version}.min.js build/gremlinjs/gremlin.min.js", (error, stdout, stderr) ->
+      invoke "test" unless options.test is "no"
 
 task 'docco', 'Building the docco files for GremlinJS', ->
   wrench = require "wrench"
@@ -62,6 +64,7 @@ task 'docco', 'Building the docco files for GremlinJS', ->
       #fs.openSync("./docs/index.html", 'a')
       fs.writeFileSync("./docs/index.html", result, "utf8")
 
+  wrench.rmdirSyncRecursive('docs');
   files = wrench.readdirSyncRecursive "./src"
   filesToDocco = files.filter (file) ->
     (file.indexOf '.js') isnt -1 or (file.indexOf '.coffee') isnt -1
@@ -83,6 +86,7 @@ task 'test', 'Run tests via phantomJS', ->
   # Disable web security so we don't have to run a server on localhost for AJAX
   # calls
   console.log "Running unit tests via PhantomJS".yellow
+  console.log "Testing current minified build of gremlinjs! Run cake build first if there is none.".bold.cyan
   p = exec "phantomjs test/lib/phantom-driver.coffee --web-security=no"
   p.stderr.on 'data', stdErrorStreamer (data) -> data.red
   # The phantom driver outputs JSON

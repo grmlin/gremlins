@@ -1,6 +1,6 @@
 define([
-    "lib/gremlinjs/core/helper",
-    "lib/gremlinjs/event/EventDispatcher"
+    "gremlinjs/core/helper",
+    "gremlinjs/event/EventDispatcher"
 ], function (helper, EventDispatcher) {
     return function () {
         module("gremlinjs/event/EventDispatcher");
@@ -11,11 +11,12 @@ define([
         var EVENT = "anEvent";
         stop();
         asyncTest("event dispatches", function () {
-            expect(2);
+            expect(3);
             var observed = new MyDispatcher();
-            observed.bind(EVENT, function (event) {
+            observed.bind(EVENT, function (event, data) {
                 ok(true, "Event was catched");
-                equal(event.foo, 'bar', "Event object passed in correctly");
+                equal(event, EVENT, "Event type correct");
+                equal(data.foo, 'bar', "Event object passed in correctly");
                 start();
             });
             observed.dispatch(EVENT, {
