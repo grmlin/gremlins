@@ -23,7 +23,7 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
     unless @events is null
       for own handlerName, event of @events
         do (handlerName, event) =>
-          throw new TypeError "Event handler have to be referenced by strings!" unless (helper.isString(handlerName) and helper.isString(event))
+          throw new TypeError "Event selectors have to be referenced by strings!" unless (helper.isString(event))
 
           if helper.isFunction @[handlerName]
             handler = @[handlerName]

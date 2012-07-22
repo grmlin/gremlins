@@ -55,7 +55,6 @@ define([
             });
             g = new G($('<div></div>'), {}, 1);
         });
-
         test("jquery elements are bound", function () {
             var g, G = Lair.create("aname", {
                 elements : {
@@ -96,14 +95,26 @@ define([
             }, "element member must not be defined");
         });
         asyncTest("jquery events are bound", function () {
-            var g, G = Lair.create("aname", {
+            var g, G;
+
+            G = Lair.create("aname", {
                 events : {
-                    "handle1" : "click .foo",
+                    "handle1" : "click .foo"
                 }
             });
             throws(function () {
                 g = new G($('<div></div>'), {}, 1);
             }, "event handlers have to be defined");
+
+            G = Lair.create("aname", {
+                events : {
+                    "handle1" : function () {
+                    }
+                }
+            });
+            throws(function () {
+                g = new G($('<div></div>'), {}, 1);
+            }, "event selectors have to be referenced by strings");
 
             G = Lair.create("aname", {
                 elements : {
@@ -119,11 +130,13 @@ define([
                     this.foo.append('<span id="foobar" class="foobar"></span>');
                 },
                 handleSelf : function (e) {
+                    ok(this instanceof G, "context bound to gremlin instance");
                     strictEqual(e.currentTarget.id, this.view.attr("id"), "view clicked");
                     this.foo.click();
                 },
                 handle1 : function (e) {
                     e.stopPropagation();
+                    ok(this instanceof G, "context bound to gremlin instance");
                     strictEqual(e.currentTarget.id, this.foo.attr("id"), "#foo clicked");
                     this.view.find('.bar').keyup();
                 },
