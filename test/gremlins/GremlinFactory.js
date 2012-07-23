@@ -1,26 +1,24 @@
 define([
     "jquery",
-    "lib/gremlinjs/gremlins/GremlinFactory"
+    "gremlinjs/gremlins/GremlinFactory"
 ], function ($, factory) {
     return function () {
         module("gremlinjs/gremlins/GremlinFactory");
         asyncTest("creates gremlins", 2, function () {
-            var container = document.createElement("div");
-            factory.createGremlin("test/_gremlinClasses/test", $(container), function (gremlin) {
+            factory.createGremlin("_gremlinClasses/test", $('<div>foo</div>'), function (gremlin) {
                 ok(true, "gremlin loaded!");
-                strictEqual(gremlin.foo, "bar", "Gremlin created");
+                strictEqual(gremlin.view.text(), "foo", "Gremlin created");
                 start();
             });
         });
         asyncTest("Fails, if the gremlin returned isn't a function", 2, function () {
-            var container = document.createElement("div");
-            var gremlinName = "test/_gremlinClasses/test_fail";
-            factory.createGremlin(gremlinName, $(container), function (gremlin) {
-            }, function (name, message) {
-                ok(true, "creating a non function gremlin failed");
-                strictEqual(name, gremlinName);
-                start();
+            factory.createGremlin("_gremlinClasses/test_fail", $('<div></div>'), function (gremlin) {
             });
+            factory.error = function (name) {
+                ok(true, "create error fetched.");
+                strictEqual(name, "_gremlinClasses/test_fail", "the correct gremlin failed");
+                start();
+            };
         });
 
     }

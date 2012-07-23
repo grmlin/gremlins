@@ -3,7 +3,8 @@ require([
     "gremlinjs",//include gremlinjs once so we have no dependency trouble later
     "core/helper.js",
     "event/EventDispatcher",
-    "gremlins/GremlinLair"
+    "gremlins/GremlinLair",
+    "gremlins/GremlinFactory"
 ], function () {
     for (var i = 1, l=arguments.length;i<l;i+=1){
         arguments[i]()
@@ -13,7 +14,7 @@ require([
 require([
     "test/core/helper",
     "test/event/EventDispatcher",
-    "test/gremlins/GremlinFactory",
+
     "test/gremlins/Loader"
 ], function () {
     QUnit.start();
