@@ -4,7 +4,7 @@
 # The gremlin's lair. All gremlins should be created with this
 
 # define the requirejs module
-define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispatcher) ->
+define ['cs!../core/helper', 'cs!../event/EventDispatcher', "cs!./GremlinSwitchboard"], (helper, EventDispatcher, Switchboard) ->
   # ### private members
 
   # add all jquery elements to the instance
@@ -64,10 +64,17 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
     # * `data` - the `view`'s data object obtained with `view.data()`
     # * `id` - a unique id assigned to this gremlin instance
     #
+    # than
+    #
+    # * jQuery elements and events are bound
+    # * interests list is prepared
+    # * the gremlin is registered in the Switchboard
+    # * the pseudo constructor is called
     constructor: (@view, @data, @id) ->
       _addElements.call @, @elements
       _addEvents.call @, @events
       @interests = [] if @interests is null
+      Switchboard.register @
       @initialize()
 
     # #### public members
@@ -102,7 +109,7 @@ define ['cs!../core/helper', 'cs!../event/EventDispatcher'], (helper, EventDispa
 
     # Trigger the content change event of a gremlin
     triggerChange: ->
-      @chatter AbstractGremlin.CONTENT_CHANGED
+      @chatter @CONTENT_CHANGED
 
   helper.mixin AbstractGremlin, EventDispatcher
 

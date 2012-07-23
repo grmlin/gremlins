@@ -8,7 +8,7 @@
 #
 
 #including jquery, helper, GremlinFactory and gremlinEvents
-define(['jquery', "cs!../core/helper", "cs!./GremlinFactory", "cs!./GremlinSwitchboard"], ($, helper, GremlinFactory, Switchboard) ->
+define(['jquery', "cs!../core/helper", "cs!./GremlinFactory"], ($, helper, GremlinFactory) ->
   # ##Private module members
 
   # a unique id for every loader instance
@@ -108,12 +108,11 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory", "cs!./GremlinSwitc
         # - Add the gremlin to the stack
         # - listen to the content change event of each gremlin and rescan the gremlins view for gremlins when it fires
         # - gremlin is loaded now, remove the loading css class
-        # - register the gremlin in the switchboard for notifications
         allGremlins.push(gremlin)
         gremlin.bind gremlin.NOTIFICATION, (type, data) =>
           @load(gremlin.view) if data.interest is gremlin.CONTENT_CHANGED
         $element.removeClass(GREMLIN_LOADING_CLASS).addClass(GREMLIN_READY_CLASS)
-        Switchboard.register gremlin
+
         true
 
     # Handle window scrolling for the lazy loaded gremlins

@@ -154,6 +154,85 @@ define([
             g = new G($('<div id="me"><span id="foo" class="foo"></span><span id="bar" class="bar"></span></div>'), {}, 1);
             g.view.click();
         });
+        asyncTest("Interests", function () {
+            var N_1 = "n1",
+                N_2 = "n2",
+                N_3 = "n3",
+                N_4 = "n4",
+                n1 = false,
+                n2 = false,
+                n3 = false,
+                n4 = false,
+                G1 = Lair.create("g1", {
+                    interests : [N_1, N_2, N_3],
+                    inform : function (type, data) {
+                        switch (type) {
+                            case N_1:
+                                n1 = true;
+                                strictEqual(data.foo, "bar", "interest 1 catched");
+                                g2.two();
+                                break;
+                            case N_2:
+                                n2 = true;
+                                strictEqual(data.bar, "foo", "interest 2 catched");
+                                g2.three();
+                                break;
+                            case N_3:
+                                n3 = true;
+                                strictEqual(data.foobar, "barfoo", "interest 3 catched");
+                                this.chatter(N_4, {foo : "bar"});
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }),
+                G2 = Lair.create("g2", {
+                    interests : [N_4],
+                    inform : function (type, data) {
+                        switch (type) {
+                            case N_4:
+                                n4 = true;
+                                strictEqual(data.foo, "bar", "interest 4 catched");
+                                ok(n1 && n2 && n3 && n4, "all notifications arrived");
+                                start();
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    one : function () {
+                        this.chatter(N_1, {foo : "bar"});
+                    },
+                    two : function () {
+                        this.chatter(N_2, {bar : "foo"});
+                    },
+                    three : function () {
+                        this.chatter(N_3, {foobar : "barfoo"});
+
+                    }
+                });
+            g1 = new G1($('<div></div>'), {}, 2);
+            g2 = new G2($('<div></div>'), {}, 3);
+            g2.one();
+
+        });
+        asyncTest("html change event available", 2, function () {
+            var G = Lair.create("g", {
+                    foo : function () {
+                        this.view.text("bar");
+                        this.triggerChange();
+                    }
+                }),
+                g = new G($('<div></div>'), {}, 4);
+            g.bind(g.NOTIFICATION, function (type, data) {
+                strictEqual("bar", g.view.text(), "Content changed to bar");
+                strictEqual(data.interest, g.CONTENT_CHANGED, "correct event triggered");
+                start();
+            });
+            g.foo();
+
+        });
     }
 
 });
