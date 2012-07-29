@@ -50,20 +50,20 @@
 * [Gremlin creation](#gremlincreation)
     * <span class="toc-code">[gremlinjs.create()](#create)</span>
 * [Initialization / pseudo constructor](#initializationpseudoconstructor)
-    * <span class="toc-code">[this.initialize()](#initialize)</span>
+    * <span class="toc-code">[\<g\>.initialize()](#initialize)</span>
 * [jQuery toolkit](#jquerytoolkit)
-    * <span class="toc-code">[this.view](#view)</span>
-    * <span class="toc-code">[this.events](#events)</span>
-    * <span class="toc-code">[this.elements](#elements)</span>
+    * <span class="toc-code">[\<g\>.view](#view)</span>
+    * <span class="toc-code">[\<g\>.events](#events)</span>
+    * <span class="toc-code">[\<g\>.elements](#elements)</span>
 * [Setting gremlin options](#settinggremlinoptions)
-    * <span class="toc-code">[this.data](#data)</span>
+    * <span class="toc-code">[\<g\>.data](#data)</span>
 * [Notifications](#notifications)
-    * <span class="toc-code">[this.interests](#interests)</span>
-    * <span class="toc-code">[this.chatter()](#chatter)</span>
-    * <span class="toc-code">[this.inform()](#inform)</span>
+    * <span class="toc-code">[\<g\>.interests](#interests)</span>
+    * <span class="toc-code">[\<g\>.chatter()](#chatter)</span>
+    * <span class="toc-code">[\<g\>.inform()](#inform)</span>
 * [MISC](#misc)
-    * <span class="toc-code">[this.id](#id)</span>
-    * <span class="toc-code">[this.triggerChange()](#triggerChange)</span>
+    * <span class="toc-code">[\<g\>.id](#id)</span>
+    * <span class="toc-code">[\<g\>.triggerChange()](#triggerChange)</span>
 
 
 ---
