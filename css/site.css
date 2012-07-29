@@ -330,7 +330,7 @@ nav.detached .belt .progress {
     -moz-transition: -moz-box-shadow 350ms ease-out;
     -o-transition: box-shadow 350ms ease-out;
     transition: box-shadow 350ms ease-out;
-    border: 2px solid #f5f5f5;
+    border: 2px solid #fff;
 
 }
 
@@ -342,7 +342,7 @@ nav.detached .belt .progress {
     padding-top: 100px;
     margin-right: 400px;
     z-index: 2;
-    border-color: #f5f5f5;
+    border-color: #fff;
     -webkit-box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.3);
     box-shadow: 2px 0px 5px 0px rgba(0, 0, 0, 0.3);
