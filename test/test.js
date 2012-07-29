@@ -4,7 +4,10 @@ require([
     "core/helper.js",
     "event/EventDispatcher",
     "gremlins/GremlinLair",
-    "gremlins/GremlinFactory"
+    "gremlins/GremlinFactory",
+    "gremlins/GremlinSwitchboard",
+    "gremlins/LoaderPool",
+    "gremlins/Loader"
 ], function () {
     for (var i = 1, l=arguments.length;i<l;i+=1){
         arguments[i]()

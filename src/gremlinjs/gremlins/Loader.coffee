@@ -39,7 +39,6 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory"], ($, helper, Greml
 
   # Constructor function used for the Loader. It's conststructed with an optional namespace and optional css class
     constructor: (@_namespace = DEFAULT_GREMLIN_NAMESPACE, @_gremlinCssClass = DEFAULT_GREMLIN_CSS_CLASS) ->
-      throw new Error("gremlinjs.gremlins.Loader#Loader Missing new. The Loader is a constructor function.") unless @ instanceof Loader
       @_lazyLoadQueue = []
       this._bindLazyLoading()
 
@@ -72,6 +71,7 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory"], ($, helper, Greml
       for lazyLoadObject in @_lazyLoadQueue
         lazyLoadObject.top = lazyLoadObject.$element.offset().top
         lazyLoadObject.height = lazyLoadObject.$element.outerHeight()
+      @_handleScrollEvent()
 
     # ### **Private** instance methods
 
@@ -91,7 +91,7 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory"], ($, helper, Greml
     _addGremlin: (name, element) ->
       $element = $(element)
       lazyLoad = element.getAttribute(DATA_GREMLIN_LAZY_LOAD_ATTRIBUTE) is "true"
-      $element.addClass(GREMLIN_LOADING_CLASS).removeClass(@_gremlinCssClass)
+      $element.removeClass @_gremlinCssClass
       if (lazyLoad)
         @_lazyLoadQueue.push
           name: name
@@ -104,6 +104,7 @@ define(['jquery', "cs!../core/helper", "cs!./GremlinFactory"], ($, helper, Greml
     # Create a gremlin with the factory
     _createGremlin: (name, $element) ->
       # Call the factory and request a new gremlin
+      $element.addClass GREMLIN_LOADING_CLASS
       GremlinFactory.createGremlin name, $element, (gremlin) =>
         # - Add the gremlin to the stack
         # - listen to the content change event of each gremlin and rescan the gremlins view for gremlins when it fires
