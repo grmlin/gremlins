@@ -7,342 +7,227 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
 /* 
- This document has been created with Marked.app <http://markedapp.com>, Copyright 2011 Brett Terpstra
- Please leave this notice in place, along with any additional credits below.
- ---------------------------------------------------------------
- SwissStyle by Brett Terpstra
- */
-
-body
-{
-    -webkit-font-smoothing:antialiased;
-    font:normal .8764em/1.5em Arial,Verdana,sans-serif;
-    margin:0
+   This document has been created with Marked.app <http://markedapp.com>, Copyright 2011 Brett Terpstra
+   Please leave this notice in place, along with any additional credits below.
+   ---------------------------------------------------------------
+   Some simple Github-like styles, with syntax highlighting CSS via Pygments (requires custom processor).
+   via https://github.com/alampros/Docter
+*/
+html {
+	margin:0;
+	padding:1em;
+}
+body{
+    -webkit-font-smoothing: antialiased;
+	font: 13.34px helvetica,arial,freesans,clean,sans-serif;
+	line-height: 1.4em;
+	color: #333;
+	border: none;
+	line-height: 1.5;
+	margin: 0 auto;
+    max-width: 900px; 
+	text-align:left;
+	color:black;
+    background:#fff;
 }
 
-html>body
-{
-    font-size:13px
+@media screen {
+    #wrapper { padding:9px; background:#F8F8F8;	border:1px solid #E9E9E9;}    
+    body.inverted, .inverted #wrapper {
+        color: #eee;
+        background:#333;
+        border-color:#555
+    }
+    .inverted h2 {
+        border-color:#555
+    }
+}
+h1 {
+	font-size: 170%;
+	border-top: 4px solid #aaa;
+	padding-top: .5em;
+	margin-top: 1.5em;
 }
 
-li
-{
-    font-size:110%
+h1:first-child {
+	margin-top: 0 !important;
+	padding-top: .25em !important;
+	border-top: none !important;
 }
 
-li li
-{
-    font-size:100%
+h2 {
+	font-size: 150%;
+	margin-top: 1.5em;
+	border-top: 4px solid #e0e0e0;
+	padding-top: .5em;
 }
 
-li p
-{
-    font-size:100%;
-    margin:.5em 0
+h3 {
+	margin-top: 1em;
 }
 
-h1
-{
-    color:#000;
-    font-size:2.2857em;
-    line-height:.6563em;
-    margin:.6563em 0
+p {
+	margin: 1em 0!important;
+	line-height: 1.5em!important;
 }
 
-h2
-{
-    color:#111;
-    font-size:1.7143em;
-    line-height:.875em;
-    margin:.875em 0
+pre, code {
+    font: 12px 'Bitstream Vera Sans Mono','Courier',monospace;
+}
+pre {
+    -webkit-box-shadow: rgba(0, 0, 0, 0.0664062) 0px 1px 2px 0px inset;
+    background-color: #EEE;
+    border: #ddd 1px solid;
+    color: #444;
+    display: block;
+    margin: 12px 0;
+    overflow: auto;
+    padding: 5px;
+    white-space: pre;
+    max-width:100%;
+    overflow:auto;
+}
+code {
+    background-color: ghostWhite;
+    color: #444!important;
+    padding: 0 .2em;
+    border: 1px solid #DEDEDE;
+}
+pre code {
+    padding: 0!important;
+    font-size: 12px!important;
+    background-color: #EEE!important;
+    border: none!important;
+    overflow:visible;
+}
+a, a code {
+	color: #4183C4;
+	text-decoration:none;
 }
 
-h3
-{
-    color:#111;
-    font-size:1.5em;
-    line-height:1em;
-    margin:1em 0
+table td {
+	border-bottom: 1px solid #DDD!important;
+	padding: .2em 1em!important;
 }
 
-h4
-{
-    color:#111;
-    font-size:1.2857em;
-    line-height:1.1667em;
-    margin:1.1667em 0
+.shadow{
+	-webkit-box-shadow:0 5px 15px #000;
+	-moz-box-shadow:0 5px 15px #000;
+	box-shadow:0 5px 15px #000;		
 }
 
-h6
-{
-    font-size:1em;
-    line-height:1.5em;
-    margin:1.5em 0
-}
 
-body,p,td,div
-{
-    color:#111;
-    font-family:Helvetica,Arial,sans-serif;
-    word-wrap:break-word
-}
+.c{color:#998;font-style:italic;}
+.err{color:#a61717;background-color:#e3d2d2;}
+.k{font-weight:bold;}
+.o{font-weight:bold;}
+.cm{color:#998;font-style:italic;}
+.cp{color:#999;font-weight:bold;}
+.c1{color:#998;font-style:italic;}
+.cs{color:#999;font-weight:bold;font-style:italic;}
+.gd{color:#000;background-color:#fdd;}
+.gd .x{color:#000;background-color:#faa;}
+.ge{font-style:italic;}
+.gr{color:#a00;}
+.gh{color:#999;}
+.gi{color:#000;background-color:#dfd;}
+.gi .x{color:#000;background-color:#afa;}
+.go{color:#888;}
+.gp{color:#555;}
+.gs{font-weight:bold;}
+.gu{color:#800080;font-weight:bold;}
+.gt{color:#a00;}
+.kc{font-weight:bold;}
+.kd{font-weight:bold;}
+.kn{font-weight:bold;}
+.kp{font-weight:bold;}
+.kr{font-weight:bold;}
+.kt{color:#458;font-weight:bold;}
+.m{color:#099;}
+.s{color:#d14;}
+.na{color:#008080;}
+.nb{color:#0086B3;}
+.nc{color:#458;font-weight:bold;}
+.no{color:#008080;}
+.ni{color:#800080;}
+.ne{color:#900;font-weight:bold;}
+.nf{color:#900;font-weight:bold;}
+.nn{color:#555;}
+.nt{color:#000080;}
+.nv{color:#008080;}
+.ow{font-weight:bold;}
+.w{color:#bbb;}
+.mf{color:#099;}
+.mh{color:#099;}
+.mi{color:#099;}
+.mo{color:#099;}
+.sb{color:#d14;}
+.sc{color:#d14;}
+.sd{color:#d14;}
+.s2{color:#d14;}
+.se{color:#d14;}
+.sh{color:#d14;}
+.si{color:#d14;}
+.sx{color:#d14;}
+.sr{color:#009926;}
+.s1{color:#d14;}
+.ss{color:#990073;}
+.bp{color:#999;}
+.vc{color:#008080;}
+.vg{color:#008080;}
+.vi{color:#008080;}
+.il{color:#099;}
 
-h1,h2,h3,h4,h5,h6
-{
-    line-height:1.5em
-}
-
-a
-{
-    -webkit-transition:color .2s ease-in-out;
-    color:#0d6ea1;
-    text-decoration:none
-}
-
-a:hover
-{
-    color:#3593d9
-}
-
-h2 em
-{
-    color:#111;
-    padding-left:10px;
-    text-shadow:0 1px 0 #FFF
-}
-
-.footnote
-{
-    color:#0d6ea1;
-    font-size:.8em;
-    vertical-align:super
-}
-
-#wrapper img
-{
-    max-width:100%
-}
-
-dd
-{
-    margin-bottom:1em
-}
-
-li > p:first-child
-{
-    margin:0
-}
-
-ul ul,ul ol
-{
-    margin-bottom:.4em
-}
-
-caption,col,colgroup,table,tbody,td,tfoot,th,thead,tr
-{
-    border-spacing:0
-}
-
-table
-{
-    border:1px solid rgba(0,0,0,0.25);
-    border-collapse:collapse;
-    display:table;
-    empty-cells:hide;
-    margin:-1px 0 23px;
-    padding:0;
-    table-layout:fixed
-}
-
-caption
-{
-    display:table-caption;
-    font-weight:700
-}
-
-col
-{
-    display:table-column
-}
-
-colgroup
-{
-    display:table-column-group
-}
-
-tbody
-{
-    display:table-row-group
-}
-
-tfoot
-{
-    display:table-footer-group
-}
-
-thead
-{
-    display:table-header-group
-}
-
-td,th
-{
-    display:table-cell
-}
-
-tr
-{
-    display:table-row
-}
-
-table th,table td
-{
-    font-size:1.1em;
-    line-height:23px;
-    padding:0 1em
-}
-
-table thead
-{
-    background:rgba(0,0,0,0.15);
-    border:1px solid rgba(0,0,0,0.15);
-    border-bottom:1px solid rgba(0,0,0,0.2)
-}
-
-table tbody
-{
-    background:rgba(0,0,0,0.05)
-}
-
-table tfoot
-{
-    background:rgba(0,0,0,0.15);
-    border:1px solid rgba(0,0,0,0.15);
-    border-top:1px solid rgba(0,0,0,0.2)
-}
-
-figure
-{
-    display:inline-block;
-    margin-bottom:1.2em;
-    position:relative
-}
-
-figcaption
-{
-    -webkit-transition:all .2s ease-in-out;
-    background:rgba(0,0,0,0);
-    bottom:0;
-    color:rgba(255,255,255,0);
-    left:0;
-    position:absolute;
-    text-align:center;
-    width:100%
-}
-
-figure:hover
-{
-    cursor:pointer
-}
-
-figcaption:hover
-{
-    background:rgba(0,0,0,.56);
-    color:rgba(255,255,255,1)
-}
-
-.poetry pre
-{
-    display:block;
-    font-family:Georgia, Garamond, serif!important;
-    font-size:110%!important;
+.poetry pre {
+    font-family:Georgia, Garamond, serif !important;
     font-style:italic;
+    font-size:110% !important;
     line-height:1.6em;
-    margin-left:1em
+    display:block;
+    margin-left:1em;
 }
 
-.poetry pre code
-{
-    font-family:Georgia, Garamond, serif!important
+.poetry pre code {
+    font-family:Georgia, Garamond, serif !important;
 }
 
-sup,sub,a.footnote
-{
-    font-size:1.4ex;
-    height:0;
-    line-height:1;
-    position:relative;
-    vertical-align:super
+sup,sub,a.footnote {
+	font-size: 1.4ex;
+	height: 0;
+	line-height: 1;
+	vertical-align: super;
+	position: relative;
 }
-
 sub {
     vertical-align: sub;
     top: -1px;
 }
 
-p,h5
-{
-    font-size:1.1429em;
-    line-height:1.3125em;
-    margin:1.3125em 0
-}
-
-dt,th
-{
-    font-weight:700
-}
-
-table tr:nth-child(odd),table th:nth-child(odd),table td:nth-child(odd)
-{
-    background:rgba(255,255,255,0.06)
-}
-
-table tr:nth-child(even),table td:nth-child(even)
-{
-    background:rgba(0,0,0,0.06)
-}
-
 @media print {
-    body
-    {
-        overflow:auto
-    }
-    
-    #wrapper
-    {
+    body {
         background:#fff;
-        color:#303030;
-        font-size:85%;
-        padding:10px;
-        position:relative;
-        text-indent:0
     }
-}
-
-@media screen {
-    .inverted {
-        background:#333
+    #wrapper {
+        background: #fff;
+        border:none;
     }
-    
-    .inverted p,.inverted td,.inverted li,.inverted h1,.inverted h2,.inverted h3,.inverted h4,.inverted h5,.inverted h6,.inverted pre,.inverted code,.inverted th
-    {
-        color:#eee!important
+    code {
+        background-color: #fff;
+        color: #444!important;
+        padding: 0 .2em;
+        border: 1px solid #DEDEDE;
     }
-    
-    .inverted a
-    {
-        color:#fff;
-        text-decoration:underline
+    pre code {
+        padding: 0!important;
+        font-size: 12px!important;
+        background-color: #fff!important;
+        border: none!important;
+        overflow:visible;
     }
-    
-    #wrapper
-    {
-        padding:20px
-    }
-    
-    .inverted #wrapper
-    {
-        background:#333;
+    pre {
+        background: #fff;
+        white-space: pre-wrap;
+        white-space: pre-line;
     }
 }
 </style>
@@ -367,7 +252,7 @@ table tr:nth-child(even),table td:nth-child(even)
     font-size: 1.2em;
     color: #969648;
     display: inline-block;
-    padding-top: 30px;
+    padding-top: 10px;
 }
 
 .property-name {
@@ -385,22 +270,36 @@ table tr:nth-child(even),table td:nth-child(even)
 
 <h1 id="gremlinjsdocumentation">GremlinJS Documentation</h1>
 
-<p><a href="#requirejs">Require configuration</a></p>
+<h3 id="requireconfiguration"><a href="#requirejs">Require configuration</a></h3>
 
 <hr />
 
-<p><a href="#loader">Loader</a></p>
+<h3 id="loader"><a href="#loader">Loader</a></h3>
+
+<ul>
+<li><a href="#gettingloaderinstances">getting Loader instances</a>
 
 <ul>
 <li><span class="toc-code"><a href="#getloader">gremlinjs.getLoader()</a></span></li>
+</ul></li>
+<li><a href="#theloaderinstance">the Loader instance</a>
+
+<ul>
+<li><span class="toc-code"><a href="#loading-gremlins">&lt;loader&gt;.load()</a></span></li>
+<li><span class="toc-code"><a href="#lazy-load-gremlins">&lt;loader&gt;.resetLazyGremlins()</a></span></li>
+</ul></li>
 </ul>
 
 <hr />
 
-<p><a href="#gremlins">Gremlins</a></p>
+<h3 id="gremlins"><a href="#gremlins">Gremlins</a></h3>
 
 <ul>
-<li><a href="#html">HTML</a></li>
+<li><a href="#html">HTML</a>
+
+<ul>
+<li><a href="#lazyloading">lazy loading</a></li>
+</ul></li>
 <li><a href="#gremlincreation">Gremlin creation</a>
 
 <ul>
@@ -409,36 +308,34 @@ table tr:nth-child(even),table td:nth-child(even)
 <li><a href="#initializationpseudoconstructor">Initialization / pseudo constructor</a>
 
 <ul>
-<li><span class="toc-code"><a href="#initialize">&lt;g&gt;.initialize()</a></span></li>
+<li><span class="toc-code"><a href="#initialize">&lt;gremlin&gt;.initialize()</a></span></li>
 </ul></li>
 <li><a href="#jquerytoolkit">jQuery toolkit</a>
 
 <ul>
-<li><span class="toc-code"><a href="#view">&lt;g&gt;.view</a></span></li>
-<li><span class="toc-code"><a href="#events">&lt;g&gt;.events</a></span></li>
-<li><span class="toc-code"><a href="#elements">&lt;g&gt;.elements</a></span></li>
+<li><span class="toc-code"><a href="#view">&lt;gremlin&gt;.view</a></span></li>
+<li><span class="toc-code"><a href="#events">&lt;gremlin&gt;.events</a></span></li>
+<li><span class="toc-code"><a href="#elements">&lt;gremlin&gt;.elements</a></span></li>
 </ul></li>
 <li><a href="#settinggremlinoptions">Setting gremlin options</a>
 
 <ul>
-<li><span class="toc-code"><a href="#data">&lt;g&gt;.data</a></span></li>
+<li><span class="toc-code"><a href="#data">&lt;gremlin&gt;.data</a></span></li>
 </ul></li>
 <li><a href="#notifications">Notifications</a>
 
 <ul>
-<li><span class="toc-code"><a href="#interests">&lt;g&gt;.interests</a></span></li>
-<li><span class="toc-code"><a href="#chatter">&lt;g&gt;.chatter()</a></span></li>
-<li><span class="toc-code"><a href="#inform">&lt;g&gt;.inform()</a></span></li>
+<li><span class="toc-code"><a href="#interests">&lt;gremlin&gt;.interests</a></span></li>
+<li><span class="toc-code"><a href="#chatter">&lt;gremlin&gt;.chatter()</a></span></li>
+<li><span class="toc-code"><a href="#inform">&lt;gremlin&gt;.inform()</a></span></li>
 </ul></li>
 <li><a href="#misc">MISC</a>
 
 <ul>
-<li><span class="toc-code"><a href="#id">&lt;g&gt;.id</a></span></li>
-<li><span class="toc-code"><a href="#triggerChange">&lt;g&gt;.triggerChange()</a></span></li>
+<li><span class="toc-code"><a href="#id">&lt;gremlin&gt;.id</a></span></li>
+<li><span class="toc-code"><a href="#triggerChange">&lt;gremlin&gt;.triggerChange()</a></span></li>
 </ul></li>
 </ul>
-
-<hr />
 
 <h1 id="requirejs">requirejs</h1>
 
@@ -454,9 +351,11 @@ the <code>path</code> configuration option.</p>
 
 <h1 id="loader">Loader</h1>
 
+<h2 id="gettingloaderinstances">Getting Loader instances</h2>
+
 <p>The gremlins won&#8217;t be processed by simply including the script. You have to use the loader for that.</p>
 
-<p><span id="getloader" class="module-member">gremlinjs.<strong>getLoader</strong>(String <strong>namespace</strong> = &quot;&#8220;, String <strong>cssClass</strong> = &#8221;gremlin&quot;) : Loader</span></p>
+<p><span id="getloader" class="module-member">gremlinjs.<strong>getLoader</strong>(String <strong>namespace</strong> = &quot;&#8220;, String <strong>cssClass</strong> = &#8221;gremlin&quot;) : loader</span></p>
 
 <p>Creates, or returns an existing, gremlin loader instance. Loader instances should <strong>always</strong> be created this way. It&#8217;s
 the only reliable way to create a single loader instance for a namespace/css class combination</p>
@@ -473,11 +372,10 @@ the only reliable way to create a single loader instance for a namespace/css cla
 </tr>
 </table>
 
-<h3 id="example">Example</h3>
+<h5 id="example">Example</h5>
 
 <pre><code>require([&quot;gremlinjs&quot;], function (gremlinjs) {
     var loader = gremlinjs.getLoader(&quot;public/gremlins/&quot;, &quot;gremlin&quot;);
-    loader.load();
 });
 </code></pre>
 
@@ -486,6 +384,46 @@ The answer is easy: speed. Modern browsers give you a native <code>getElementsBy
 is much slower.</p>
 
 <p><strong>Take care not to use css classes for loader instances more than once. This will not work and throw an exception</strong></p>
+
+<h2 id="theloaderinstance">the loader instance</h2>
+
+<p><span id="loading-gremlins" class="module-member">method &lt;loader&gt;.<strong>load(</strong>jquery <strong>parent</strong> = jQuery(&#8216;body&#8217;) )</span></p>
+
+<p>Loads all the loader&#8217;s gremlins.</p>
+
+<table>
+<tr>
+<td class="property-name">parent</td>
+<td>Optional jquery-element to search the gremlins in. If you know where the new gremlins can be found, use this
+parameter. It's faster than traversing the whole dom.
+<br />
+If you omit this parameter, the complete document will be searched.
+</td>
+</tr>
+</table>
+
+<h5 id="example">Example</h5>
+
+<pre><code>require([&quot;gremlinjs&quot;], function (gremlinjs) {
+    var loader = gremlinjs.getLoader(&quot;public/gremlins/&quot;, &quot;gremlin&quot;);
+    loader.load();
+});
+</code></pre>
+
+<p><span id="lazy-load-gremlins" class="module-member">method &lt;loader&gt;.<strong>resetLazyGremlins()</strong></span></p>
+
+<p>Using lazy loading for gremlins can be tricky when the HTML changes. Call this method to recalculate the lazy loading
+offsets for the remaining gremlins.</p>
+
+<h5 id="example">Example</h5>
+
+<pre><code>require([&quot;gremlinjs&quot;], function (gremlinjs) {
+    var loader = gremlinjs.getLoader(&quot;public/gremlins/&quot;, &quot;gremlin&quot;);
+    loader.load();
+    //html changed
+    loader.resetLazyGremlins();
+});
+</code></pre>
 
 <h1 id="gremlins">Gremlins</h1>
 
@@ -505,10 +443,20 @@ is much slower.</p>
 
 <p>Add a unique css class and a name via the <code>data-gremlin-name</code> attribute to it and you are done.</p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>&lt;div class=&quot;gremlin&quot; data-gremlin-name=&quot;HelloWorld&quot;&gt;
     &lt;span&gt;Loading Gremlin...&lt;/span&gt;
+&lt;/div&gt;
+</code></pre>
+
+<h3 id="lazyloading">Lazy Loading</h3>
+
+<p>If you want GremlinJS to load a gremlin not before it&#8217;s visible, add the <code>data-lazy-load</code> parameter
+set <code>true</code> to the gremlins HTML.</p>
+
+<pre><code>&lt;div class=&quot;gremlin&quot; data-gremlin-name=&quot;HelloWorld&quot; data-lazy-load=&quot;true&quot;&gt;
+    &lt;span&gt;Loading Gremlin if it's visible...&lt;/span&gt;
 &lt;/div&gt;
 </code></pre>
 
@@ -537,7 +485,7 @@ mixes <strong>mixin</strong> into the new class&#8217; prototype.</p>
 </tr>
 </table>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>define(['gremlinjs'], function (gremlinjs) {
     var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
@@ -551,11 +499,11 @@ mixes <strong>mixin</strong> into the new class&#8217; prototype.</p>
 
 <h2 id="initializationpseudoconstructor">Initialization / pseudo constructor</h2>
 
-<p><span id="initialize" class="module-member">method <strong>initialize()</strong></span></p>
+<p><span id="initialize" class="module-member">method &lt;gremlin&gt;.<strong>initialize()</strong></span></p>
 
 <p>initialize() will always be called automatically when a gremlin is instantiated. Use it as your gremlins constructor.</p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code> var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     initialize:function () {
@@ -566,11 +514,11 @@ mixes <strong>mixin</strong> into the new class&#8217; prototype.</p>
 
 <h2 id="jquerytoolkit">jQuery toolkit</h2>
 
-<p><span id="view" class="module-member">jQuery <strong>view</strong></span> <sup class="read-only">read-only</sup></p>
+<p><span id="view" class="module-member">jQuery &lt;gremlin&gt;.<strong>view</strong></span> <sup class="read-only">read-only</sup></p>
 
 <p>jQuery object of the gremlin&#8217;s dom element</p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     initialize:function () {
@@ -579,14 +527,14 @@ mixes <strong>mixin</strong> into the new class&#8217; prototype.</p>
 });
 </code></pre>
 
-<p><span id="events" class="module-member">Object <strong>events</strong></span></p>
+<p><span id="events" class="module-member">Object &lt;gremlin&gt;.<strong>events</strong></span></p>
 
 <p>A simple way to delegate jQuery event handler to the gremlins instance or it&#8217;s children within it&#8217;s context.</p>
 
 <p>The events object has to be of this format: <code>{'String &quot;instanceMethod&quot;':'String &quot;eventType selector'}</code>, where the method
 has to reference an instance method of this class.</p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     events: {
@@ -610,11 +558,11 @@ has to reference an instance method of this class.</p>
 });
 </code></pre>
 
-<p><span id="elements" class="module-member">Object <strong>elements</strong></span></p>
+<p><span id="elements" class="module-member">Object &lt;gremlin&gt;.<strong>elements</strong></span></p>
 
 <p>Similar to the events object you can define jQuery elements in this object. It must have the format <code>{'String instanceMember':'String selector'}</code>.</p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     elements: {
@@ -628,7 +576,7 @@ has to reference an instance method of this class.</p>
 
 <h2 id="settinggremlinoptions">Setting Gremlin Options</h2>
 
-<p><span id="data" class="module-member">Object <strong>data</strong></span> <sup class="read-only">read-only</sup></p>
+<p><span id="data" class="module-member">Object &lt;gremlin&gt;.<strong>data</strong></span> <sup class="read-only">read-only</sup></p>
 
 <p>Every gremlin automatically provides data-attributes to it&#8217;s instance with the <a href="#gremlin.data"><code>data</code></a> property.
 All custom data-attributes you add to your gremlins tag can be found in there.</p>
@@ -660,18 +608,18 @@ in and all you have to do is:</p>
 <li>trigger the chatter-method if your gremlin has something to say</li>
 </ul>
 
-<p><span id="interests" class="module-member">Array <strong>interests</strong></span></p>
+<p><span id="interests" class="module-member">Array &lt;gremlin&gt;.<strong>interests</strong></span></p>
 
 <p>List of all interests. If any gremlin triggers on of the events in the list, <code>inform</code> will be called.</p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     interests: [&quot;FOO&quot;, &quot;BAR&quot;]
  });
 </code></pre>
 
-<p><span id="chatter" class="module-member">method <strong>chatter</strong>(String <strong>interest</strong>, Object <strong>notificationData</strong> = {})</span> <sup class="read-only">read-only</sup></p>
+<p><span id="chatter" class="module-member">method &lt;gremlin&gt;.<strong>chatter</strong>(String <strong>interest</strong>, Object <strong>notificationData</strong> = {})</span> <sup class="read-only">read-only</sup></p>
 
 <p>Publish an event/interest/notification. The method expects the interest and an optional notification data object.</p>
 
@@ -690,14 +638,14 @@ in and all you have to do is:</p>
 </tr>
 </table>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>initialize:function () {
     this.chatter(&quot;OUCH&quot;,{foo:&quot;bar&quot;});
 }
 </code></pre>
 
-<p><span id="inform" class="module-member">method <strong>inform</strong>(<strong>interest</strong>, <strong>notificationData</strong>)</span></p>
+<p><span id="inform" class="module-member">method &lt;gremlin&gt;.<strong>inform</strong>(<strong>interest</strong>, <strong>notificationData</strong>)</span></p>
 
 <p><code>inform</code> is called, when a gremlin in the site published a notification, the gremlin is interested in (see <code>interests</code>)</p>
 
@@ -718,7 +666,7 @@ in and all you have to do is:</p>
 </tr>
 </table>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     interests: [&quot;FOO&quot;, &quot;BAR&quot;]
@@ -739,12 +687,12 @@ in and all you have to do is:</p>
 
 <h2 id="misc">MISC</h2>
 
-<p><span id="id" class="module-member">Number <strong>id</strong></span> <sup class="read-only">read-only</sup></p>
+<p><span id="id" class="module-member">Number &lt;gremlin&gt;.<strong>id</strong></span> <sup class="read-only">read-only</sup></p>
 
 <p>A unique ID bound to every gremlin. This ID stays unique through multiple Loader instances.
 IDs may be useful, if you have to add an dynamically generated ID to the dom element.</p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     initialize:function () {
@@ -753,13 +701,13 @@ IDs may be useful, if you have to add an dynamically generated ID to the dom ele
 });
 </code></pre>
 
-<p><span id="triggerChange" class="module-member">method <strong>triggerChange()</strong></span></p>
+<p><span id="triggerChange" class="module-member">method &lt;gremlin&gt;.<strong>triggerChange()</strong></span></p>
 
 <p>Call this method if you changed the HTML of the gremlin and new gremlins may appear in it.</p>
 
 <p>The Loader will scan inside the gremlin for new gremlins. <strong>Don&#8217;t call the loader directly!</strong></p>
 
-<h4 id="example">Example</h4>
+<h5 id="example">Example</h5>
 
 <pre><code>var HelloWorld = gremlinjs.create(&quot;HelloWorld&quot;, {
     events: {

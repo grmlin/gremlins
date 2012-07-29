@@ -15,7 +15,7 @@
     font-size: 1.2em;
     color: #969648;
     display: inline-block;
-    padding-top: 30px;
+    padding-top: 10px;
 }
 
 .property-name {
@@ -32,41 +32,45 @@
 </style>
 
 # GremlinJS Documentation
-[Require configuration](#requirejs)
+
+### [Require configuration](#requirejs)
 
 ---
 
-[Loader](#loader)
+### [Loader](#loader)
 
-
-* <span class="toc-code">[gremlinjs.getLoader()](#getloader)</span>
+* [getting Loader instances](#gettingloaderinstances)
+    * <span class="toc-code">[gremlinjs.getLoader()](#getloader)</span>
+* [the Loader instance](#theloaderinstance)
+    * <span class="toc-code">[\<loader\>.load()](#loading-gremlins)</span>
+    * <span class="toc-code">[\<loader\>.resetLazyGremlins()](#lazy-load-gremlins)</span>
 
 ---
 
-[Gremlins](#gremlins)
+### [Gremlins](#gremlins)
 
 
 * [HTML](#html)
+    * [lazy loading](#lazyloading)
 * [Gremlin creation](#gremlincreation)
     * <span class="toc-code">[gremlinjs.create()](#create)</span>
 * [Initialization / pseudo constructor](#initializationpseudoconstructor)
-    * <span class="toc-code">[\<g\>.initialize()](#initialize)</span>
+    * <span class="toc-code">[\<gremlin\>.initialize()](#initialize)</span>
 * [jQuery toolkit](#jquerytoolkit)
-    * <span class="toc-code">[\<g\>.view](#view)</span>
-    * <span class="toc-code">[\<g\>.events](#events)</span>
-    * <span class="toc-code">[\<g\>.elements](#elements)</span>
+    * <span class="toc-code">[\<gremlin\>.view](#view)</span>
+    * <span class="toc-code">[\<gremlin\>.events](#events)</span>
+    * <span class="toc-code">[\<gremlin\>.elements](#elements)</span>
 * [Setting gremlin options](#settinggremlinoptions)
-    * <span class="toc-code">[\<g\>.data](#data)</span>
+    * <span class="toc-code">[\<gremlin\>.data](#data)</span>
 * [Notifications](#notifications)
-    * <span class="toc-code">[\<g\>.interests](#interests)</span>
-    * <span class="toc-code">[\<g\>.chatter()](#chatter)</span>
-    * <span class="toc-code">[\<g\>.inform()](#inform)</span>
+    * <span class="toc-code">[\<gremlin\>.interests](#interests)</span>
+    * <span class="toc-code">[\<gremlin\>.chatter()](#chatter)</span>
+    * <span class="toc-code">[\<gremlin\>.inform()](#inform)</span>
 * [MISC](#misc)
-    * <span class="toc-code">[\<g\>.id](#id)</span>
-    * <span class="toc-code">[\<g\>.triggerChange()](#triggerChange)</span>
+    * <span class="toc-code">[\<gremlin\>.id](#id)</span>
+    * <span class="toc-code">[\<gremlin\>.triggerChange()](#triggerChange)</span>
 
 
----
 
 # requirejs
 
@@ -79,11 +83,13 @@ the `path` configuration option.
         }
     });
 
+
 # Loader
 
+## Getting Loader instances
 The gremlins won't be processed by simply including the script. You have to use the loader for that.
 
-<span id="getloader" class="module-member">gremlinjs.**getLoader**(String **namespace** = "", String **cssClass** = "gremlin") : Loader</span>
+<span id="getloader" class="module-member">gremlinjs.**getLoader**(String **namespace** = "", String **cssClass** = "gremlin") : loader</span>
 
 Creates, or returns an existing, gremlin loader instance. Loader instances should **always** be created this way. It's
 the only reliable way to create a single loader instance for a namespace/css class combination
@@ -100,10 +106,9 @@ the only reliable way to create a single loader instance for a namespace/css cla
 </tr>
 </table>
 
-### Example
+##### Example
     require(["gremlinjs"], function (gremlinjs) {
         var loader = gremlinjs.getLoader("public/gremlins/", "gremlin");
-        loader.load();
     });
 
 You may ask yourself why an extra css class is needed and GremlinJS doesn't use the gremlin-name attribute to find them.
@@ -111,6 +116,44 @@ The answer is easy: speed. Modern browsers give you a native `getElementsByClass
 is much slower.
 
 **Take care not to use css classes for loader instances more than once. This will not work and throw an exception**
+
+## the loader instance
+<span id="loading-gremlins" class="module-member">method \<loader\>.**load(**jquery **parent** = jQuery('body') )</span>
+
+Loads all the loader's gremlins.
+
+<table>
+<tr>
+<td class="property-name">parent</td>
+<td>Optional jquery-element to search the gremlins in. If you know where the new gremlins can be found, use this
+parameter. It's faster than traversing the whole dom.
+<br />
+If you omit this parameter, the complete document will be searched.
+</td>
+</tr>
+</table>
+
+##### Example
+    require(["gremlinjs"], function (gremlinjs) {
+        var loader = gremlinjs.getLoader("public/gremlins/", "gremlin");
+        loader.load();
+    });
+
+<span id="lazy-load-gremlins" class="module-member">method \<loader\>.**resetLazyGremlins()**</span>
+
+Using lazy loading for gremlins can be tricky when the HTML changes. Call this method to recalculate the lazy loading
+offsets for the remaining gremlins.
+
+##### Example
+    require(["gremlinjs"], function (gremlinjs) {
+        var loader = gremlinjs.getLoader("public/gremlins/", "gremlin");
+        loader.load();
+        //html changed
+        loader.resetLazyGremlins();
+    });
+
+
+
 # Gremlins
 GremlinJS is all about Gremlins. Whenever you have the feeling there is something that uses javascript create one
 
@@ -126,12 +169,20 @@ Every HTML element is a possible gremlin.
 
 Add a unique css class and a name via the `data-gremlin-name` attribute to it and you are done.
 
-#### Example
+##### Example
 
     <div class="gremlin" data-gremlin-name="HelloWorld">
         <span>Loading Gremlin...</span>
     </div>
 
+### Lazy Loading
+
+If you want GremlinJS to load a gremlin not before it's visible, add the `data-lazy-load` parameter
+set `true` to the gremlins HTML.
+
+    <div class="gremlin" data-gremlin-name="HelloWorld" data-lazy-load="true">
+        <span>Loading Gremlin if it's visible...</span>
+    </div>
 
 ## Gremlin creation
 
@@ -158,7 +209,7 @@ mixes **mixin** into the new class' prototype.
 </tr>
 </table>
 
-#### Example
+##### Example
 
     define(['gremlinjs'], function (gremlinjs) {
         var HelloWorld = gremlinjs.create("HelloWorld", {
@@ -170,11 +221,11 @@ mixes **mixin** into the new class' prototype.
     });
 
 ## Initialization / pseudo constructor
-<span id="initialize" class="module-member">method **initialize()**</span>
+<span id="initialize" class="module-member">method \<gremlin\>.**initialize()**</span>
 
 initialize() will always be called automatically when a gremlin is instantiated. Use it as your gremlins constructor.
 
-#### Example
+##### Example
 
      var HelloWorld = gremlinjs.create("HelloWorld", {
         initialize:function () {
@@ -184,25 +235,25 @@ initialize() will always be called automatically when a gremlin is instantiated.
 
 ## jQuery toolkit
 
-<span id="view" class="module-member">jQuery **view**</span> <sup class="read-only">read-only</sup>
+<span id="view" class="module-member">jQuery \<gremlin\>.**view**</span> <sup class="read-only">read-only</sup>
 
 jQuery object of the gremlin's dom element
 
-#### Example
+##### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         initialize:function () {
             this.view.html("Hello World!");
         }
     });
 
-<span id="events" class="module-member">Object **events**</span>
+<span id="events" class="module-member">Object \<gremlin\>.**events**</span>
 
 A simple way to delegate jQuery event handler to the gremlins instance or it's children within it's context.
 
 The events object has to be of this format: `{'String "instanceMethod"':'String "eventType selector'}`, where the method
 has to reference an instance method of this class.
 
-#### Example
+##### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         events: {
             "handleClick": "click div.content h1"
@@ -224,11 +275,11 @@ Omitting the target selector, the gremlin's main dom element (`this.view`) will 
     });
 
 
-<span id="elements" class="module-member">Object **elements**</span>
+<span id="elements" class="module-member">Object \<gremlin\>.**elements**</span>
 
 Similar to the events object you can define jQuery elements in this object. It must have the format `{'String instanceMember':'String selector'}`.
 
-#### Example
+##### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         elements: {
             "content":"div.content"
@@ -239,7 +290,7 @@ Similar to the events object you can define jQuery elements in this object. It m
     });
 
 ## Setting Gremlin Options
-<span id="data" class="module-member">Object **data**</span> <sup class="read-only">read-only</sup>
+<span id="data" class="module-member">Object \<gremlin\>.**data**</span> <sup class="read-only">read-only</sup>
 
 Every gremlin automatically provides data-attributes to it's instance with the [`data`](#gremlin.data) property.
 All custom data-attributes you add to your gremlins tag can be found in there.
@@ -267,16 +318,16 @@ in and all you have to do is:
 * implement the inform-method called when notifications are incoming
 * trigger the chatter-method if your gremlin has something to say
 
-<span id="interests" class="module-member">Array **interests**</span>
+<span id="interests" class="module-member">Array \<gremlin\>.**interests**</span>
 
 List of all interests. If any gremlin triggers on of the events in the list, `inform` will be called.
 
-#### Example
+##### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         interests: ["FOO", "BAR"]
      });
 
-<span id="chatter" class="module-member">method **chatter**(String **interest**, Object **notificationData** = {})</span> <sup class="read-only">read-only</sup>
+<span id="chatter" class="module-member">method \<gremlin\>.**chatter**(String **interest**, Object **notificationData** = {})</span> <sup class="read-only">read-only</sup>
 
 Publish an event/interest/notification. The method expects the interest and an optional notification data object.
 
@@ -296,12 +347,12 @@ Publish an event/interest/notification. The method expects the interest and an o
 </table>
 
 
-#### Example
+##### Example
     initialize:function () {
         this.chatter("OUCH",{foo:"bar"});
     }
 
-<span id="inform" class="module-member">method **inform**(**interest**, **notificationData**)</span>
+<span id="inform" class="module-member">method \<gremlin\>.**inform**(**interest**, **notificationData**)</span>
 
 `inform` is called, when a gremlin in the site published a notification, the gremlin is interested in (see `interests`)
 
@@ -322,7 +373,7 @@ Both the interest and the notification data are  passed into the inform method.
 </tr>
 </table>
 
-#### Example
+##### Example
 
     var HelloWorld = gremlinjs.create("HelloWorld", {
         interests: ["FOO", "BAR"]
@@ -342,25 +393,25 @@ Both the interest and the notification data are  passed into the inform method.
 
 
 ## MISC
-<span id="id" class="module-member">Number **id**</span> <sup class="read-only">read-only</sup>
+<span id="id" class="module-member">Number \<gremlin\>.**id**</span> <sup class="read-only">read-only</sup>
 
 A unique ID bound to every gremlin. This ID stays unique through multiple Loader instances.
 IDs may be useful, if you have to add an dynamically generated ID to the dom element.
 
-#### Example
+##### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         initialize:function () {
            this.view.attr("id",this.id);
         }
     });
 
-<span id="triggerChange" class="module-member">method **triggerChange()**</span>
+<span id="triggerChange" class="module-member">method \<gremlin\>.**triggerChange()**</span>
 
 Call this method if you changed the HTML of the gremlin and new gremlins may appear in it.
 
 The Loader will scan inside the gremlin for new gremlins. **Don't call the loader directly!**
 
-#### Example
+##### Example
     var HelloWorld = gremlinjs.create("HelloWorld", {
         events: {
             "handleClick": "click"
