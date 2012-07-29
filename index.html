@@ -27,22 +27,15 @@
 <header id="header" class="" data-gremlin-name="Detachable" data-detach-bottom="true">
     <hgroup>
         <h1>GremlinJS</h1>
-
-        <h2>A widget framework using <a href="http://jquery.com">jQuery</a> and <a
-                href="http://requirejs.org">requirejs</a></h2>
     </hgroup>
 </header>
 <nav id="navigation" class="gremlin" data-gremlin-name="Detachable,Navigation">
     <ul>
-        <li class="scroll-mark">
-            <div></div>
-        </li>
         <li><a class="jumper" href="#about">About</a></li>
         <li><a class="jumper" href="#download">Get it</a></li>
         <li><a class="jumper" href="#quick">Quick guide</a></li>
-        <li><a href="doc.html">API</a></li>
-        <li><a href="lair.html" target="_blank">Generate <span class="icon external">D</span></a>
-        <!--li><a href="api_documentation/index.html" target="_blank">API Documentation <span class="icon">d</span></a-->
+        <li><a href="api.html" target="_blank">API </a></li>
+        <li><a href="docs/index.html" target="_blank">annotated source </a></li>
         </li>
         <li class="logo">GremlinJS</li>
     </ul>
@@ -88,21 +81,21 @@
         --><div>
             <h3>Efficient jQuery</h3>
             <p>
-                There will be only <strong>one</strong> jQuery selector traversing the dom to discover the gremlins.
+                There will be only <strong>one</strong> jQuery selector traversing the dom to discover the gremlins, your
+                javascript enhanced page elements..
                 <br>
                 Less traversals <span class="icon">j</span> better performance.
             </p>
         </div><!--
         --><div>
             <h3>Uncluttered HTML</h3>
-
             <p>
-                Add a classname identifying your gremlins and the gremlin's name to the html-tag of your choice.
-                Filenames, dependencies and object construction are nothing you have to care about.
+                Only a classname identifying the gremlins and a name-attribute are added to your HTML. Don't worry about
+                script tags, jQuery document ready handlers and code organization.
             </p>
         </div><!--
         --><div>
-            <h3>Notifications and jQuery helper</h3>
+            <h3>Notifications and jQuery helpers</h3>
             <p>
                 One Gremlin wants to talk to another? A notification system is built in!<br>
                 Tired of typing dozens of lines adding jQuery-objects and events to your classes. GremlinJS fixes that.
@@ -111,34 +104,14 @@
         --><div>
             <h3>Lazy loading</h3>
             <p>
-                You placed some heavy javascript at the end of the page? GremlinJS won't load it until the user scrolls
+                You placed some elements using heavy javascript at the end of the page? GremlinJS won't load it until the user scrolls
                 the gremlin into the viewport.
             </p>
         </div>
     </div>
     <hr>
-    <h3>How it works</h3>
 
-    <h4>1. Create the gremlin's javascript module</h4>
-
-    <div class="example" title="More on that later"><code class="file">js/gremlins/HelloWorld.js</code></div>
-    <h4>2. Add the gremlin to your HTML</h4>
-
-    <div class="example">
-        <code>
-            &lt;div class=&quot;gremlin&quot; data-gremlin-name=&quot;HelloWorld&quot;&gt;&lt;/div&gt;
-        </code>
-    </div>
-    <h4>3. Start the gremlin loader</h4>
-
-    <div class="example"><code>gremlinjs.getLoader("js/gremlins/","gremlin").load();</code></div>
-    <h4>That's it</h4>
-    <p class="success">
-        The gremlin loader will find the <code>Gist</code> gremlin in your HTML, loads the file
-        <code class="file">js/gremlins/Gist.js</code> and calls the gremlin's constructor function.
-    </p>
-
-    <h3>When should I use GremlinJS?</h3>
+    <h3>Who should use GremlinJS?</h3>
 
     <ul>
         <li>
@@ -462,7 +435,7 @@ Change the requirejs configuration wherever you want. Here it's done inside the 
 <p>Don't forget to download the sample project to see the results of the steps above.</p>
 <h4>Complete reference</h4>
 
-<p>To learn all the details open the <a href="doc.html">detailed documentation</a></p>
+<p>To learn all the details open the <a href="api.html">detailed documentation</a></p>
 </div>
 </div>
 </div>

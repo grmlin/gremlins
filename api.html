@@ -348,7 +348,7 @@ table tr:nth-child(even),table td:nth-child(even)
 </style>
 
 </head>
-<body class="inverted">
+<body class="normal">
   <div id="wrapper">
       <style type="text/css">
 .module-header {
@@ -359,13 +359,13 @@ table tr:nth-child(even),table td:nth-child(even)
 }
 .toc-code a {
    font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
-   color: rgb(255,185,250);
+   color: #969648;
    text-decoration: none;
 }
 .module-member {
     font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
     font-size: 1.2em;
-    color: rgb(255,185,250);
+    color: #969648;
     display: inline-block;
     padding-top: 30px;
 }
@@ -382,6 +382,12 @@ table tr:nth-child(even),table td:nth-child(even)
     font-weight: bold;
 }
 </style>
+
+<h1 id="gremlinjsdocumentation">GremlinJS Documentation</h1>
+
+<p><a href="#requirejs">Require configuration</a></p>
+
+<hr />
 
 <p><a href="#loader">Loader</a></p>
 
@@ -432,7 +438,19 @@ table tr:nth-child(even),table td:nth-child(even)
 </ul></li>
 </ul>
 
-<hr />
+<p>&#8212;</p>
+
+<h1 id="requirejs">requirejs</h1>
+
+<p>The <code>gremlinjs</code> module used below with requirejs is part of the <code>gremlin.min.js</code>. Tell requirejs where to find it with
+the <code>path</code> configuration option.</p>
+
+<pre><code>require.config({
+    paths: {
+        &quot;gremlinjs&quot;: &quot;js/gremlin.min&quot;
+    }
+});
+</code></pre>
 
 <h1 id="loader">Loader</h1>
 
@@ -501,7 +519,7 @@ is much slower.</p>
 <p>Creates a gremlin class. It does <strong>not</strong> create an instance!
 <code>gremlinjs.create</code> is a shortcut to <a href="https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/GremlinLair.coffee#L12">GremlinLair#create</a>.</p>
 
-<p>It creates and returns a new class inherited from <a href="https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/AbstractGremlin.coffee">AbstractGremlin</a> and
+<p>It creates and returns a new class inherited from <a href="https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/GremlinLair.coffee#L44-L114">AbstractGremlin</a> and
 mixes <strong>mixin</strong> into the new class&#8217; prototype.</p>
 
 <table>

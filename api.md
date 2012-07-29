@@ -7,13 +7,13 @@
 }
 .toc-code a {
    font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
-   color: rgb(255,185,250);
+   color: #969648;
    text-decoration: none;
 }
 .module-member {
     font-family: 'Bitstream Vera Sans Mono','Courier',monospace;
     font-size: 1.2em;
-    color: rgb(255,185,250);
+    color: #969648;
     display: inline-block;
     padding-top: 30px;
 }
@@ -30,6 +30,11 @@
     font-weight: bold;
 }
 </style>
+
+# GremlinJS Documentation
+[Require configuration](#requirejs)
+
+---
 
 [Loader](#loader)
 
@@ -62,6 +67,16 @@
 
 
 ---
+# requirejs
+
+The `gremlinjs` module used below with requirejs is part of the `gremlin.min.js`. Tell requirejs where to find it with
+the `path` configuration option.
+
+    require.config({
+        paths: {
+            "gremlinjs": "js/gremlin.min"
+        }
+    });
 
 # Loader
 
@@ -124,7 +139,7 @@ Add a unique css class and a name via the `data-gremlin-name` attribute to it an
 Creates a gremlin class. It does **not** create an instance!
 `gremlinjs.create` is a shortcut to [GremlinLair#create](https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/GremlinLair.coffee#L12).
 
-It creates and returns a new class inherited from [AbstractGremlin](https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/AbstractGremlin.coffee) and
+It creates and returns a new class inherited from [AbstractGremlin](https://github.com/grmlin/gremlinjs/blob/master/src/gremlinjs/gremlins/GremlinLair.coffee#L44-L114) and
 mixes **mixin** into the new class' prototype.
 
 <table>
