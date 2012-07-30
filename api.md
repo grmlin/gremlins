@@ -51,6 +51,7 @@
 
 
 * [HTML](#html)
+    * [Multiple gremlins per element](#multiplegremlinsperelement)
     * [lazy loading](#lazyloading)
 * [Gremlin creation](#gremlincreation)
     * <span class="toc-code">[gremlinjs.create()](#create)</span>
@@ -174,6 +175,14 @@ Add a unique css class and a name via the `data-gremlin-name` attribute to it an
     <div class="gremlin" data-gremlin-name="HelloWorld">
         <span>Loading Gremlin...</span>
     </div>
+
+### Multiple gremlins per element
+
+If you want to use multiple gremlins with a single html element, seperate the gremlin names by `,`
+
+       <div class="gremlin" data-gremlin-name="Foo,Bar">
+           <span>Loading Gremlin...</span>
+       </div>
 
 ### Lazy Loading
 
