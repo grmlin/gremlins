@@ -1,4 +1,6 @@
 fs = require 'fs'
+path = require 'path'
+
 exec = require('child_process').exec
 
 try
@@ -10,39 +12,40 @@ catch error
 
 option '-t', '--test [YESNO]', 'running test when building gremlinjs'
 
-task 'build', 'Compiles and minifies JavaScript file for production use', (options) ->
-  console.log "Compiling CoffeeScript"
-  requirejs = require 'requirejs'
+task "build2", 'Compiles and minifies coffeescript sources for production', (options) ->
+  LIB_NAME     = "gremlinjs"
+  SRC          = path.join __dirname, "src", "gremlinjs.coffee"
+  DIR_OUT      = path.join __dirname, "build"
+  FILENAME_MIN = "gremlin.min.js"
+  DEST         = path.join DIR_OUT, FILENAME_MIN
+
+  webpack = require "webpack"
+
   packageInfo =  JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf8'))
   version = packageInfo.version
 
   wrapStart = fs.readFileSync('build/start.frag', 'utf8').replace("{{VERSION}}", version)
   wrapEnd = fs.readFileSync('build/end.frag', 'utf8')
 
-  config =
-    baseUrl: './src/'
-    name: 'gremlinMain'
-    optimize: "uglify"
-    #optimize: "none"
-    paths:
-      "jquery": "../vendor/jquery-1.7.1.min"
-      "cs": '../vendor/cs'
-      "coffee-script": '../vendor/coffee-script'
-    exclude: ['coffee-script', 'jquery']
-    stubModules: ['cs'],
-    out: "build/gremlinjs/gremlin-#{version}.min.js"
-    wrap:
-      start: wrapStart,
-      end: wrapEnd
-    onBuildWrite: (moduleName, path, contents) ->
-      contents = contents.replace /cs!/g, ""
-      contents = "" if moduleName is "cs"
-      contents
+  options =
+    output          : FILENAME_MIN
+    outputDirectory : DIR_OUT
+    library         : LIB_NAME
+    #minimize       : false
+    minimize        : true
+    #debug          : true
+    watch           : true
 
-  requirejs.optimize config, (buildResponse) ->
-    console.log(buildResponse)
-    exec "cp -f build/gremlinjs/gremlin-#{version}.min.js build/gremlinjs/gremlin.min.js", (error, stdout, stderr) ->
-      invoke "test" unless options.test is "no"
+  webpack SRC, options, (err, stats)->
+    console.log err if err
+    unless err
+      min = fs.readFileSync DEST, 'utf8'
+      comb = wrapStart + min + wrapEnd
+      console.log "build successful\n\n", comb, "\n\n", stats
+      
+      fs.writeFileSync DEST, comb, 'utf8'
+
+
 
 task 'docco', 'Building the docco files for GremlinJS', ->
   wrench = require "wrench"
@@ -75,71 +78,6 @@ task 'docco', 'Building the docco files for GremlinJS', ->
       filesFinished += 1
       console.log stdout
       buildIndex()
-
-# from https://github.com/fortes/coffee-script-project-template
-task 'test', 'Run tests via phantomJS', ->
-  exec "which phantomjs", (e, o, se) ->
-    if e
-      console.error "Must install PhantomJS http://phantomjs.org/".red
-      process.exit -1
-
-  # Disable web security so we don't have to run a server on localhost for AJAX
-  # calls
-  console.log "Running unit tests via PhantomJS".yellow
-  console.log "Testing current minified build of gremlinjs! Run cake build first if there is none.".bold.cyan
-  p = exec "phantomjs test/lib/phantom-driver.coffee --web-security=no"
-  p.stderr.on 'data', stdErrorStreamer (data) -> data.red
-  # The phantom driver outputs JSON
-  bufferedOutput = ''
-  p.stdout.on 'data', (data) ->
-    bufferedOutput += data
-    return unless bufferedOutput[bufferedOutput.length - 1] is "\n"
-
-    unless /^PHANTOM/.test bufferedOutput
-      process.stdout.write data.grey
-      return
-
-    pass = "✔".green
-    fail = "✖".red
-
-    # Split lines
-    for line in (bufferedOutput.split '\n')
-      continue unless line
-      try
-        obj = JSON.parse(line.substr 9)
-        switch obj.name
-          when 'error'
-            console.error "#{fail}  JS Error: #{obj.result.msg}"
-            console.dir obj.result.trace if obj.result.trace
-
-          when 'log'
-            continue if obj.result.result
-            if 'expected' of obj.result
-              console.error "#{fail}  Failure: #{obj.result.message}; Expected: #{obj.result.expected}, Actual: #{obj.result.actual}"
-            else
-              console.error "#{fail}  Failure: #{obj.result.message}"
-
-          when 'moduleDone'
-            if obj.result.failed
-              console.error "#{fail}  #{obj.result.name} module: #{obj.result.passed} tests passed, " + "#{obj.result.failed} tests failed".red
-            else
-              console.log "#{pass}  #{obj.result.name} module: #{obj.result.total} tests passed"
-
-        # Output statistics on completion
-          when 'done'
-            console.log "\nFinished in #{obj.result.runtime / 1000}s".grey
-            if obj.result.failed
-              console.error "#{fail}  #{obj.result.passed} tests passed, #{obj.result.failed} tests failed (#{Math.round(obj.result.passed / obj.result.total * 100)}%)"
-              process.exit -1
-            else
-              console.log "#{pass}  #{obj.result.total} tests passed"
-      catch ex
-        console.error "JSON parsing fail: #{line}".red
-
-    bufferedOutput = ''
-
-  p.on 'exit', (code) ->
-    process.exit code
 
 stdOutStreamer = (filter) ->
   (str) ->

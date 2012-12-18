@@ -5,8 +5,10 @@
 
 GID_ATTR = "data-gid"
 
-helper      = require "./../helper.coffee"
-ElementData = require "./../ElementData/ElementData.coffee"
+helper            = require "./../helper.coffee"
+ElementData       = require "./ElementData/ElementData.coffee"
+ExtensionFactory  = require "./../extensions/Factory.coffee"
+AbstractExtension = require "./../extensions/AbstractExtension.coffee"
 
 # defininge the GremlinFactory module for requirejs
 # A unique id counter used for gremlin instantiation
@@ -28,6 +30,7 @@ module.exports =
     # Use requirejs to load the gremlin class dynamically
     gid = uid()
     data = new ElementData element
+    extensions = []
     
     window.require [name], (Gremlin) ->
       return module.exports.onError name unless helper.isFunction Gremlin
@@ -35,5 +38,9 @@ module.exports =
       # call the constructor function passing in the jQuery object of the dom element, the gremlin's data retrieved with
       # `.data()` and a new unique id
       gremlin = new Gremlin element, data.toObject(), gid
-      successCallback.call null, gremlin
+
+      ExtensionFactory.create gremlin, =>
+        gremlin.initialize()
+        successCallback.call null, gremlin   
+        
       return yes

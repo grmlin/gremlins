@@ -1,9 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>GremlinJS</title>
+    <script type="text/javascript" src="zepto.min.js"></script>
+    <script type="text/javascript" src="http://requirejs.org/docs/release/2.1.2/minified/require.js"></script>
+    <script type="text/javascript">
+        var gremlins;
+        require.config({
+            paths : {
+                "jquery"    : "jquery.min",
+                "gremlinjs" : "./gremlin.min"
+            },
+            shim: {
+                "zepto": {
+                    exports: "$"
+                }
+            }
+        });
+        require(["gremlinjs"], function (gremlinjs) {
+            gremlinjs.Loader.getLoader("gremlins/", "gremlin").load();
+            gremlinjs.Loader.getLoader("gremlins/", "gremlin").load();
+        });
+    </script>
 </head>
 <body>
+
+<div class="gremlin"
+     data-gremlin-name="Foo"
+     data-string="baz"
+     data-int="1"
+     data-obj='{"foo":"bar"}'
+     data-array='["foo","bar",1,true,false]'
+     data-true="true"
+     data-false="false">
+    <div class="content"></div>
+</div>
 
 </body>
 </html>

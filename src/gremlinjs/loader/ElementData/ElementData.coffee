@@ -1,4 +1,4 @@
-helper    = require "./../helper.coffee"
+helper    = require "./../../helper.coffee"
 DataValue = require "./DataValue.coffee"
 
 camelize = (string) ->

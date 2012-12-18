@@ -1,4 +1,4 @@
-helper          = require "./../helper.coffee"
+helper       = require "./../helper.coffee"
 
 # add all jquery elements to the instance
 _addElements = (elements) ->
@@ -7,32 +7,7 @@ _addElements = (elements) ->
       throw new TypeError "Element member #{propertyName} already defined!" unless (helper.isUndefined(@[propertyName]))
       throw new TypeError "Element selector have to be referenced by strings!" unless (helper.isString(selector))
       @[propertyName] = @view.querySelectorAll(selector)
-
-# add all event listeners to the instance
-#
-# to do so, iterate over all given events, get the event type and the jquery selector and bind the event handler
-# with the context still set to the gremlins instance
-_addEvents = (events) ->
-  unless @events is null
-    for own handlerName, event of @events
-      do (handlerName, event) =>
-        throw new TypeError "Event selectors have to be referenced by strings!" unless (helper.isString(event))
-
-        if helper.isFunction @[handlerName]
-          handler = @[handlerName]
-        else
-          throw new TypeError "Event '#{event}' can't be bound to '#{@name}.#{handlerName}', as the type is " + typeof @[handlerName]
-
-        firstWhitespace = event.indexOf(" ")
-        isDelegated = firstWhitespace isnt -1
-        eventType = if isDelegated then event.substr(0, firstWhitespace) else event
-        target = if isDelegated then event.substr(firstWhitespace + 1) else null
-
-        @view.on eventType, target, =>
-          handler.apply(@, arguments)
-          true
-    true
-    
+  
 class AbstractGremlin
 
 # ### static class members
@@ -48,6 +23,12 @@ class AbstractGremlin
   # Name of the gremlin, initially unknown
   name: "anonymous"
 
+  # Gremlin options
+  __settings: null
+ 
+  # Extensions used with this gremlin
+  __extensions : null
+  
   # #### constructor
 
   # The constructor function of each gremlin will get three parameters passed in:
@@ -63,11 +44,10 @@ class AbstractGremlin
   # * the gremlin is registered in the Switchboard
   # * the pseudo constructor is called
   constructor: (@view, @data, @id) ->
+    
     _addElements.call @, @elements
-    #_addEvents.call @, @events
     @interests = [] if @interests is null
     #Switchboard.register @
-    @initialize()
 
   # #### public members
 

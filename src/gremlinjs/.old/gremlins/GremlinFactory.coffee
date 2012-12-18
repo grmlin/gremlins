@@ -24,6 +24,6 @@ define ['cs!../core/helper'], (helper) ->
 
         # call the constructor function passing in the jQuery object of the dom element, the gremlin's data retrieved with
         # `.data()` and a new unique id
-        gremlin = new Gremlin $element, $element.data(), gid += 1
+        # gremlin = new Gremlin $element, $element.data(), gid += 1
         successCallback.apply null, [gremlin]
         return yes
