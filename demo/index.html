@@ -2,24 +2,27 @@
 <html>
 <head>
     <title>GremlinJS</title>
-    <script type="text/javascript" src="zepto.min.js"></script>
-    <script type="text/javascript" src="http://requirejs.org/docs/release/2.1.2/minified/require.js"></script>
+    <script type="text/javascript" src="vendor/require.js"></script>
     <script type="text/javascript">
         var gremlins;
         require.config({
             paths : {
-                "jquery"    : "jquery.min",
-                "gremlinjs" : "./gremlin.min"
+                "jquery"    : "./vendor/jquery.min",
+                "zepto"     : "./vendor/zepto.min",
+                "gator"     : "./vendor/gator.min",
+                "gremlinjs" : "./../gremlinjs/gremlin.min"
             },
             shim: {
                 "zepto": {
                     exports: "$"
+                },
+                "gator": {
+                    exports: "Gator"
                 }
             }
         });
-        require(["gremlinjs"], function (gremlinjs) {
-            gremlinjs.Loader.getLoader("gremlins/", "gremlin").load();
-            gremlinjs.Loader.getLoader("gremlins/", "gremlin").load();
+        require(["."], function (gremlinjs) {
+            gremlinjs.Loader.getLoader("./gremlins/", "gremlin").load();
         });
     </script>
 </head>

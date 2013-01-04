@@ -1,5 +1,5 @@
-helper = require "./../helper.coffee"
-AbstractExtension = require "./AbstractExtension.coffee"
+helper = require "./../gremlinjs/helper.coffee"
+AbstractExtension = require "./../gremlinjs/extensions/AbstractExtension.coffee"
 
 # add all event listeners to the instance
 #
@@ -48,4 +48,6 @@ class JQuery extends AbstractExtension
       @onLoad()
 
 module.exports = JQuery 
+
+### window.define
   
