@@ -6,27 +6,35 @@
     <script type="text/javascript">
         var gremlins;
         require.config({
-            paths : {
-                "jquery"    : "./vendor/jquery.min",
-                "zepto"     : "./vendor/zepto.min",
-                "gator"     : "./vendor/gator.min",
-                "gremlinjs" : "./../gremlinjs/gremlin.min"
+            baseUrl : "./",
+            paths   : {
+                "jquery"    : "vendor/jquery.min",
+                "zepto"     : "vendor/zepto.min",
+                "gator"     : "vendor/gator.min",
+                "gremlinjs" : "build/gremlinjs/gremlin.min"
             },
-            shim: {
-                "zepto": {
-                    exports: "$"
+            shim    : {
+                "zepto" : {
+                    exports : "$"
                 },
-                "gator": {
-                    exports: "Gator"
+                "gator" : {
+                    exports : "Gator"
                 }
             }
         });
-        require(["."], function (gremlinjs) {
-            gremlinjs.Loader.getLoader("./gremlins/", "gremlin").load();
+        require(["gremlinjs"], function (gremlinjs) {
+            gremlinjs.Loader.getLoader("../gremlins/", "gremlin").load();
         });
     </script>
 </head>
 <body>
+
+<div class="gremlin" data-gremlin-name="A">
+    <div class="content"><h1>Click me</h1></div>
+</div>
+<div class="gremlin" data-gremlin-name="B,C">
+    <div class="content"></div>
+</div>
 
 <div class="gremlin"
      data-gremlin-name="Foo"

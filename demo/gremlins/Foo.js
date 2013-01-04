@@ -1,4 +1,4 @@
-define(["../."], function (gremlinjs) {
+define(["gremlinjs"], function (gremlinjs) {
     var HelloWorld = gremlinjs.Gremlin.extend("HelloWorld", {
         elements     : {
             ".content" : "content"

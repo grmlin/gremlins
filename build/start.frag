@@ -5,4 +5,4 @@
  * Copyright 2012, Andreas Wehr
  * Released under the MIT License
  */
- define("gremlinjs",function(){
+ define("{{MODULE_NAME}}",function(){
