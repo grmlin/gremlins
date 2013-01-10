@@ -1,7 +1,7 @@
 helper            = require "./../helper.coffee"
-GremlinCollection = require "./GremlinCollection.coffee"
+GremlinCollection = require "./../gremlins/GremlinCollection.coffee"
 
-class Hound
+class DomWalker
   @LEGACY_TAG_SELECTOR : "*"
 
   _className : null
@@ -11,7 +11,7 @@ class Hound
   constructor : (className, doWatch = no) ->
     @_className = className
     @_isNative = helper.isFunction document.getElementsByClassName
-    @_elements = if @_isNative then document.getElementsByClassName(className) else document.getElementsByTagName(Hound.LEGACY_TAG_SELECTOR)
+    @_elements = if @_isNative then document.getElementsByClassName(className) else document.getElementsByTagName(DomWalker.LEGACY_TAG_SELECTOR)
 
   _getElements : ->
     coll = new GremlinCollection
@@ -23,12 +23,12 @@ class Hound
         coll.addGremlin(gremlin) if gremlin.className is @_className
 
 
-    console.log "Found #{coll.size()} gremlins in the dom"
+    #console.log "Found #{coll.size()} gremlins in the dom"
 
     return coll
 
-  seek : ->
+  getGremlinCollection : ->
     @_getElements()
 
 
-module.exports = Hound
+module.exports = DomWalker

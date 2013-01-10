@@ -16,9 +16,4 @@ class GremlinCollection
   toArray : ->
     @_elements
     
-class Foo extends GremlinCollection
-  constructor: ->
-    super
-
-
 module.exports = GremlinCollection

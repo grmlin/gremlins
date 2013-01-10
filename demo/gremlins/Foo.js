@@ -14,7 +14,7 @@ define(["gremlinjs"], function (gremlinjs) {
             this.$content.html("<h1>OUCH</h1>");
         }
     }, {
-        extensions : [gremlinjs.extensions.ZEPTO]
+        extensions : [gremlinjs.extensions.JQUERY]
     });
     return HelloWorld;
 });

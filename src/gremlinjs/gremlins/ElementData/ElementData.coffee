@@ -27,10 +27,13 @@ getData = (element) ->
   return resultObj
 
 class ElementData
-  
-  constructor: (@_el) ->
-    
-  toObject: ->
-    getData @_el 
-  
+
+  constructor : (@_el) ->
+    @_obj = getData @_el
+
+  get : (key) ->
+    @_obj[key] ? null
+  toObject : ->
+    @_obj
+
 module.exports = ElementData

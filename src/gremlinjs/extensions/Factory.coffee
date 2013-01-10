@@ -4,8 +4,7 @@ getExtension = (name, gremlin, cb) ->
   if typeof name is "string"
     base = requirejs.s.contexts._.config.baseUrl
     grmlinSrc = requirejs.s.contexts._.config.paths.gremlinjs.replace("gremlin.min","")
-    src = "#{grmlinSrc}extensions/#{name}/index"
-    console.log "loading #{src}"
+    src = "#{grmlinSrc}gremlinExtensions/#{name}/index"
     window.require [src], (E) ->
       ext = new E gremlin
       cb.call null, ext

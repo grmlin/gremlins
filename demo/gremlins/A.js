@@ -7,6 +7,7 @@ define(["gremlinjs"], function (gremlinjs) {
            "click .content h1": "_handleClick"
         },
         initialize   : function () {
+            console.log("Gremlin A initialized")
         },
         _handleClick : function () {
             console.log("Chattering");

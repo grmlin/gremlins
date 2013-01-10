@@ -6,7 +6,7 @@
 GID_ATTR = "data-gid"
 
 helper            = require "./../helper.coffee"
-ElementData       = require "./../loader/ElementData/ElementData.coffee"
+ElementData       = require "./ElementData/ElementData.coffee"
 ExtensionFactory  = require "./../extensions/Factory.coffee"
 AbstractExtension = require "./../extensions/AbstractExtension.coffee"
 
@@ -26,10 +26,9 @@ module.exports =
     throw new TypeError "GremlinFactory#createGremlin> The gremlin module #{name} didn't return a (constructor) function and will not work!"
 
   # Create a gremlin
-  create  : (name, element, successCallback) ->
+  create  : (name, element, elementData, successCallback) ->
     # Use requirejs to load the gremlin class dynamically
     gid = uid()
-    data = new ElementData element
     extensions = []
     
     window.require [name], (Gremlin) ->
@@ -37,7 +36,7 @@ module.exports =
 
       # call the constructor function passing in the jQuery object of the dom element, the gremlin's data retrieved with
       # `.data()` and a new unique id
-      gremlin = new Gremlin element, data.toObject(), gid
+      gremlin = new Gremlin element, elementData, gid
 
       ExtensionFactory.create gremlin, =>
         gremlin.initialize()

@@ -22,7 +22,10 @@
                 }
             }
         });
-        require(["gremlinjs"], function (gremlinjs) {
+        require(["gremlinjs"], function (gremlinjs) {    
+            gremlinjs.configuration.set({
+                modules: ["debug"]
+            });
             gremlinjs.Loader.getLoader("../gremlins/", "gremlin").load();
         });
     </script>
@@ -33,7 +36,7 @@
     <div class="content"><h1>Click me</h1></div>
 </div>
 <div class="gremlin" data-gremlin-name="B,C">
-    <div class="content"></div>
+    <div class="content"><ul></ul></div>
 </div>
 
 <div class="gremlin"
@@ -45,6 +48,13 @@
      data-true="true"
      data-false="false">
     <div class="content"></div>
+</div>
+
+<div class="gremlin" data-lazy-load="true" data-gremlin-name="A" style="border-top: 1px solid red;margin-top: 2000px;">
+    <div class="content"><h1>Click me</h1></div>
+</div>
+<div class="gremlin" data-lazy-load="true" data-gremlin-name="B,C">
+    <div class="content"><ul></ul></div>
 </div>
 
 </body>

@@ -63,11 +63,13 @@ module.exports =
         else
           destination[key] = module.exports.extend destination[key], val
     destination
-    
+  # test an dom element for a specific css class
   hasClass      : (element, className) ->
     element.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+  # add an css class to a dom element
   addClass      : (element, className) ->
     element.className += " " + className if (!module.exports.hasClass(element, className))
+  # remove a css class from a dom element
   removeClass   : (element, className) ->
     if (module.exports.hasClass(element, className))
       reg = new RegExp('(\\s|^)' + className + '(\\s|$)')

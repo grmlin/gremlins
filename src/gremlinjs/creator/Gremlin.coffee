@@ -4,7 +4,7 @@
 # The gremlin's lair. All gremlins should be created with this
 
 helper          = require "./../helper.coffee"
-defaults        = require "./../conf/default.options.coffee"
+defaults        = require "./../conf/gremlin.defaults.coffee"
 AbstractGremlin = require "./AbstractGremlin.coffee"
           
 # the exported object

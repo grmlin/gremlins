@@ -4,30 +4,26 @@
 # Switchboard singleton, handling the inter-gremlin notifications
 
 # defininge the GremlinSwitchboard module for requirejs
-define ['cs!../core/helper'], (helper) ->
-  # ## Private module members
+# ## Private module members
 
-  # interests cache
-  cache = {}
+# interests cache
+cache = {}
 
-  # ## Public module members
+# ## Public module members
 
-  # The switchboard
-  exports =
-    # Register a gremlin
-    register: (gremlin) ->
-      gremlin.bind gremlin.NOTIFICATION, @_broadcast, @
-      @_addInterest gremlin, interest for interest in gremlin.interests
+# The switchboard
+module.exports =
+  # Register a gremlin
+  register: (gremlin) ->
+    @_addInterest gremlin, interest for interest in gremlin.interests
 
-    _broadcast: (eventType, eventData) ->
-      interest = eventData.interest
-      notificationData = eventData.notificationData
-      unless helper.isUndefined cache[interest]
-        @__notify gremlin, interest, notificationData for gremlin in cache[interest]
+  dispatch: (interest, data) ->
+    unless cache[interest] is undefined
+      @__notify gremlin, interest, data for gremlin in cache[interest]
+      
+  _addInterest: (gremlin, interest) ->
+    cache[interest] = [] if cache[interest] is undefined
+    cache[interest].push gremlin
 
-    _addInterest: (gremlin, interest) ->
-      cache[interest] = [] if helper.isUndefined cache[interest]
-      cache[interest].push gremlin
-
-    __notify: (gremlin, interest, data) ->
-      gremlin.inform interest, data
+  __notify: (gremlin, interest, data) ->
+    gremlin.inform interest, data

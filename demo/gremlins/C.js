@@ -1,16 +1,16 @@
 define(["gremlinjs"], function (gremlinjs) {
-    var B = gremlinjs.Gremlin.extend("B", {
+    var C = gremlinjs.Gremlin.extend("C", {
         elements  : {
             ".content ul" : "li"
         },
-        interests : ["B"],
+        interests : ["C"],
         inform    : function (interest, notificationData) {
-            if (interest === "B") {
-                this.$li.append("<li><p>B chattered</p></li>")
+            if (interest === "C") {
+                this.$li.append("<li><p>C chattered</p></li>")
             }
         }
     }, {
         extensions : [gremlinjs.extensions.JQUERY]
     });
-    return B;
+    return C;
 });

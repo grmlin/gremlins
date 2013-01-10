@@ -1,5 +1,5 @@
 helper       = require "./../helper.coffee"
-
+Switchboard  = require "./../switchboard/GremlinSwitchboard.coffee"
 # add all jquery elements to the instance
 _addElements = (elements) ->
   unless @elements is null
@@ -11,9 +11,6 @@ _addElements = (elements) ->
 class AbstractGremlin
 
 # ### static class members
-
-# Gremlin chatter event
-  @NOTIFICATION: "GREMLIN_NOTIFICATION"
 
   # Gremlin HTML changed event. This is the only build in Notification for gremlins. It's used with @triggerChange
   @CONTENT_CHANGED: "gremlinjs_gremlin_content_changed"
@@ -47,7 +44,7 @@ class AbstractGremlin
     
     _addElements.call @, @elements
     @interests = [] if @interests is null
-    #Switchboard.register @
+    Switchboard.register @
 
   # #### public members
 
@@ -77,7 +74,7 @@ class AbstractGremlin
     # e.g.:
     # @chatter("FOO",{})
   chatter: (interest, notificationData = {}) ->
-    @dispatch @NOTIFICATION, {interest: interest, notificationData: notificationData}
+    Switchboard.dispatch interest, notificationData
 
   # Trigger the content change event of a gremlin
   triggerChange: ->
