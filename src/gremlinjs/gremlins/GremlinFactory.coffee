@@ -6,7 +6,7 @@
 GID_ATTR = "data-gid"
 
 helper            = require "./../helper.coffee"
-ElementData       = require "./ElementData/ElementData.coffee"
+ElementData       = require "./../loader/ElementData/ElementData.coffee"
 ExtensionFactory  = require "./../extensions/Factory.coffee"
 AbstractExtension = require "./../extensions/AbstractExtension.coffee"
 
