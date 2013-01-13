@@ -7,7 +7,7 @@ GID_ATTR = "data-gid"
 
 helper            = require "./../helper.coffee"
 ElementData       = require "./ElementData/ElementData.coffee"
-ExtensionFactory  = require "./../extensions/Factory.coffee"
+ExtensionFactory  = require "./../extensions/ExtensionFactory.coffee"
 AbstractExtension = require "./../extensions/AbstractExtension.coffee"
 
 # defininge the GremlinFactory module for requirejs
@@ -26,10 +26,9 @@ module.exports =
     throw new TypeError "GremlinFactory#createGremlin> The gremlin module #{name} didn't return a (constructor) function and will not work!"
 
   # Create a gremlin
-  create  : (name, element, elementData, successCallback) ->
+  getInstance  : (name, element, elementData, successCallback) ->
     # Use requirejs to load the gremlin class dynamically
     gid = uid()
-    extensions = []
     
     window.require [name], (Gremlin) ->
       return module.exports.onError name unless helper.isFunction Gremlin
@@ -38,8 +37,17 @@ module.exports =
       # `.data()` and a new unique id
       gremlin = new Gremlin element, elementData, gid
 
-      ExtensionFactory.create gremlin, =>
-        gremlin.initialize()
-        successCallback.call null, gremlin   
-        
+      # hook up all extensions for this gremlin and initialize it afterwards
+      available  = gremlin.__settings.extensions
+      length     = available.length
+      count      = 0
+      
+      for name in available
+        do (name) ->
+          ExtensionFactory.create name, gremlin, =>
+            count += 1
+            if count is length
+              gremlin.initialize()
+              successCallback.call null, gremlin
+
       return yes

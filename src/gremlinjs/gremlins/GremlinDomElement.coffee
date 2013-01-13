@@ -38,7 +38,7 @@ class GremlinDomElement
 
   _createGremlin : (name) ->
     # Call the factory and request a new gremlin
-    Factory.create name, @_el, @_data.toObject(), (gremlin) =>
+    Factory.getInstance name, @_el, @_data.toObject(), (gremlin) =>
       # - Add the gremlin to the stack
       # - listen to the content change event of each gremlin and rescan the gremlins view for gremlins when it fires
       # - gremlin is loaded now, remove the loading css class

@@ -7,23 +7,23 @@
 Loader = require "./Loader.coffee"
 
 # The internal cache
-cache = {}
-
+cache   = {}
 # Used css classes, we don't want to use them twice
 classes = {}
 
 # ## Public module members
 
 # Get a `gremlinjs/gremlins/Loader` instance
-module.exports.getInstance = (namespace, cssClass) ->
-  key = "#{namespace}_#{cssClass}"
+module.exports =
+  getInstance : (namespace, cssClass) ->
+    key = "#{namespace}_#{cssClass}"
 
-  if cache[key] is undefined
-    if classes[cssClass] is true
-      throw new Error "GremlinJS: Trying to use the same css class (#{cssClass}) with multiple namespaces."
+    if cache[key] is undefined
+      if classes[cssClass] is true
+        throw new Error "GremlinJS: Trying to use the same css class (#{cssClass}) with multiple namespaces."
 
-    classes[cssClass] = true
-    cache[key] = new Loader(namespace, cssClass)
+      classes[cssClass] = true
+      cache[key] = new Loader(namespace, cssClass)
 
-  return cache[key]
+    return cache[key]
 

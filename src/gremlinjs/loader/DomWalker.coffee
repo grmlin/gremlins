@@ -10,8 +10,8 @@ class DomWalker
 
   constructor : (className, doWatch = no) ->
     @_className = className
-    @_isNative = helper.isFunction document.getElementsByClassName
-    @_elements = if @_isNative then document.getElementsByClassName(className) else document.getElementsByTagName(DomWalker.LEGACY_TAG_SELECTOR)
+    @_isNative  = helper.isFunction document.getElementsByClassName
+    @_elements  = if @_isNative then document.getElementsByClassName(className) else document.getElementsByTagName(DomWalker.LEGACY_TAG_SELECTOR)
 
   _getElements : ->
     coll = new GremlinCollection

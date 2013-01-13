@@ -23,10 +23,11 @@
             }
         });
         require(["gremlinjs"], function (gremlinjs) {    
+            console.dir(gremlinjs)
             gremlinjs.configuration.set({
                 modules: ["debug"]
             });
-            gremlinjs.Loader.getLoader("../gremlins/", "gremlin").load();
+            gremlinjs.getLoader("../gremlins/", "gremlin").load();
         });
     </script>
 </head>

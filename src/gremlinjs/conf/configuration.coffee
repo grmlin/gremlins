@@ -1,4 +1,6 @@
-helper = require "../helper.coffee"
+helper         = require "../helper.coffee"
+ModulesManager = require "../modules/ModulesManager.coffee"
+
 config =
   modules : []
   watch   : no
@@ -6,7 +8,8 @@ config =
 module.exports =
   set : (newConfig = {}) ->
     config = helper.extend config, newConfig
-
+    ModulesManager.loadModules(config.modules)
+    
   get : () ->
     config
     

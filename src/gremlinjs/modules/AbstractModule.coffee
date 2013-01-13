@@ -1,7 +1,5 @@
-class AbstractExtension
-  _gremlin    : null
-  constructor : (@_gremlin) ->
+class AbstractModule
+  constructor : () ->
   initialize  : ->
-  onReady     : ->
 
-module.exports = AbstractExtension
+module.exports = AbstractModule

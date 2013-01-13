@@ -1,31 +1,28 @@
-extensionTypes = require "./../extensions/constants.coffee"
+AbstractExtension = require "./AbstractExtension.coffee"
+requirejsEnv      = require "../conf/requirejsEnv.coffee"
+helper            = require "../helper.coffee"
 
+EXTENSIONS_PATH         = "#{requirejsEnv.GREMLINJS_PATH}gremlinjsExtensions/"
+EXTENSION_INDEX_FILE    = "/index"
+  
 getExtension = (name, gremlin, cb) ->
   if typeof name is "string"
-    base = requirejs.s.contexts._.config.baseUrl
-    grmlinSrc = requirejs.s.contexts._.config.paths.gremlinjs.replace("gremlin.min","")
-    src = "#{grmlinSrc}gremlinExtensions/#{name}/index"
-    window.require [src], (E) ->
-      ext = new E gremlin
+    src = "#{EXTENSIONS_PATH}#{name}#{EXTENSION_INDEX_FILE}"
+    window.require [src], (extensionMixin) ->
+      class Extension extends AbstractExtension
+      helper.mixin(Extension, extensionMixin)
+      ext = new Extension gremlin
       cb.call null, ext
   else
     throw new TypeError "GremlinJS extension <#{name}> unavailable"
 
 class Factory
-  create : (gremlin, cb) ->
-    # processing extensions
-    extensions = []
-    available  = gremlin.__settings.extensions
-    length     = available.length
+  create : (name, gremlin, cb) ->
+    # processing extension
+    getExtension name, gremlin, (e)=>
+      e.onReady = =>
+        cb.call null, gremlin
 
-    for name in available
-      do (name) ->
-        getExtension name, gremlin, (e)=>
-          e.onLoad = =>
-            extensions.push e
-            if extensions.length is length
-              cb.call null, gremlin
-
-          e.load()
+      e.initialize()
 
 module.exports = new Factory

@@ -41,47 +41,11 @@ task "build", 'Compiles and minifies coffeescript sources for production', (opti
 
 
 task 'extensions', 'Building gremlinjs extensions', ->
-  LIB_NAME     = "gremlinjs"
-  EXT_PATH     = "gremlinExtensions"
-  DIR_OUT      = path.join __dirname, "build", "gremlinjs", EXT_PATH
-  #DEST         = path.join DIR_OUT, FILENAME_MIN
+  compileExternals("gremlinjsExtensions")
 
-  webpack = require "webpack"
-
-  wrench.rmdirSyncRecursive DIR_OUT if fs.existsSync DIR_OUT
-
-  files = fs.readdirSync(path.join(__dirname, "src", EXT_PATH))
-  filesToCompile = files.filter (file) ->
-    src  = path.join __dirname, "src", EXT_PATH, file
-    stat = fs.statSync(src)
-    stat.isFile()
-
-  compileNext = ->
-    if filesToCompile.length > 0
-      file = filesToCompile.shift()
-      src  = path.join __dirname, "src", EXT_PATH, file
-      filename = file.replace(".coffee", "").toLowerCase()
-      out      = path.join DIR_OUT, filename
-      options  =
-        output          : "index.js"
-        outputDirectory : out
-        library         : LIB_NAME
-        #minimize        : true
-        #debug          : true
-        watch           : false
-      dest     = path.join(out, options.output)
-
-
-      console.log "File:", file, "(#{dest})"
-      webpack src, options, (err, stats)->
-        console.log "Error occured:", err if err
-        unless err
-          console.log "webpack: extensions updated"
-          result = wrapFile(filename, dest, yes)
-          fs.writeFileSync dest, result, 'utf8'
-          compileNext()
-
-  compileNext()
+task 'modules', 'Building gremlinjs modules', ->
+  compileExternals("gremlinjsModules")
+  
 
 task 'docco', 'Building the docco files for GremlinJS', ->
   wrench = require "wrench"
@@ -137,3 +101,43 @@ stdErrorStreamer = (filter) ->
   (str) ->
     str = filter str if filter
     process.stderr.write str.red
+    
+compileExternals = (EXT_PATH) ->
+  LIB_NAME = "gremlinjs"
+  DIR_OUT = path.join __dirname, "build", "gremlinjs", EXT_PATH
+  webpack = require "webpack"
+
+  wrench.rmdirSyncRecursive DIR_OUT if fs.existsSync DIR_OUT
+
+  files = fs.readdirSync(path.join(__dirname, "src", EXT_PATH))
+  filesToCompile = files.filter (file) ->
+    src  = path.join __dirname, "src", EXT_PATH, file
+    stat = fs.statSync(src)
+    stat.isFile()
+
+  compileNext = ->
+    if filesToCompile.length > 0
+      file = filesToCompile.shift()
+      src  = path.join __dirname, "src", EXT_PATH, file
+      filename = file.replace(".coffee", "")#.toLowerCase()
+      out      = path.join DIR_OUT, filename
+      options  =
+        output          : "index.js"
+        outputDirectory : out
+        library         : LIB_NAME
+        #minimize        : true
+        #debug          : true
+        watch           : false
+      dest     = path.join(out, options.output)
+
+
+      console.log "File:", file, "(#{dest})"
+      webpack src, options, (err, stats)->
+        console.log "Error occured:", err if err
+        unless err
+          console.log "webpack: extensions updated"
+          result = wrapFile(filename, dest, yes)
+          fs.writeFileSync dest, result, 'utf8'
+          compileNext()
+
+  compileNext()

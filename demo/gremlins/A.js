@@ -1,5 +1,5 @@
 define(["gremlinjs"], function (gremlinjs) {
-    var A = gremlinjs.Gremlin.extend("A", {
+    var A = gremlinjs.AbstractGremlin.extend("A", {
         elements     : {
             ".content h1" : "content"
         },
@@ -15,7 +15,7 @@ define(["gremlinjs"], function (gremlinjs) {
             this.chatter("C");
         }
     }, {
-        extensions : [gremlinjs.extensions.JQUERY]
+        extensions : [gremlinjs.extensionTypes.JQUERY]
     });
     return A;
 });
