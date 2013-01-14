@@ -3,7 +3,7 @@ AbstractGremlin = require "./gremlinjs/gremlins/AbstractGremlin.coffee"
 LoaderPool      = require "./gremlinjs/loader/LoaderPool.coffee"
 helper          = require "./gremlinjs/helper.coffee"
 extensions      = require "./gremlinjs/extensions/extensionTypes.coffee"
-configuration   = require "./gremlinjs/conf/Configuration.coffee"
+configuration   = require "./gremlinjs/conf/configuration.coffee"
 
 module.exports =
   # Gremlin creation
