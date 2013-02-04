@@ -10,12 +10,10 @@ module.exports =
   AbstractGremlin :
     extend : AbstractGremlin.extend
   # GremlinJS configuration
-  configuration   :
-    get : configuration.get
-    set : configuration.set
+  configuration   : configuration
   # Included GremlinJS extensions
   extensionTypes  : extensions
   # Loader 
-  load        : LoaderPool.load 
+  load            : LoaderPool.load
   # shortcut to the helper module
   helper          : helper
