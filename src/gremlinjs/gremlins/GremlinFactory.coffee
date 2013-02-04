@@ -9,6 +9,7 @@ helper            = require "./../helper.coffee"
 ElementData       = require "./ElementData/ElementData.coffee"
 ExtensionFactory  = require "./../extensions/ExtensionFactory.coffee"
 AbstractExtension = require "./../extensions/AbstractExtension.coffee"
+configuration     = require "./../conf/configuration.coffee"
 
 # defininge the GremlinFactory module for requirejs
 # A unique id counter used for gremlin instantiation
@@ -29,7 +30,9 @@ module.exports =
   getInstance  : (name, element, elementData, successCallback) ->
     # Use requirejs to load the gremlin class dynamically
     gid = uid()
-    
+
+    # TODO add check for trailing /
+    name = configuration.get('path') + name
     window.require [name], (Gremlin) ->
       return module.exports.onError name unless helper.isFunction Gremlin
 

@@ -15,7 +15,7 @@ module.exports =
     set : configuration.set
   # Included GremlinJS extensions
   extensionTypes  : extensions
-  # Loader creation
-  getLoader       : LoaderPool.getInstance
+  # Loader 
+  load        : LoaderPool.load 
   # shortcut to the helper module
   helper          : helper

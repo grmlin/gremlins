@@ -15,20 +15,18 @@ class GremlinDomElement
   _el                          : null
   _data                        : null
   _cls                         : null
-  _ns                          : null
   _gremlins                    : null
   
-  constructor : (el, cssClass, namespace) ->
+  constructor : (el, cssClass) ->
     @_el = el
     @_cls = cssClass
-    @_ns = namespace
     @_data = new ElementData(@_el)
 
   _loadGremlin : (name) ->
     helper.removeClass @_el, @_cls
     helper.addClass @_el, GremlinDomElement.GREMLIN_LOADING_CLASS
 
-    name = @_ns + name.trim()
+    name = name.trim()
 
     if (helper.isString(name) and not helper.isEmptyString(name))
       @_createGremlin(name)

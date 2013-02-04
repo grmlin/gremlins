@@ -12,25 +12,26 @@ class Loader
 
 
   _walker          : null
-  _namespace       : null
-  _gremlinCssClass : null
+  _cssClass : null
   _elements        : null
   _lazyElements    : null
 
-  constructor : (namespace = "", gremlinCssClass = "gremlin") ->
-    @_namespace = namespace
-    @_gremlinCssClass = gremlinCssClass
-    @_walker = new Walker @_gremlinCssClass
+  constructor : (cssClass) ->
+    @_cssClass = cssClass
+    @_walker = new Walker @_cssClass
     @_elements = []
     @_lazyElements = []
+    
+    @_bindScroll()
 
+  _bindScroll : ->
     if window.addEventListener
-      window.addEventListener('scroll', @_scrollHandler, false);
+      window.addEventListener('scroll', @_scrollHandler, false)
     else if window.attachEvent
-      window.attachEvent('onscroll', @_scrollHandler);
-
+      window.attachEvent('onscroll', @_scrollHandler)
+      
   _processElement : (element) ->
-    @_elements.push(new GremlinDomElement element, @_gremlinCssClass, @_namespace)
+    @_elements.push(new GremlinDomElement(element, @_cssClass))
     current = @_elements[@_elements.length - 1]
 
     if current.isLazy()
