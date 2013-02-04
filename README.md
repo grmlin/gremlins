@@ -12,3 +12,4 @@
 - namespace/Ordner über Config
 - gremlin-name umbauen auf Ordner mit `index.js`
 - coffeescript gremlins?
+- `.on()`/`.off()` für Gremlin-Kommunikation
