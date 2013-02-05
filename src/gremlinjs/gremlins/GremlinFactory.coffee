@@ -3,7 +3,8 @@
 #
 # Factory singleton, that loads gremlin classes using *requirejs* and instantiates them
 
-GID_ATTR = "data-gid"
+GID_ATTR       = 'data-gid'
+TRAILING_SLASH = '/'
 
 helper            = require "./../helper.coffee"
 ElementData       = require "./ElementData/ElementData.coffee"
@@ -32,7 +33,8 @@ module.exports =
     gid = uid()
 
     # TODO add check for trailing /
-    name = configuration.get('path') + name
+    name = configuration.get(configuration.PATH) + name
+    name += TRAILING_SLASH if name.charAt(name.length - 1) isnt TRAILING_SLASH
     window.require [name], (Gremlin) ->
       return module.exports.onError name unless helper.isFunction Gremlin
 

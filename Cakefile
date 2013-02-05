@@ -4,8 +4,9 @@ path = require 'path'
 exec = require('child_process').exec
 
 try
-  colors     = require 'colors'
-  wrench     = require 'wrench'
+  colors  = require 'colors'
+  wrench  = require 'wrench'
+  webpack = require "webpack"
 catch error
   console.error 'Please run `npm install` first'
   process.exit 1
@@ -18,10 +19,6 @@ task "build", 'Compiles and minifies coffeescript sources for production', (opti
   DIR_OUT      = path.join __dirname, "build", "gremlinjs"
   FILENAME_MIN = "gremlin.min.js"
   DEST         = path.join DIR_OUT, FILENAME_MIN
-
-  webpack = require "webpack"
-
-
   fs.unlinkSync DEST if fs.existsSync DIR_OUT
 
   options =
@@ -34,6 +31,8 @@ task "build", 'Compiles and minifies coffeescript sources for production', (opti
 
   webpack SRC, options, (err, stats)->
     console.log err if err
+    console.log "here"
+
     unless err
       console.log "webpack: files updated"
       result = wrapFile("gremlinjs", DEST)
