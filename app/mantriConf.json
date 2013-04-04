@@ -9,8 +9,8 @@
     },
 
     "build": {
-        "input": "./scripts/gremlinjs.js",
-        "outputWrapper": "(function(){<%=output%>}).call(this);",
+        "input": "./.tmp/scripts/gremlinjs.js",
+        "outputWrapper": "(function(){<%=output%>}());",
         "exclude": [""]
     }
 }

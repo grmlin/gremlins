@@ -6,18 +6,20 @@
 <body>
 <div class="gremlin" data-gremlin-name="HelloWorld">
     <h2>Gremlin 1</h2>
+
     <div class="content"></div>
 </div>
 <hr>
 <div class="gremlin" data-gremlin-name="Buddy">
     <h2>Gremlin 2</h2>
+
     <div class="content"></div>
 </div>
 
-<script data-require="gremlinjs.App" data-config="mantriConf" data-deps="/.tmp/deps" src="/vendor/mantri.web.js"></script>
+<script data-require="Gremlinjs" data-config="mantriConf" data-deps="/.tmp/deps"
+        src="/vendor/mantri.web.js"></script>
 <script type="text/javascript">
-    var app = new gremlinjs.App();
-    app.init();
+    Gremlinjs.watch("gremlin");
 </script>
 </body>
 </html>

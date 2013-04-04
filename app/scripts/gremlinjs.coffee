@@ -19,6 +19,18 @@ module.exports =
   
   
 ###
-goog.provide 'gremlinjs.App'
+goog.provide 'Gremlinjs'
 
-gremlinjs.App = ->
+goog.require 'gremlin.helper'
+
+Gremlinjs =
+  create: ->
+
+  watch: (cssClassName) ->
+    console.log "searching for gremlins now, using selector '#{cssClassName}'"
+
+window.Gremlinjs = Gremlinjs
+
+if typeof window.define is "function" and window.define.amd
+  define "gremlinjs", [], ->
+    Gremlinjs

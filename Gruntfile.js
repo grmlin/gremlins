@@ -16,6 +16,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
 
     //
@@ -53,7 +54,7 @@ module.exports = function (grunt) {
             gremlinjs: {
                 // src can be omitted as this is also the default value.
                 src: 'app/mantriConf.json',
-                dest: 'dist/gremlinjs.min.js'
+                dest: 'dist/gremlinjs.js'
             }
         },
 
@@ -76,14 +77,30 @@ module.exports = function (grunt) {
             deps: ['app/.tmp/deps.js'],
             coffee: ["app/.tmp/scripts"],
             dist: ["dist"]
+        },
+        pkg: grunt.file.readJSON('package.json'),
+        uglify: {
+            options: {
+                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+                    '<%= grunt.template.today("yyyy-mm-dd") %> */',
+                compress: true,
+                report: 'gzip',
+                wrap: ''
+            },
+            dist: {
+                files: {
+                    'dist/gremlinjs.min.js': ['dist/gremlinjs.js']
+                }
+            }
         }
     });
 
     grunt.registerTask('cs', ['clean:coffee', 'coffee:gremlinjs']);
-    // Create shortcuts to main operations.
-    grunt.registerTask('deps', ['clean:deps','mantriDeps:gremlinjs']);
 
-    grunt.registerTask('build', ['clean:dist','mantriBuild:gremlinjs']);
+    // Create shortcuts to main operations.
+    grunt.registerTask('deps', ['clean:deps', 'mantriDeps:gremlinjs']);
+
+    grunt.registerTask('build', ['cs','clean:dist', 'mantriBuild:gremlinjs','uglify:dist']);
     grunt.registerTask('server', ['cs', 'deps', 'connect:gremlinjs', 'watch:gremlinjs']);
     // the default task, when 'grunt' is executed with no options.
     grunt.registerTask('default', ['test']);
