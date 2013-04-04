@@ -1,17 +1,20 @@
 {
-    "name"         : "GremlinJS",
-    "version"      : "0.4.0",
-    "main"         : "./src/gremlinjs/main.coffee",
-    "license"      : "MIT",
-    "repository"   : {
-        "type" : "git",
-        "url"  : "https://github.com/grmlin/gremlinjs.git"
-    },
-    "dependencies" : {
-        "webpack"    : "latest",
-        "requirejs"  : "latest",
-        "wrench"     : "latest",
-        "handlebars" : "latest",
-        "colors"     : "*"
-    }
+  "name": "GremlinJS",
+  "version": "0.4.0",
+  "main": "./src/gremlinjs/main.coffee",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grmlin/gremlinjs.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt-contrib-watch": "~0.2.0",
+    "grunt": "~0.4.0",
+    "grunt-contrib-connect": "~0.1.2",
+    "mantri": "~0.1.0",
+    "grunt-contrib-coffee": "~0.6.4",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-clean": "~0.4.0"
+  }
 }

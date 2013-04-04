@@ -17,17 +17,16 @@
 <script type="text/javascript" src="../vendor/require.js"></script>
 <script type="text/javascript">
     require.config({
-        baseUrl:"/src",
+        baseUrl:"/",
         paths:{
-            "jquery":"../vendor/jquery-1.7.1.min",
-            'cs': '../vendor/cs',
-            'coffee-script': '../vendor/coffee-script',
-            //"GremlinJS":"build/gremlinjs/gremlin-0.2.0.min"
-            "gremlinjs":"gremlinjs"
+            "jquery":"vendor/jquery-1.7.1.min",
+            'cs': 'vendor/cs',
+            'coffee-script': 'vendor/coffee-script',
+            "gremlinjs":"build/gremlinjs/gremlin-0.3.4.min"
         }
     });
-    require(["cs!gremlinjs"], function (gremlinjs) {
-        var loader = gremlinjs.getLoader("../public/gremlins/", "gremlin");
+    require(["."], function (gremlinjs) {
+        var loader = gremlinjs.getLoader("public/gremlins/", "gremlin");
         loader.load();
     });
 </script>

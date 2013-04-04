@@ -19,3 +19,6 @@ module.exports =
   
   
 ###
+goog.provide 'gremlinjs.App'
+
+gremlinjs.App = ->

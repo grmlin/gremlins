@@ -1,0 +1,16 @@
+{
+    "baseUrl": "./app",
+    "libs": {},
+
+    "deps": {
+        "target": {
+            "src": "./scripts"
+        }
+    },
+
+    "build": {
+        "input": "./scripts/gremlinjs.js",
+        "outputWrapper": "(function(){<%=output%>}).call(this);",
+        "exclude": [""]
+    }
+}
