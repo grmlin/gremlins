@@ -2,26 +2,26 @@
 # #GremlinJS - `gremlinjs/gremlins/GremlinFactory`
 #
 # Factory singleton, that loads gremlin classes using *requirejs* and instantiates them
+goog.provide 'gremlin.gremlins.GremlinFactory'
+goog.require 'gremlin.util.ElementData'
 
-GID_ATTR       = 'data-gid'
-TRAILING_SLASH = '/'
 
-helper            = require "./../helper.coffee"
-ElementData       = require "././ElementData.coffee"
-ExtensionFactory  = require "./../extensions/ExtensionFactory.coffee"
-AbstractExtension = require "./../extensions/AbstractExtension.coffee"
-configuration     = require "./../conf/Configuration.coffee"
+class gremlin.gremlins.GremlinFactory
+  DATA_GREMLIN_NAME = 'gremlinName'
+  # A unique id counter used for gremlin instantiation
+  uid = do ->
+    i = 0
+    return ->
+      i++
 
-# defininge the GremlinFactory module for requirejs
-# A unique id counter used for gremlin instantiation
-uid = do ->
-  i = 0
-  return ->
-    i++
-
+  @getInstance: (element) ->
+    data = new gremlin.util.ElementData.ElementData element
+    name = data.get DATA_GREMLIN_NAME
+    
 # ## Public module members
 
 # the exported module object
+###
 module.exports =
 # error handler
   onError : (name) ->
@@ -56,3 +56,4 @@ module.exports =
               successCallback.call null, gremlin
 
       return yes
+###

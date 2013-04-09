@@ -1,8 +1,8 @@
 # js source by https://github.com/mrappleton/microevent.js
 
-goog.provide "gremlin.Event"
+goog.provide "gremlin.event.Event"
 
-class gremlin.Event
+class gremlin.event.Event
   constructor: ->
     @_events = new Object()
 

@@ -23,6 +23,7 @@ goog.provide 'GremlinJS'
 
 goog.require 'gremlin.util.ready'
 goog.require 'gremlin.Application'
+goog.require 'gremlin.conf.Configuration'
 
 
 class GremlinJS
@@ -30,7 +31,13 @@ class GremlinJS
     console.log 'dom ready'
     gremlin.Application.get().start()
 
-  @gremlin: (name, definition) ->
+  @options : gremlin.conf.Configuration.options
+
+  @config : (option, value) ->
+    gremlin.Application.get().config option, value
+
+  @gremlin : (name, definition) ->
+
 
 window.GremlinJS = GremlinJS
 

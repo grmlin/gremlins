@@ -1,27 +1,45 @@
-helper      = require "./../helper.coffee"
-ElementData = require "././ElementData.coffee"
-Factory     = require "./GremlinFactory.coffee"
+goog.provide 'gremlin.gremlins.GremlinDomElement'
+goog.require 'gremlin.util.ElementData.ElementData'
+goog.require 'gremlin.util.Helper'
+
+#helper      = require "./../helper.coffee"
+#ElementData = require "././ElementData.coffee"
+#Factory     = require "./GremlinFactory.coffee"
 
 isModern = document.body.getBoundingClientRect isnt undefined
 
-class GremlinDomElement
-# static
+class gremlin.gremlins.GremlinDomElement
+  DATA_LAZY = "lazyLoad"
+  DATA_NAME = 'gremlinName'
+  NAME_SEPARATOR  = ","
+  CSS_CLASS_LOADING = "gremlin-loading"
+  CSS_CLASS_READY = 'gremlin-ready'
+  CSS_CLASS_ERROR = 'gremlin-error'
+  
+
+  # static
   @DATA_GREMLIN_NAME_ATTRIBUTE : "data-gremlin-name"
   @GREMLIN_NAME_SEPARATOR      : ","
   @GREMLIN_LOADING_CLASS       : "gremlin-loading"
   @GREMLIN_READY_CLASS         : "gremlin-ready"
   @GREMLIN_LAZY_BUFFER         : 100
   # members
-  _el                          : null
-  _data                        : null
-  _cls                         : null
   _gremlins                    : null
-  
-  constructor : (el, cssClass) ->
-    @_el = el
-    @_cls = cssClass
-    @_data = new ElementData(@_el)
 
+  constructor : (@_el, cssClass) ->
+    console.log cssClass
+    @_data = new gremlin.util.ElementData.ElementData @_el
+    
+    try 
+      @_names = (name.trim() for name in @_data.get(DATA_NAME).split(NAME_SEPARATOR))
+      @_isLazy = if @_data.get(DATA_LAZY) is yes then yes else no
+        
+      gremlin.util.Helper.addClass @_el, CSS_CLASS_LOADING
+    catch error
+      gremlin.util.Helper.addClass @_el, CSS_CLASS_ERROR
+    finally
+      gremlin.util.Helper.removeClass @_el, cssClass
+    
   _loadGremlin : (name) ->
     helper.removeClass @_el, @_cls
     helper.addClass @_el, GremlinDomElement.GREMLIN_LOADING_CLASS
@@ -55,18 +73,15 @@ class GremlinDomElement
       names = @_el.getAttribute GremlinDomElement.DATA_GREMLIN_NAME_ATTRIBUTE
       @_loadGremlin name for name in names.split(GremlinDomElement.GREMLIN_NAME_SEPARATOR)
 
-  isLazy : ->
-    @_data.get("lazyLoad")
+  isInViewport : ->
+    return yes unless @_isLazy
 
-  isInViewport : (scrollTop) ->
     if isModern
       clientHeight = document.documentElement.clientHeight
       box = @_el.getBoundingClientRect()
       distance = box.top - clientHeight;
-    
     else
       distance = 0
 
     distance < GremlinDomElement.GREMLIN_LAZY_BUFFER
     
-module.exports = GremlinDomElement
