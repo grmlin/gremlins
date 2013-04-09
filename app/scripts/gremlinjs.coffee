@@ -19,18 +19,21 @@ module.exports =
   
   
 ###
-goog.provide 'Gremlinjs'
+goog.provide 'GremlinJS'
 
-goog.require 'gremlin.helper'
+goog.require 'gremlin.util.ready'
+goog.require 'gremlin.Application'
 
-Gremlinjs =
-  create: ->
 
-  watch: (cssClassName) ->
-    console.log "searching for gremlins now, using selector '#{cssClassName}'"
+class GremlinJS
+  gremlin.util.ready ->
+    console.log 'dom ready'
+    gremlin.Application.get().start()
 
-window.Gremlinjs = Gremlinjs
+  @gremlin: (name, definition) ->
+
+window.GremlinJS = GremlinJS
 
 if typeof window.define is "function" and window.define.amd
-  define "gremlinjs", [], ->
-    Gremlinjs
+  define "GremlinJS", [], ->
+    GremlinJS

@@ -7,10 +7,10 @@ GID_ATTR       = 'data-gid'
 TRAILING_SLASH = '/'
 
 helper            = require "./../helper.coffee"
-ElementData       = require "./ElementData/ElementData.coffee"
+ElementData       = require "././ElementData.coffee"
 ExtensionFactory  = require "./../extensions/ExtensionFactory.coffee"
 AbstractExtension = require "./../extensions/AbstractExtension.coffee"
-configuration     = require "./../conf/configuration.coffee"
+configuration     = require "./../conf/Configuration.coffee"
 
 # defininge the GremlinFactory module for requirejs
 # A unique id counter used for gremlin instantiation

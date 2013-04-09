@@ -9,7 +9,7 @@
     },
 
     "build": {
-        "input": "./.tmp/scripts/gremlinjs.js",
+        "input": "./.tmp/scripts/GremlinJS.js",
         "outputWrapper": "(function(){<%=output%>}());",
         "exclude": [""]
     }

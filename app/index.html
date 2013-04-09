@@ -3,7 +3,7 @@
 <head>
     <title></title>
 </head>
-<body>
+<body data-gremlin-classname="gremlin">
 <div class="gremlin" data-gremlin-name="HelloWorld">
     <h2>Gremlin 1</h2>
 
@@ -15,11 +15,25 @@
 
     <div class="content"></div>
 </div>
+<hr>
+<p>
+    <button onclick="addGremlin()">Add a gremlin</button>
+</p>
 
-<script data-require="Gremlinjs" data-config="mantriConf" data-deps="/.tmp/deps"
+<div id="adder">
+
+</div>
+<script data-require="GremlinJS" data-config="mantriConf" data-deps="/.tmp/deps"
         src="/vendor/mantri.web.js"></script>
 <script type="text/javascript">
-    Gremlinjs.watch("gremlin");
+    var addGremlin = function(){
+        var el = document.createElement('div');
+        el.className = "gremlin";
+        document.getElementById("adder").appendChild(el);
+    };
+
 </script>
+
+
 </body>
 </html>

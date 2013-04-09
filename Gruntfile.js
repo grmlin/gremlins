@@ -54,7 +54,7 @@ module.exports = function (grunt) {
             gremlinjs: {
                 // src can be omitted as this is also the default value.
                 src: 'app/mantriConf.json',
-                dest: 'dist/gremlinjs.js'
+                dest: 'dist/GremlinJS.js'
             }
         },
 
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    'dist/gremlinjs.min.js': ['dist/gremlinjs.js']
+                    'dist/GremlinJS.min.js': ['dist/GremlinJS.js']
                 }
             }
         }

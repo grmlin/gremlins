@@ -1,5 +1,5 @@
 helper      = require "./../helper.coffee"
-ElementData = require "./ElementData/ElementData.coffee"
+ElementData = require "././ElementData.coffee"
 Factory     = require "./GremlinFactory.coffee"
 
 isModern = document.body.getBoundingClientRect isnt undefined

@@ -1,13 +1,13 @@
-helper = require "./../../helper.coffee"
+goog.provide 'gremlin.util.ElementData.DataValue'
 
-class DataValue
+class gremlin.util.ElementData.DataValue
   constructor: (@_dataString) ->
     
   parse: ->
     data   = @_dataString
     result = @_dataString
     
-    if helper.isString @_dataString
+    if typeof @_dataString is "string"
       try 
         if data is "true"
           result = true
@@ -25,4 +25,3 @@ class DataValue
         
     return result
     
-module.exports = DataValue
