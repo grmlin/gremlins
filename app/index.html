@@ -3,21 +3,22 @@
 <head>
     <title></title>
 </head>
-<body data-gremlin-classname="gremlin">
-<div class="component" data-gremlin-name=" HelloWorld, Foo ,Bar">
+<body>
+<div data-gremlin-name=" HelloWorld, Foo ,Bar">
     <h2>Gremlin 1</h2>
 
     <div class="content"></div>
 </div>
 <hr>
-<div class="component" data-gremlin-name="Buddy" data-lazy-load="true">
+<div data-gremlin-name="Buddy" data-gremlin-lazy="true">
     <h2>Gremlin 2</h2>
 
     <div class="content"></div>
 </div>
 <hr>
 <p>
-    <button onclick="addGremlin()">Add a gremlin</button>
+    <button onclick="addGremlin('Foo')">Add a gremlin</button>
+    <button onclick="addGremlin('')">Add a broken gremlin</button>
 </p>
 
 <div id="adder">
@@ -26,12 +27,12 @@
 <script data-require="GremlinJS" data-config="mantriConf" data-deps="/.tmp/deps"
         src="/vendor/mantri.web.js"></script>
 <script type="text/javascript">
-    var addGremlin = function () {
+    var addGremlin = function (name) {
         var el = document.createElement('div');
-        el.className = "component";
+        el.setAttribute('data-gremlin-name',name);
         document.getElementById("adder").appendChild(el);
     };
-    GremlinJS.config(GremlinJS.options.CSS_CLASS_NAME, 'component')
+
 </script>
 
 

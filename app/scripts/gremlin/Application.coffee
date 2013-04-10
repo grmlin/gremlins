@@ -17,24 +17,20 @@ class gremlin.Application
       @_coll = new gremlin.gremlins.GremlinCollection
 
     _onNew : (elArray, cssClass) =>
-      console.log "found #{elArray.length} new elements for .#{cssClass}"
-      @_coll.add elArray, cssClass
+      console.log "found #{elArray.length} new gremlins in the dom"
+      console.dir elArray
+      @_coll.add elArray
 
     start : ->
-      @_updateCssClass()
       @_observer.observe()
 
     config          : (option, value) ->
-      console.log "updating configuration,", option, value
       @_conf.set option, value
 
       switch option
-        when gremlin.conf.Configuration.options.CSS_CLASS_NAME
-          @_updateCssClass()
+        when gremlin.conf.Configuration.options.AUTOLOAD
+          # TODO stop / start autoloading
         else
-
-    _updateCssClass : ->
-      @_observer.setCssClass(@_conf.getCssClassName())
 
   @get : () ->
     instance ?= new Application

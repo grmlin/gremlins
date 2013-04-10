@@ -9,13 +9,10 @@ goog.require 'gremlin.util.Helper'
 isModern = document.body.getBoundingClientRect isnt undefined
 
 class gremlin.gremlins.GremlinDomElement
-  DATA_LAZY = "lazyLoad"
-  DATA_NAME = 'gremlinName'
-  NAME_SEPARATOR  = ","
+  DATA_LAZY = "gremlinLazy"
   CSS_CLASS_LOADING = "gremlin-loading"
   CSS_CLASS_READY = 'gremlin-ready'
-  CSS_CLASS_ERROR = 'gremlin-error'
-  
+
 
   # static
   @DATA_GREMLIN_NAME_ATTRIBUTE : "data-gremlin-name"
@@ -26,20 +23,11 @@ class gremlin.gremlins.GremlinDomElement
   # members
   _gremlins                    : null
 
-  constructor : (@_el, cssClass) ->
-    console.log cssClass
+  constructor : (@_el, @_name) ->
     @_data = new gremlin.util.ElementData.ElementData @_el
-    
-    try 
-      @_names = (name.trim() for name in @_data.get(DATA_NAME).split(NAME_SEPARATOR))
-      @_isLazy = if @_data.get(DATA_LAZY) is yes then yes else no
-        
-      gremlin.util.Helper.addClass @_el, CSS_CLASS_LOADING
-    catch error
-      gremlin.util.Helper.addClass @_el, CSS_CLASS_ERROR
-    finally
-      gremlin.util.Helper.removeClass @_el, cssClass
-    
+    @_isLazy = if @_data.get(DATA_LAZY) is yes then yes else no
+    gremlin.util.Helper.addClass @_el, CSS_CLASS_LOADING
+
   _loadGremlin : (name) ->
     helper.removeClass @_el, @_cls
     helper.addClass @_el, GremlinDomElement.GREMLIN_LOADING_CLASS

@@ -3,20 +3,20 @@
 #
 # Factory singleton, that loads gremlin classes using *requirejs* and instantiates them
 goog.provide 'gremlin.gremlins.GremlinFactory'
-goog.require 'gremlin.util.ElementData'
+goog.require 'gremlin.util.ElementData.ElementData'
+
 
 
 class gremlin.gremlins.GremlinFactory
-  DATA_GREMLIN_NAME = 'gremlinName'
   # A unique id counter used for gremlin instantiation
   uid = do ->
     i = 0
     return ->
       i++
 
-  @getInstance: (element) ->
-    data = new gremlin.util.ElementData.ElementData element
-    name = data.get DATA_GREMLIN_NAME
+  @getInstance: (gremlinElement) ->
+    #data = new gremlin.util.ElementData.ElementData element
+    name = gremlinElement.name
     
 # ## Public module members
 

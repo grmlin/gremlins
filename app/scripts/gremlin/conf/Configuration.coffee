@@ -1,12 +1,10 @@
 goog.provide 'gremlin.conf.Configuration'
 goog.require 'gremlin.event.Event'
-goog.require 'gremlin.util.ElementData.ElementData'
 
 class gremlin.conf.Configuration
   instance = null
-  data = new gremlin.util.ElementData.ElementData document.body
   options =
-    cssClassName : data.get('gremlinCssClassName') ? 'gremlin'
+    autoload: yes
 
   class Configuration
     constructor : (@_options) ->
@@ -14,11 +12,8 @@ class gremlin.conf.Configuration
     set         : (key, value) ->
       @_options[key] = value
 
-    getCssClassName : ->
-      @_options.cssClassName
-
   @options:
-    CSS_CLASS_NAME: 'cssClassName'
+    AUTOLOAD: 'autoload'
   
   @get : () ->
     instance ?= new Configuration(options)

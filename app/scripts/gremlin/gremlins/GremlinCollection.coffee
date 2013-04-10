@@ -1,5 +1,7 @@
 goog.provide 'gremlin.gremlins.GremlinCollection'
+goog.require 'gremlin.gremlins.NameProvider'
 goog.require 'gremlin.gremlins.GremlinDomElement'
+goog.require 'gremlin.gremlins.GremlinFactory'
 
 class gremlin.gremlins.GremlinCollection
   _elements     : null
@@ -19,15 +21,21 @@ class gremlin.gremlins.GremlinCollection
     else if window.attachEvent
       window.attachEvent('onscroll', @_scrollHandler)
 
-  add : (elArray, cssClass) ->
-    @_queue = (new gremlin.gremlins.GremlinDomElement(el, cssClass) for el in elArray)
-    console.dir @_queue
+  add : (elArray) ->
+    @_addGremlinElements el for el in elArray
+    #@_queue = (new gremlin.gremlins.GremlinDomElement(el, cssClass) for el in elArray)
     @_processQueue()
+
+  _addGremlinElements : (el) ->
+    names = gremlin.gremlins.NameProvider.getNames el
+    gremlin.gremlins.NameProvider.flagProcessedElement el
+    @_queue.push new gremlin.gremlins.GremlinDomElement(el, name) for name in names
 
   _processQueue : ->
     remaining = []
     for element in @_queue
       if element.isInViewport()
+        # trying to instantiate the gremlin
         #load element@_checkElement(element, remaining)
       else
         remaining.push element
