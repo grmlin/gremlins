@@ -11,16 +11,16 @@ class gremlin.domObserver.DomObserver
     @_elementList = new gremlin.domObserver.ElementList
 
   _bindMutations : ->
-    gremlin.MutationObserverShim.get().on gremlin.MutationObserverShim.ON_TICK, @_handleMutation
-    @_triggerTick()
-
-  _triggerTick : ->
-    gremlin.MutationObserverShim.get().tickNow()
+    observer = gremlin.MutationObserverShim.get()
+    observer.on gremlin.MutationObserverShim.ON_MUTATION, @_handleMutation
+    observer.observe()
 
   _handleMutation : =>
+    #console.time "searching gremlins"
     elements = @_elementList.getList()
     if elements.length > 0
       @onNewElements elements
+    #console.timeEnd "searching gremlins"
 
   observe : ->
     @_bindMutations()

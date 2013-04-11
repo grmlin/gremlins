@@ -1,48 +1,28 @@
-goog.provide "gremlin.MutationObserverShim"
-goog.require "gremlin.event.Event"
+goog.provide 'gremlin.MutationObserverShim'
+goog.require 'gremlin.event.Event'
+goog.require 'gremlin.domObserver.clocks.ClockFactory'
 
 class gremlin.MutationObserverShim
   instance = null
-  MutationObserver = window.MutationObserver or window.WebKitMutationObserver or window.MozMutationObserver or null
 
   class MutationObserverShim extends gremlin.event.Event
-    mutationTypes =
-      CHILD_LIST : 'childList'
-
     @RESCAN_INTERVAL : 500
 
-    constructor : (@_node) ->
+    constructor : ->
       super
-      if typeof MutationObserver is "function" then @_addDomMutationListener() else @_initiateInterval()
+      @_clock = gremlin.domObserver.clocks.ClockFactory.createClock()
+      @_clock.onMutation = @_onMutation
 
-    _initiateInterval : ->
-      @_interval = window.setTimeout @_onInterval, MutationObserverShim.RESCAN_INTERVAL
+    _onMutation : =>
+      @emit gremlin.MutationObserverShim.ON_MUTATION
 
-    _onInterval : =>
-      console.log "DomObserver fired"
-      @_onTick()
-      @_initiateInterval()
+    observe: ->
+      @_clock.observe()
+      @_onMutation()
 
-    _addDomMutationListener : ->
-      observer = new MutationObserver @_onMutation
-      observer.observe @_node,
-        childList : true
-        subtree   : true
-
-    _onMutation : (mutations) =>
-      for mutation in mutations
-        if mutation.type is mutationTypes.CHILD_LIST
-          @_onTick()
-
-    _onTick : ->
-      @emit gremlin.MutationObserverShim.ON_TICK
-
-    tickNow : ->
-      @_onTick()
-
-  @ON_TICK : 'ON_TICK'
+  @ON_MUTATION : 'ON_MUTATION'
   @get     : () ->
-    instance ?= new MutationObserverShim(document)
+    instance ?= new MutationObserverShim
 
 
 

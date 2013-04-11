@@ -5,26 +5,30 @@ class gremlin.gremlins.NameProvider
   DATA_NAME = 'data-gremlin-name'
   NAME_SEPARATOR  = ","
   CSS_CLASS_GREMLIN_BROKEN = 'gremlin-error'
-  getNameString = (el) -> el.getAttribute(DATA_NAME)
+
+  hasAttribute = (el, name) ->
+    if typeof el.hasAttribute is 'function'
+      el.hasAttribute name
+    else
+      node = el.getAttributeNode name
+      !!(node && (node.specified || node.nodeValue))
 
   isNameString = (names) -> typeof names is 'string'
 
   @DATA_NAME_ATTR : DATA_NAME
   @isGremlin: (el) ->
-    names = getNameString el
-    isNameString names
+    hasAttribute el, DATA_NAME
 
   @getNames: (el) ->
-    names = getNameString el
-    if isNameString(names) and names.length > 0
-      names = (name.trim() for name in names.split(NAME_SEPARATOR))
-    else
+    names = el.getAttribute(DATA_NAME)
+    try
+      throw new Error "No gremlin names available, '#{DATA_NAME}' is empty!" if names is ""
+      nameList = (name.trim() for name in names.split(NAME_SEPARATOR))
+    catch e
       html = el.outerHTML ? ""
       gremlin.gremlins.NameProvider.flagBrokenElement el
-      throw new Error "Couldn't process gremlin element, maybe the '#{DATA_NAME}' is missing or empty?\n" +
-      html
-
-    #names
+      console?.warn? "Couldn't process gremlin element, #{e.message}\n" + html
+      []
 
   @flagBrokenElement: (el) ->
     gremlin.util.Helper.addClass el, CSS_CLASS_GREMLIN_BROKEN
