@@ -3,6 +3,7 @@ goog.provide 'gremlin.util.FeatureDetector'
 class gremlin.util.FeatureDetector
   @hasQuerySelectorAll : typeof document.querySelectorAll is "function"
   @hasMutationObserver : !!(window.MutationObserver or window.WebKitMutationObserver or window.MozMutationObserver)
+  @hasGetClientRect : document.body.getBoundingClientRect isnt undefined
   @hasCssAnimations : do ->
     elm = document.body
     animation = false

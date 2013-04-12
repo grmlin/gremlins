@@ -14,13 +14,7 @@ class AbstractGremlin
 
 # ### static class members
 
-  # Gremlin HTML changed event. This is the only build in Notification for gremlins. It's used with @triggerChange
-  @CONTENT_CHANGED: "gremlinjs_gremlin_content_changed"
-
   # ### instance members
-
-  # Name of the gremlin, initially unknown
-  name: "anonymous"
 
   # Gremlin options
   __settings: null

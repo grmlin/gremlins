@@ -34,12 +34,9 @@ class gremlin.gremlins.GremlinCollection
   _processQueue : ->
     remaining = []
     for element in @_queue
-      if element.isInViewport()
-        # trying to instantiate the gremlin
-        #load element@_checkElement(element, remaining)
-      else
-        remaining.push element
-
+      element.check()
+      remaining.push(element) unless element.hasGremlin()
+      
     @_queue = remaining
 
 

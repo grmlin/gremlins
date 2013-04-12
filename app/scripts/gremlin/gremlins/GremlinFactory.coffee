@@ -1,23 +1,20 @@
-#
-# #GremlinJS - `gremlinjs/gremlins/GremlinFactory`
-#
-# Factory singleton, that loads gremlin classes using *requirejs* and instantiates them
 goog.provide 'gremlin.gremlins.GremlinFactory'
-goog.require 'gremlin.util.ElementData.ElementData'
-
+goog.require 'gremlin.gremlinDefinitions.Pool'
 
 
 class gremlin.gremlins.GremlinFactory
-  # A unique id counter used for gremlin instantiation
+# A unique id counter used for gremlin instantiation
   uid = do ->
     i = 0
     return ->
       i++
 
-  @getInstance: (gremlinElement) ->
+  @getInstance : (name, domEl, elData) ->
     #data = new gremlin.util.ElementData.ElementData element
-    name = gremlinElement.name
-    
+    console.log "Trying to intantiate gremlin #{name}"
+    GremlinClass = gremlin.gremlinDefinitions.Pool.getInstance().get name
+    if typeof GremlinClass is 'function' then new GremlinClass(domEl, elData, uid()) else null
+
 # ## Public module members
 
 # the exported module object

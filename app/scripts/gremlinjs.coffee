@@ -4,6 +4,7 @@ goog.require 'gremlin.util.polyfill'
 goog.require 'gremlin.util.ready'
 goog.require 'gremlin.Application'
 goog.require 'gremlin.conf.Configuration'
+goog.require 'gremlin.gremlinDefinitions.Pool'
 
 
 class GremlinJS
@@ -15,8 +16,8 @@ class GremlinJS
   @config : (option, value) ->
     gremlin.Application.get().config option, value
 
-  @gremlin : (name, definition) ->
-
+  @define: (name, definition) -> 
+    gremlin.gremlinDefinitions.Pool.getInstance().define name, definition
 
 window.GremlinJS = GremlinJS
 
