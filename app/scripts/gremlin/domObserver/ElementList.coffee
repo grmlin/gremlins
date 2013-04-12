@@ -13,7 +13,7 @@ class gremlin.domObserver.ElementList
       elements = document.body.getElementsByTagName '*'
       (element for element in elements when gremlin.gremlins.NameProvider.isGremlin(element))
 
-  isNative = typeof document.querySelectorAll is "function"
+  isNative = gremlin.util.FeatureDetector.hasQuerySelectorAll
   Selector = if isNative then NativeQuerySelector else LegacySelector
 
   constructor: (@_attributeName) ->

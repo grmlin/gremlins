@@ -42,14 +42,14 @@ class gremlin.gremlins.GremlinDomElement
 
   _create : ->
     @_gremlinInstance = gremlin.gremlins.GremlinFactory.getInstance @_name, @_el, @_data 
-    @_gremlinInstance?.initialize()
- 
+    if @hasGremlin()
+      @_gremlinInstance.initialize()
+      gremlin.util.Helper.removeClass @_el, CSS_CLASS_LOADING
+      gremlin.util.Helper.addClass @_el, CSS_CLASS_READY
+
   hasGremlin: -> 
-    hasGremlin = @_gremlinInstance isnt null
-    if hasGremlin
-      console.log "Gremlin for #{@_name} instantiated", @_gremlinInstance
-    hasGremlin
-    
+    @_gremlinInstance isnt null
+
   _loadGremlin : (name) ->
     helper.removeClass @_el, @_cls
     helper.addClass @_el, GremlinDomElement.GREMLIN_LOADING_CLASS

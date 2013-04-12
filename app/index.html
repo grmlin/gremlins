@@ -5,6 +5,8 @@
     <style type="text/css">
 
     </style>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
     <script type="text/javascript">
         //console.time implementation for IE
         if(window.console && typeof(window.console.time) == "undefined") {
@@ -34,29 +36,29 @@
     </script>
 </head>
 <body>
-<div data-gremlin-name=" HelloWorld, Foo ,Bar, Buddy">
-    <h2>Gremlin 1</h2>
-
+<div data-gremlin-name="Buddy">
+    <h2>Buddy</h2>
     <div class="content"></div>
 </div>
 <hr>
-<div data-gremlin-name="Buddy" data-gremlin-lazy="true">
-    <h2>Gremlin 2</h2>
-
+<div data-gremlin-name="Holly">
+    <h2>Holly</h2>
     <div class="content"></div>
 </div>
 <hr>
 <p>
-    <button onclick="addGremlin('Foo')">Add a gremlin</button>
+    <button onclick="addGremlin('Buddy')">Add a Buddy gremlin</button>
+    <button onclick="addGremlin('Holly')">Add a Holly gremlin</button>
     <button onclick="addGremlin('')">Add a broken gremlin</button>
 </p>
-
 <div id="adder">
 
 </div>
 <script data-require="GremlinJS" data-config="mantriConf" data-deps="/.tmp/deps"
         src="/vendor/mantri.web.js"></script>
 <script type="text/javascript" src="/vendor/Buddy.js"></script>
+<script type="text/javascript" src="/vendor/Holly.js"></script>
+
 <script type="text/javascript">
     var addGremlin = function (name) {
         var el = document.createElement('div');

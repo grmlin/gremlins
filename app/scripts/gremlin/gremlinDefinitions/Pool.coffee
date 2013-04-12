@@ -1,6 +1,7 @@
 goog.provide 'gremlin.gremlinDefinitions.Pool'
-goog.require 'gremlin.gremlinDefinitions.AbstractGremlin'
 goog.require 'gremlin.util.Helper'
+goog.require 'gremlin.gremlinDefinitions.AbstractGremlin'
+
 
 class gremlin.gremlinDefinitions.Pool
   instance = null

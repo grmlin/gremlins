@@ -1,5 +1,6 @@
 goog.provide 'gremlin.util.ElementData.ElementData'
 goog.require 'gremlin.util.ElementData.DataValue'
+goog.require 'gremlin.util.Helper'
 
 class gremlin.util.ElementData.ElementData
   camelize = (string) ->
@@ -34,4 +35,4 @@ class gremlin.util.ElementData.ElementData
     @_obj[key] ? null
 
   toObject : ->
-    @_obj
+    gremlin.util.Helper.clone @_obj

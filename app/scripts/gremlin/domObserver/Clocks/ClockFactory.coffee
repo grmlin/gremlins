@@ -16,7 +16,7 @@ class gremlin.domObserver.clocks.ClockFactory
     else
       Clock = gremlin.domObserver.clocks.LegacyTimeoutClock
 
-    console.log "MutationObserverFactory uses clock:", Clock.name
+    #console.log "MutationObserverFactory uses clock:", Clock.name
 
     new Clock
 

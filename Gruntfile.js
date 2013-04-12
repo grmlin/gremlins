@@ -71,6 +71,13 @@ module.exports = function (grunt) {
                     base: './app'
                     //keepalive: true
                 }
+            },
+            dist: {
+                options: {
+                    port: 4242,
+                    base: './test',
+                    keepalive: true
+                }
             }
         },
         clean: {

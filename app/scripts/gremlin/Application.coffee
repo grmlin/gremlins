@@ -17,8 +17,8 @@ class gremlin.Application
       @_coll = new gremlin.gremlins.GremlinCollection
 
     _onNew : (elArray, cssClass) =>
-      console.log "found #{elArray.length} new gremlins in the dom"
-      console.dir elArray
+      #console.log "found #{elArray.length} new gremlins in the dom"
+      #console.dir elArray
       @_coll.add elArray
 
     start : ->

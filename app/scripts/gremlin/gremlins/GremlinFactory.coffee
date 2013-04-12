@@ -1,5 +1,8 @@
 goog.provide 'gremlin.gremlins.GremlinFactory'
 goog.require 'gremlin.gremlinDefinitions.Pool'
+goog.require 'gremlin.gremlinDefinitions.extensions.Interests'
+goog.require 'gremlin.gremlinDefinitions.extensions.DomElements'
+goog.require 'gremlin.gremlinDefinitions.extensions.JQuery'
 
 
 class gremlin.gremlins.GremlinFactory
@@ -9,11 +12,18 @@ class gremlin.gremlins.GremlinFactory
     return ->
       i++
 
+  addExtensions = (gremlinInstance) ->
+    extension.bind gremlinInstance for own name, extension of gremlin.gremlinDefinitions.extensions when extension.test()
+
   @getInstance : (name, domEl, elData) ->
     #data = new gremlin.util.ElementData.ElementData element
-    console.log "Trying to intantiate gremlin #{name}"
     GremlinClass = gremlin.gremlinDefinitions.Pool.getInstance().get name
-    if typeof GremlinClass is 'function' then new GremlinClass(domEl, elData, uid()) else null
+    if typeof GremlinClass is 'function'
+      gremlinInstance = new GremlinClass domEl, elData.toObject(), uid()
+      addExtensions gremlinInstance
+      gremlinInstance
+    else
+      null
 
 # ## Public module members
 

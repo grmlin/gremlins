@@ -13,7 +13,7 @@ unless Array::filter
     len = t.length >>> 0
     throw new TypeError()  unless typeof fun is "function"
     res = []
-    thisp = arguments_[1]
+    thisp = arguments[1]
     i = 0
 
     while i < len
