@@ -4,16 +4,13 @@ goog.require 'gremlin.gremlins.GremlinDomElement'
 goog.require 'gremlin.gremlins.GremlinFactory'
 
 class gremlin.gremlins.GremlinCollection
-  _elements     : null
-  _queue        : null
-  _lazyElements : null
+  _queue : null
 
   constructor : ->
     @_queue = []
-    @_elements = []
-    @_lazyElements = []
-
-  #@_bindScroll()
+    @_bindScroll()
+    @_didScroll = no
+    @_scrollTimer = no
 
   _bindScroll : ->
     if window.addEventListener
@@ -32,32 +29,26 @@ class gremlin.gremlins.GremlinCollection
     @_queue.push new gremlin.gremlins.GremlinDomElement(el, name) for name in names
 
   _processQueue : ->
+    console.log "processing gremlin queue"
     remaining = []
     for element in @_queue
       element.check()
       remaining.push(element) unless element.hasGremlin()
-      
+
     @_queue = remaining
+    console.log "processing gremlins finished, remaining: "
+    console.dir @_queue
 
 
-  _processElement : (element) ->
-    @_elements.push(new GremlinDomElement(element, @_cssClass))
-    current = @_elements[@_elements.length - 1]
+  process : ->
+    @_processQueue()
 
-    if current.isLazy()
-      @_lazyElements.push current
-    else
-      current.load()
-
-
-  _scrollHandler : () =>
-    if @_lazyElements.length > 0
-      remaining = []
-      @_checkLazyElement(element, remaining) for element in @_lazyElements
-      @_lazyElements = remaining
-
-  _checkElement : (element, remaining) ->
-    if element.isInViewport()
-      element.load()
-    else
-      remaining.push element
+  _scrollHandler : =>
+    unless @_didScroll
+      @_scrollTimer = setInterval(=>
+        if @_didScroll
+          @_didScroll = false
+          clearTimeout @_scrollTimer
+          @process()
+      , 250)
+    @_didScroll = true

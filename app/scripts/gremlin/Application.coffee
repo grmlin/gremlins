@@ -31,6 +31,9 @@ class gremlin.Application
         when gremlin.conf.Configuration.options.AUTOLOAD
           # TODO stop / start autoloading
         else
+    
+    refresh : ->
+      @_coll.process()
 
   @get : () ->
     instance ?= new Application

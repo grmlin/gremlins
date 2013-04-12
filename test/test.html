@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="lib/mocha.css"/>
+    <script type="text/javascript" src="lib/mocha.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        // This will be overridden by mocha-helper if you run with grunt
+        mocha.setup('bdd');
+    </script>
+    <script type="text/javascript" src="gremlinjs/GremlinJS.js"></script>
+    <script type="text/javascript">
+        gremlin = gremlin.gremlin
+    </script>
+</head>
+<body>
+<div id="mocha"></div>
+<script src="lib/chai.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+    // Setup chai
+    var expect = chai.expect;
+</script>
+
+<script type="text/javascript" src="spec/GremlinJS.js"></script>
+
+<!-- run mocha -->
+<script type="text/javascript" charset="utf-8">
+    // If tests run in a real browser
+    // Can alternatively do a check on window.PHANTOMJS
+    if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+        mocha
+            // .globals(['Wombat', 'Apple']) // acceptable globals
+                .run();
+    }
+</script>
+</body>
+</html>

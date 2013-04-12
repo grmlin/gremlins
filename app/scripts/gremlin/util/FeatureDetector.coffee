@@ -3,9 +3,9 @@ goog.provide 'gremlin.util.FeatureDetector'
 class gremlin.util.FeatureDetector
   @hasQuerySelectorAll : typeof document.querySelectorAll isnt "undefined"
   @hasMutationObserver : !!(window.MutationObserver or window.WebKitMutationObserver or window.MozMutationObserver)
-  @hasGetClientRect : document.body.getBoundingClientRect isnt undefined
+  @hasGetClientRect : document.documentElement.getBoundingClientRect isnt undefined
   @hasCssAnimations : do ->
-    elm = document.body
+    elm = document.documentElement
     animation = false
     animationstring = "animation"
     keyframeprefix = ""

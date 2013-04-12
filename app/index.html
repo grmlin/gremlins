@@ -41,7 +41,7 @@
     <div class="content"></div>
 </div>
 <hr>
-<div data-gremlin-name="Holly">
+<div data-gremlin-name="Holly" data-gremlin-lazy="true" style="margin-top: 2000px;">
     <h2>Holly</h2>
     <div class="content"></div>
 </div>
@@ -62,7 +62,15 @@
 <script type="text/javascript">
     var addGremlin = function (name) {
         var el = document.createElement('div');
+        var h = document.createElement('h2');
+        var content = document.createElement('div');
+
         el.setAttribute('data-gremlin-name',name);
+        h.innerHTML = name;
+        content.className = 'content'
+        el.appendChild(h);
+        el.appendChild(content);
+
         document.getElementById("adder").appendChild(el);
     };
 

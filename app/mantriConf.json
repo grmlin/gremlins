@@ -10,7 +10,7 @@
 
     "build": {
         "input": "./.tmp/scripts/GremlinJS.js",
-        "outputWrapper": "(function(){<%=output%>}());",
+        "xoutputWrapper": "(function(){<%=output%>}());",
         "exclude": [""]
     }
 }

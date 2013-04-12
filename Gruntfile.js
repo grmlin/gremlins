@@ -17,6 +17,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-mocha');
 
 
     //
@@ -24,79 +26,122 @@ module.exports = function (grunt) {
     //
     //
     grunt.initConfig({
-        coffee: {
-            gremlinjs: {
-                options: {
-                    bare: true
+        coffee : {
+            gremlinjs : {
+                options : {
+                    bare : true
                 },
-                expand: true,
-                cwd: 'app/scripts',
-                src: ['**/*.coffee'],
-                dest: 'app/.tmp/scripts',
-                ext: '.js'
+                expand : true,
+                cwd : 'app/scripts',
+                src : ['**/*.coffee'],
+                dest : 'app/.tmp/scripts',
+                ext : '.js'
             }
         },
-        mantriDeps: {
-            options: {
-                root: './app'
+        mantriDeps : {
+            options : {
+                root : './app'
             },
-            gremlinjs: {
-                src: './app/.tmp/scripts',
-                dest: './app/.tmp/deps.js'
+            gremlinjs : {
+                src : './app/.tmp/scripts',
+                dest : './app/.tmp/deps.js'
             }
 
         },
 
-        mantriBuild: {
-            options: {
-                debug: true
+        mantriBuild : {
+            options : {
+                debug : true
             },
-            gremlinjs: {
+            gremlinjs : {
                 // src can be omitted as this is also the default value.
-                src: 'app/mantriConf.json',
-                dest: 'dist/GremlinJS.js'
+                src : 'app/mantriConf.json',
+                dest : 'dist/GremlinJS.js'
             }
         },
 
-        watch: {
-            gremlinjs: {
-                files: ['app/scripts/**/*.coffee', 'app/mantriConf.json'],
-                tasks: ['cs', 'mantriDeps:gremlinjs']
+        watch : {
+            gremlinjs : {
+                files : ['app/scripts/**/*.coffee', 'app/mantriConf.json'],
+                tasks : ['cs', 'mantriDeps:gremlinjs']
             }
         },
-        connect: {
-            gremlinjs: {
-                options: {
-                    port: 4242,
-                    base: './app'
+        connect : {
+            gremlinjs : {
+                options : {
+                    port : 4242,
+                    base : './app'
                     //keepalive: true
                 }
             },
-            dist: {
-                options: {
-                    port: 4242,
-                    base: './test',
-                    keepalive: true
+            test : {
+                options : {
+                    port : 4242,
+                    base : './test',
+                    keepalive : true
                 }
             }
         },
-        clean: {
-            deps: ['app/.tmp/deps.js'],
-            coffee: ["app/.tmp/scripts"],
-            dist: ["dist"]
+        clean : {
+            deps : ['app/.tmp/deps.js'],
+            coffee : ["app/.tmp/scripts"],
+            dist : ["dist"]
         },
-        pkg: grunt.file.readJSON('package.json'),
-        uglify: {
-            options: {
-                banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+        pkg : grunt.file.readJSON('package.json'),
+        uglify : {
+            options : {
+                banner : '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
                     '<%= grunt.template.today("yyyy-mm-dd") %> */',
-                compress: true,
-                report: 'gzip',
-                wrap: ''
+                compress : true,
+                report : 'gzip',
+                wrap : true
             },
-            dist: {
-                files: {
-                    'dist/GremlinJS.min.js': ['dist/GremlinJS.js']
+            dist : {
+                files : {
+                    'dist/GremlinJS.min.js' : ['dist/GremlinJS.js']
+                }
+            },
+            test : {
+                options : {
+                    wrap : "gremlin",
+                    exportAll : true
+                },
+                files : {
+                    'test/gremlinjs/GremlinJS.js' : ['dist/GremlinJS.js']
+                }
+            }
+        },
+        copy : {
+            test : {
+                files : [
+                    {src : ['dist/GremlinJS.js'], dest : 'test/vendor/GremlinJS.js'}
+                ]
+            }
+        },
+        mocha : {
+
+            // Runs 'test/test2.html' with specified mocha options.
+            // This variant auto-includes 'bridge.js' so you do not have
+            // to include it in your HTML spec file. Instead, you must add an
+            // environment check before you run `mocha.run` in your HTML.
+            test : {
+                // Test files
+                src : [ 'test/test.html' ],
+                options : {
+                    // mocha options
+                    mocha : {
+                        //    ignoreLeaks : false,
+                        //    grep : 'food'
+                    },
+
+                    // Select a Mocha reporter - http://visionmedia.github.com/mocha/#reporters
+                    reporter : 'Nyan',
+
+                    // Indicates whether 'mocha.run()' should be executed in 
+                    // 'bridge.js'. If you include `mocha.run()` in your html spec, you
+                    // must wrap it in a conditional check to not run if it is opened
+                    // in PhantomJS, see example/test/test2.html
+                    run : true
                 }
             }
         }
@@ -107,7 +152,8 @@ module.exports = function (grunt) {
     // Create shortcuts to main operations.
     grunt.registerTask('deps', ['clean:deps', 'mantriDeps:gremlinjs']);
 
-    grunt.registerTask('build', ['cs','clean:dist', 'mantriBuild:gremlinjs','uglify:dist']);
+    grunt.registerTask('build', ['cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:dist']);
+    grunt.registerTask('test', ['cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:test', 'mocha:test']);
     grunt.registerTask('server', ['cs', 'deps', 'connect:gremlinjs', 'watch:gremlinjs']);
     // the default task, when 'grunt' is executed with no options.
     grunt.registerTask('default', ['test']);
