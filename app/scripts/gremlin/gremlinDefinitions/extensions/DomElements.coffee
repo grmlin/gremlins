@@ -1,5 +1,6 @@
 goog.provide 'gremlin.gremlinDefinitions.extensions.DomElements'
 goog.require 'gremlin.util.Helper'
+goog.require 'gremlin.util.FeatureDetector'
 
 class gremlin.gremlinDefinitions.extensions.DomElements
   isSupported = gremlin.util.FeatureDetector.hasQuerySelectorAll

@@ -1,8 +1,6 @@
 goog.provide 'gremlin.gremlins.GremlinFactory'
 goog.require 'gremlin.gremlinDefinitions.Pool'
-goog.require 'gremlin.gremlinDefinitions.extensions.Interests'
-goog.require 'gremlin.gremlinDefinitions.extensions.DomElements'
-goog.require 'gremlin.gremlinDefinitions.extensions.JQuery'
+goog.require 'gremlin.gremlinDefinitions.extensions'
 
 
 class gremlin.gremlins.GremlinFactory
