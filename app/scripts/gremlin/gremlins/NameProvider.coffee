@@ -3,6 +3,7 @@ goog.require 'gremlin.util.Helper'
 
 class gremlin.gremlins.NameProvider
   DATA_NAME = 'data-gremlin-name'
+  DATA_NAME_PROCESSED = 'data-gremlin-found'
   NAME_SEPARATOR  = ","
   CSS_CLASS_GREMLIN_BROKEN = 'gremlin-error'
 
@@ -34,4 +35,7 @@ class gremlin.gremlins.NameProvider
     gremlin.util.Helper.addClass el, CSS_CLASS_GREMLIN_BROKEN
     gremlin.gremlins.NameProvider.flagProcessedElement el
 
-  @flagProcessedElement : (el) -> el.removeAttribute(DATA_NAME)
+  @flagProcessedElement : (el) ->
+    names = el.getAttribute DATA_NAME
+    el.removeAttribute DATA_NAME
+    el.setAttribute DATA_NAME_PROCESSED, names
