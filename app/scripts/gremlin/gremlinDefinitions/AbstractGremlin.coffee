@@ -1,5 +1,7 @@
 goog.provide 'gremlin.gremlinDefinitions.AbstractGremlin'
 
+goog.require 'gremlin.util.Debug'
+
 class gremlin.gremlinDefinitions.AbstractGremlin
 
 
@@ -18,6 +20,7 @@ class gremlin.gremlinDefinitions.AbstractGremlin
   # * the gremlin is registered in the Switchboard
   # * the pseudo constructor is called
   constructor: (@el, @data, @id) ->
+    @__Debug = gremlin.util.Debug
 
   # #### public members
 

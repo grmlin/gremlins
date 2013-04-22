@@ -2,6 +2,7 @@ goog.provide 'GremlinJS'
 
 goog.require 'gremlin.util.polyfill'
 goog.require 'gremlin.util.ready'
+goog.require 'gremlin.util.Debug'
 goog.require 'gremlin.Application'
 goog.require 'gremlin.conf.Configuration'
 goog.require 'gremlin.gremlinDefinitions.Pool'
@@ -11,6 +12,8 @@ goog.require 'gremlin.gremlinDefinitions.extensions'
 class GremlinJS
   gremlin.util.ready ->
     gremlin.Application.get().start()
+    gremlin.util.Debug.log "GremlinJS up and running..."
+
 
   @options: gremlin.conf.Configuration.options
 
