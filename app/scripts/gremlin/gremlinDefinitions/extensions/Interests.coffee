@@ -20,6 +20,7 @@ class gremlin.gremlinDefinitions.extensions.Interests
 
     for interest, handler of @interests
       #console.log interest, @[handler]
+      throw new Error("Handler #{handler} for the interest #{interest} is missing!") if typeof @[handler] isnt 'function'
       Controller.registerHandler interest, @[handler], @
 
   @test: ->

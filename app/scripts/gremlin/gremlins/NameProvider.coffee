@@ -4,6 +4,7 @@ goog.require 'gremlin.util.Helper'
 class gremlin.gremlins.NameProvider
   DATA_NAME = 'data-gremlin-name'
   DATA_NAME_PROCESSED = 'data-gremlin-found'
+  DATA_NAME_SEARCHING = 'data-gremlin-pending'
   NAME_SEPARATOR  = ","
   CSS_CLASS_GREMLIN_BROKEN = 'gremlin-error'
 

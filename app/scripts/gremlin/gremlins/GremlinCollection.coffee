@@ -29,21 +29,23 @@ class gremlin.gremlins.GremlinCollection
     @_queue.push new gremlin.gremlins.GremlinDomElement(el, name) for name in names
 
   _processQueue : ->
-    console.log "processing gremlin queue"
+    #console.log "processing gremlin queue"
     remaining = []
     for element in @_queue
       element.check()
       remaining.push(element) unless element.hasGremlin()
 
     @_queue = remaining
-    console.log "processing gremlins finished, remaining: "
-    console.dir @_queue
+    #console.log "processing gremlins finished, remaining: "
+    #console.dir @_queue
 
 
   process : ->
     @_processQueue()
 
   _scrollHandler : =>
+    return yes if @_queue.length is 0
+
     unless @_didScroll
       @_scrollTimer = setInterval(=>
         if @_didScroll
