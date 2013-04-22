@@ -42,3 +42,15 @@ class gremlin.util.Helper
       reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
       element.className = element.className.replace(reg, ' ')
       element.className = element.className.trim()
+
+  @addStyleSheet: (cssText) ->
+    head = document.getElementsByTagName('head')[0]
+    style = document.createElement 'style'
+    style.type = 'text/css'
+
+    if style.styleSheet
+      style.styleSheet.cssText = cssText
+    else
+      style.appendChild(document.createTextNode(cssText))
+
+    head.appendChild(style);

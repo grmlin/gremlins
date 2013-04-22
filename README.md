@@ -9,3 +9,4 @@
 - lazy load kombiniert mit autoload testen
 - debugger / console.log ausbauen
 - binding extension
+- extensions namespace in einer Datei verwalten

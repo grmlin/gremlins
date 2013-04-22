@@ -1,20 +1,14 @@
 goog.provide 'gremlin.domObserver.clocks.CssAnimationClock'
 goog.require 'gremlin.domObserver.clocks.cssAnimationStyle'
+goog.require 'gremlin.util.Helper'
 
 class gremlin.domObserver.clocks.CssAnimationClock
   ANIMATION_NAME = "gremlinInserted"
   EVENT_NAMES = ['animationend', 'webkitAnimationEnd', 'oanimationend']
 
   constructor: ->
-    head = document.getElementsByTagName('head')[0]
-    style = document.createElement 'style'
-    style.type = 'text/css'
     css = gremlin.domObserver.clocks.cssAnimationStyle ANIMATION_NAME
-    if style.styleSheet
-      style.styleSheet.cssText = css
-    else
-      style.appendChild(document.createTextNode(css))
-    head.appendChild(style);
+    gremlin.util.Helper.addStyleSheet css
 
   observe: ->
     document.body.addEventListener name, @_onAnimation, no for name in EVENT_NAMES
