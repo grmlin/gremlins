@@ -19,11 +19,9 @@ class gremlin.gremlinDefinitions.AbstractGremlin
   # * interests list is prepared
   # * the gremlin is registered in the Switchboard
   # * the pseudo constructor is called
-  constructor: (@el, @data, @id) ->
+  constructor: (@el, @data, @id, init) ->
     @__Debug = gremlin.util.Debug
+    init.call @
 
-  # #### public members
 
-  # The pseudo constructor that will be called, when the instance is created. This method has to be overwritten by the
-  # Gremlin class created in the lair below
-  initialize: ->
+

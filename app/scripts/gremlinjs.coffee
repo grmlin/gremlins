@@ -20,8 +20,8 @@ class GremlinJS
   @config: (option, value) ->
     gremlin.Application.get().config option, value
 
-  @define: (name, definition) ->
-    gremlin.gremlinDefinitions.Pool.getInstance().define name, definition
+  @define: (name, initialize, instanceMembers, staticMembers) ->
+    gremlin.gremlinDefinitions.Pool.getInstance().define name, initialize, instanceMembers, staticMembers
 
   #@extensions: gremlin.gremlinDefinitions.extensions
 

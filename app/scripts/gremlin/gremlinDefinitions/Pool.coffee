@@ -6,7 +6,8 @@ goog.require 'gremlin.gremlinDefinitions.AbstractGremlin'
 class gremlin.gremlinDefinitions.Pool
   instance = null
   definitions = {}
-  
+  noop = ->
+
   class Pool
     get: (name) -> 
       definitions[name] ? null
@@ -17,15 +18,19 @@ class gremlin.gremlinDefinitions.Pool
 
       definitions[name] = definition
       
-    define: (name, definition) ->
+    define: (name, constructor, instanceMembers, staticMembers) ->
+      constructor = noop if typeof constructor is 'object'
 
       class Gremlin extends gremlin.gremlinDefinitions.AbstractGremlin
-      #name       : name
-      #__settings : opt
-  
-      gremlin.util.Helper.mixin Gremlin, definition
-  
+        constructor: ->
+          super
+          constructor.call this
+
+      gremlin.util.Helper.mixin Gremlin, instanceMembers
+      Gremlin[key] = member for own key, member of staticMembers
+
       @set name, Gremlin
+      return Gremlin
       
   @getInstance : () ->
     instance ?= new Pool

@@ -3,6 +3,8 @@ goog.require 'gremlin.util.FeatureDetector'
 goog.require 'gremlin.util.ElementData.ElementData'
 goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.gremlins.GremlinFactory'
+goog.require 'gremlin.util.Debug'
+
 
 #helper      = require "./../helper.coffee"
 #ElementData = require "././ElementData.coffee"
@@ -14,6 +16,8 @@ class gremlin.gremlins.GremlinDomElement
   DATA_LAZY = "gremlinLazy"
   CSS_CLASS_LOADING = "gremlin-loading"
   CSS_CLASS_READY = 'gremlin-ready'
+  CSS_CLASS_PENDING = 'gremlin-definition-pending'
+
   GREMLIN_LAZY_BUFFER = 300
 
   _gremlinInstance : null
@@ -37,9 +41,15 @@ class gremlin.gremlins.GremlinDomElement
   _create : ->
     @_gremlinInstance = gremlin.gremlins.GremlinFactory.getInstance @_name, @_el, @_data 
     if @hasGremlin()
-      @_gremlinInstance.initialize()
       gremlin.util.Helper.removeClass @_el, CSS_CLASS_LOADING
+      gremlin.util.Helper.removeClass @_el, CSS_CLASS_PENDING
       gremlin.util.Helper.addClass @_el, CSS_CLASS_READY
+    else
+      gremlin.util.Helper.addClass @_el, CSS_CLASS_PENDING
+      gremlin.util.Debug.warn "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment."
+
+
+
 
   hasGremlin: -> 
     @_gremlinInstance isnt null

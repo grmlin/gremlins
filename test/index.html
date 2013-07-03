@@ -5,12 +5,12 @@
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 </head>
 <body>
-<div data-gremlin-name="Buddy">
+<div data-gremlin="Buddy">
     <h2>Buddy</h2>
     <div class="content"></div>
 </div>
 <hr>
-<div data-gremlin-name="Holly">
+<div data-gremlin="Holly">
     <h2>Holly</h2>
     <div class="content"></div>
 </div>
@@ -35,7 +35,7 @@
         var h = document.createElement('h2');
         var content = document.createElement('div');
 
-        el.setAttribute('data-gremlin-name',name);
+        el.setAttribute('data-gremlin',name);
         h.innerHTML = name;
         content.className = 'content'
         el.appendChild(h);

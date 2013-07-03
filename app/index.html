@@ -36,15 +36,20 @@
     </script>
 </head>
 <body data-gremlin-debug="true">
-<div data-gremlin-name="Buddy">
+<div data-gremlin="Buddy">
     <h2>Buddy</h2>
     <div class="content"></div>
 </div>
+<div data-gremlin="Unknown" style="margin-top: 2000px;">
+    <h2>Unknown</h2>
+    <div class="content"></div>
+</div>
 <hr>
-<div data-gremlin-name="Holly" data-gremlin-lazy="true" style="margin-top: 2000px;">
+<div data-gremlin="Holly" data-gremlin-lazy="true" style="margin-top: 2000px;">
     <h2>Holly</h2>
     <div class="content"></div>
 </div>
+
 <hr>
 <p>
     <button onclick="addGremlin('Buddy')">Add a Buddy gremlin</button>
@@ -66,7 +71,7 @@
         var h = document.createElement('h2');
         var content = document.createElement('div');
 
-        el.setAttribute('data-gremlin-name',name);
+        el.setAttribute('data-gremlin',name);
         h.innerHTML = name;
         content.className = 'content'
         el.appendChild(h);

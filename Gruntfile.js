@@ -11,6 +11,8 @@
 module.exports = function (grunt) {
     'use strict';
 
+    var DIST_NAME = 'gremlin';
+
     grunt.loadNpmTasks('mantri');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
@@ -56,7 +58,7 @@ module.exports = function (grunt) {
             gremlinjs : {
                 // src can be omitted as this is also the default value.
                 src : 'app/mantriConf.json',
-                dest : 'dist/GremlinJS.js'
+                dest : 'dist/' + DIST_NAME + '.js'
             }
         },
 
@@ -98,7 +100,7 @@ module.exports = function (grunt) {
             },
             dist : {
                 files : {
-                    'dist/GremlinJS.min.js' : ['dist/GremlinJS.js']
+                    'dist/gremlin.min.js' : ['dist/' + DIST_NAME + '.js']
                 }
             },
             test : {
@@ -107,14 +109,14 @@ module.exports = function (grunt) {
                     exportAll : true
                 },
                 files : {
-                    'test/gremlinjs/GremlinJS.js' : ['dist/GremlinJS.js']
+                    'test/gremlinjs/gremlin.js' : ['dist/' + DIST_NAME + '.js']
                 }
             }
         },
         copy : {
             test : {
                 files : [
-                    {src : ['dist/GremlinJS.js'], dest : 'test/vendor/GremlinJS.js'}
+                    {src : ['dist/' + DIST_NAME + '.js'], dest : 'test/vendor/' + DIST_NAME + '.js'}
                 ]
             }
         },

@@ -2,7 +2,7 @@ goog.provide 'gremlin.gremlins.NameProvider'
 goog.require 'gremlin.util.Helper'
 
 class gremlin.gremlins.NameProvider
-  DATA_NAME = 'data-gremlin-name'
+  DATA_NAME = 'data-gremlin'
   DATA_NAME_PROCESSED = 'data-gremlin-found'
   DATA_NAME_SEARCHING = 'data-gremlin-pending'
   NAME_SEPARATOR  = ","
