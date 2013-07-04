@@ -23,18 +23,18 @@ class gremlin.gremlins.NameProvider
 
   @getNames: (el) ->
     names = el.getAttribute(DATA_NAME)
-    try
-      throw new Error "No gremlin names available, '#{DATA_NAME}' is empty!" if names is ""
-      nameList = (name.trim() for name in names.split(NAME_SEPARATOR))
-    catch e
+    if names is ""
       html = el.outerHTML ? ""
       gremlin.gremlins.NameProvider.flagBrokenElement el
-      console?.warn? "Couldn't process gremlin element, #{e.message}\n" + html
+      GremlinJS.debug.console.log "Couldn't process gremlin element, no gremlin names available, '#{DATA_NAME}' is empty!\n" + html
       []
+    else
+      nameList = (name.trim() for name in names.split(NAME_SEPARATOR))
 
   @flagBrokenElement: (el) ->
     gremlin.util.Helper.addClass el, CSS_CLASS_GREMLIN_BROKEN
     gremlin.gremlins.NameProvider.flagProcessedElement el
+    GremlinJS.debug.reportBrokenGremlin el
 
   @flagProcessedElement : (el) ->
     names = el.getAttribute DATA_NAME

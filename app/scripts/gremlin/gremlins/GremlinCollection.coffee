@@ -36,6 +36,7 @@ class gremlin.gremlins.GremlinCollection
       remaining.push(element) unless element.hasGremlin()
 
     @_queue = remaining
+    GremlinJS.debug.updateGremlinLog()
     #console.log "processing gremlins finished, remaining: "
     #console.dir @_queue
 

@@ -1,5 +1,5 @@
 GremlinJS.define("Buddy", function () {
-        this.__Debug.dir(this)
+        console.dir(GremlinJS.debug.console);
         this.content[0].innerHTML = "<h1>I'm listening!</h1>";
         this.$content.fadeTo(0, 0).fadeTo(500, 1);
     },

@@ -4,7 +4,12 @@ class gremlin.util.Helper
   mixin = (target, mixinObject) ->
     target[name] = val for own name, val of mixinObject
     target
-    
+
+  @extend: (target, objects...) ->
+    for obj in objects
+      target[key] = value for key, value of obj
+    target
+
   @mixin : (targetClass, mixinObject) ->
     mixin targetClass::, mixinObject
 

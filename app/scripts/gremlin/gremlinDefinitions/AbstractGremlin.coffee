@@ -20,7 +20,6 @@ class gremlin.gremlinDefinitions.AbstractGremlin
   # * the gremlin is registered in the Switchboard
   # * the pseudo constructor is called
   constructor: (@el, @data, @id, init) ->
-    @__Debug = gremlin.util.Debug
     init.call @
 
 

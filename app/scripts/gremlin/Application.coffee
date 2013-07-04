@@ -24,14 +24,6 @@ class gremlin.Application
     start : ->
       @_observer.observe()
 
-    config          : (option, value) ->
-      @_conf.set option, value
-
-      switch option
-        when gremlin.conf.Configuration.options.AUTOLOAD
-          # TODO stop / start autoloading
-        else
-    
     refresh : ->
       @_coll.process()
 

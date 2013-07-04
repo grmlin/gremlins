@@ -3,8 +3,6 @@ goog.require 'gremlin.util.FeatureDetector'
 goog.require 'gremlin.util.ElementData.ElementData'
 goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.gremlins.GremlinFactory'
-goog.require 'gremlin.util.Debug'
-
 
 #helper      = require "./../helper.coffee"
 #ElementData = require "././ElementData.coffee"
@@ -25,11 +23,15 @@ class gremlin.gremlins.GremlinDomElement
   constructor : (@_el, @_name) ->
     @_data = new gremlin.util.ElementData.ElementData @_el
     @_isLazy = if @_data.get(DATA_LAZY) is yes then yes else no
+    @isLazy = @_isLazy
+    @name = @_name
     gremlin.util.Helper.addClass @_el, CSS_CLASS_LOADING
+    GremlinJS.debug.registerGremlin @
 
   check : ->
     @_create() if @_isInViewport()
-      
+
+
   _isInViewport : ->
     return yes unless @_isLazy and isModern
 
@@ -44,12 +46,10 @@ class gremlin.gremlins.GremlinDomElement
       gremlin.util.Helper.removeClass @_el, CSS_CLASS_LOADING
       gremlin.util.Helper.removeClass @_el, CSS_CLASS_PENDING
       gremlin.util.Helper.addClass @_el, CSS_CLASS_READY
+
     else
       gremlin.util.Helper.addClass @_el, CSS_CLASS_PENDING
-      gremlin.util.Debug.warn "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment."
-
-
-
+      GremlinJS.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment."
 
   hasGremlin: -> 
     @_gremlinInstance isnt null

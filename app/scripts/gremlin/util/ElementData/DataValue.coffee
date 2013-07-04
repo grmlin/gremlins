@@ -1,6 +1,8 @@
 goog.provide 'gremlin.util.ElementData.DataValue'
 
+# Inspired by jQuery. See https://github.com/jquery/jquery/blob/master/src/data.js
 class gremlin.util.ElementData.DataValue
+  rbrace = /(?:\{[\s\S]*\}|\[[\s\S]*\])$/
   constructor: (@_dataString) ->
     
   parse: ->
@@ -18,7 +20,7 @@ class gremlin.util.ElementData.DataValue
         else if +data + "" is data
           result = +data
         else
-          result = JSON.parse data
+          result = if rbrace.test(data) then JSON.parse(data) else data
           
       catch e
         #console.log e
