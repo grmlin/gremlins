@@ -36,6 +36,7 @@ class gremlin.util.Debug
         .#{CSS_CLASS_LOG} p span {
           display: inline-block;
           margin: 0 5px;
+          cursor: help;
         }
 
         .#{CSS_CLASS_LOG} p .#{CSS_CLASS_LOG_READY}{
@@ -58,18 +59,25 @@ class gremlin.util.Debug
         padding: 0 4px;
         }
 
+        *[data-gremlin-found] {
+        outline: 2px solid #41bb19;
+        }
+
         *[data-gremlin-found]::before {
         color: #41bb19;
         font-family: monospace;
-        content: '[' attr(data-gremlin-found) ']';
+        content: '[' attr(data-gremlin-found) '] ready';
         position: absolute;
         margin-top: -14px;
         font-size: 11px;
         font-weight: bold;
         }
 
+        .gremlin-definition-pending {
+        outline: 2px solid #fe781e;
+        }
         .gremlin-definition-pending::before {
-        content: '[' attr(data-gremlin-found) '] definition pendig';
+        content: '[' attr(data-gremlin-found) '] definition pendig...';
         color: #fe781e;
         }
         .gremlin-error {
@@ -77,7 +85,7 @@ class gremlin.util.Debug
         }
 
         .gremlin-error[data-gremlin-found]::before {
-        content: 'gremlin without proper name found';
+        content: 'faulty gremlin!';
         color: red;
         }
         """
