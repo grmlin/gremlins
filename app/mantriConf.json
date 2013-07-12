@@ -1,6 +1,8 @@
 {
-    "baseUrl": "./app",
-    "libs": {},
+    "baseUrl": "./",
+    "libs": {
+        "ondomready": "./vendor/ondomready"
+    },
 
     "deps": {
         "target": {

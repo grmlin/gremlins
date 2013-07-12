@@ -4,23 +4,19 @@ goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.event.Event'
 
 class gremlin.conf.Configuration
-  GREMLIN_CONFIG_NAME = 'gremlinConfig'
+
   instance = null
-  options =
+  defaultOptions =
     debug: no
-    autoload: yes
+    #autoload: yes
 
-  class Configuration
-    constructor : (options) ->
-      userConfig = new gremlin.util.ElementData.ElementData(document.body).get(GREMLIN_CONFIG_NAME) ? {}
-      @_options = gremlin.util.Helper.extend {}, options, userConfig
+  constructor : (customOptions) ->
 
-    get         : (key) ->
-      @_options[key] ? null
+    @_options = gremlin.util.Helper.extend {}, defaultOptions, customOptions
+
+  get         : (key) ->
+    @_options[key] ? null
 
   @options:
     DEBUG: 'debug'
     AUTOLOAD: 'autoload'
-  
-  @get : () ->
-    instance ?= new Configuration(options)

@@ -4,12 +4,8 @@
 
 
 ## TODO
-- constructor als erster Parameter
-- autoload deaktivieren
-- im HTML erkenntlich machen, dass ein gremlin gefunden wurde, die Definition aber (noch) fehlt
 - lazy loading in beide Scroll-Richtungen
 - lazy load kombiniert mit autoload testen
-- debugger / console.log ausbauen
 - binding extension
-- extensions namespace in einer Datei verwalten
 - Hinweis JSON IE7
+- get a gremlin Class by it's name
