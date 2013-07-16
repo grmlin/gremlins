@@ -4,6 +4,13 @@
 
 Interface every extension has to implement.
 
+##### Live Preview
+
+<pre class="codepen" data-height="430" data-type="js" data-href="mAGDC" data-user="grmlin" data-safe="true">
+</pre>
+<script async src="http://codepen.io/assets/embed/ei.js">
+</script>
+
 ## .bind(gremlinInstance)
 Binds the extension to a gremlin instance. Do whatever yout want to do with a gremlins instance in here. 
 
