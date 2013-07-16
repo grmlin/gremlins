@@ -1,6 +1,6 @@
-goog.provide 'gremlin.gremlinDefinitions.extensions.JQuery'
+goog.provide 'extensions.JQuery'
 
-class gremlin.gremlinDefinitions.extensions.JQuery
+class extensions.JQuery
   isSupported = typeof window.jQuery is 'function' or typeof window.Zepto is 'function'
 
   addElements = () ->

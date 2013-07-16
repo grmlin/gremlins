@@ -10,6 +10,7 @@
 
 module.exports = function (grunt) {
     'use strict';
+    var mdoc = require('mdoc');
 
     var DIST_NAME = 'gremlin';
 
@@ -87,7 +88,8 @@ module.exports = function (grunt) {
         clean : {
             deps : ['app/.tmp/deps.js'],
             coffee : ["app/.tmp/scripts"],
-            dist : ["dist"]
+            dist : ["dist"],
+            docs: ["dist_docs"]
         },
         pkg : grunt.file.readJSON('package.json'),
         uglify : {
@@ -154,9 +156,40 @@ module.exports = function (grunt) {
     // Create shortcuts to main operations.
     grunt.registerTask('deps', ['clean:deps', 'mantriDeps:gremlinjs']);
 
-    grunt.registerTask('build', ['cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:dist']);
+    grunt.registerTask('build', ['docs', 'cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:dist']);
     grunt.registerTask('test', ['cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:test', 'mocha:test']);
     grunt.registerTask('server', ['cs', 'deps', 'connect:gremlinjs', 'watch:gremlinjs']);
+    grunt.registerTask('docs', ['clean:docs', 'mdoc']);
+
+    grunt.registerTask('mdoc', 'Generates documentation with mdoc', function() {
+
+        mdoc.run({
+
+            // === required settings === //
+
+            inputDir : 'docs',
+            outputDir : 'dist_docs',
+
+            // === optional settings === //
+            include : '*.mdown,*.md,*.markdown',
+            baseTitle : 'GremlinJS API Documentation',
+            indexContentPath : 'docs/GremlinJS.md',
+
+            templatePath : 'docs/_tpl',
+
+            mapTocName: function (fileName, tocObject) {
+             /*   console.log("\n\n")
+                //change the name displayed on the sidebar and on the index TOC
+                console.log(fileName)
+                console.log("\n\n")*/
+                return fileName.replace('.html','').replace(/\\/g,'.');
+            }
+
+        });
+
+        grunt.log.writeln('Generated docs.');
+    });
+
     // the default task, when 'grunt' is executed with no options.
     grunt.registerTask('default', ['test']);
 

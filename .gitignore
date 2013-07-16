@@ -1,5 +1,6 @@
 .idea/
 node_modules/
 dist
+dist_docs
 app/.tmp
 test/vendor

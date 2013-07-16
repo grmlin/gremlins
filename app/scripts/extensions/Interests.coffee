@@ -1,6 +1,6 @@
-goog.provide 'gremlin.gremlinDefinitions.extensions.Interests'
+goog.provide 'extensions.Interests'
 
-class gremlin.gremlinDefinitions.extensions.Interests
+class extensions.Interests
 
   class Controller
     cache = {}
@@ -27,6 +27,4 @@ class gremlin.gremlinDefinitions.extensions.Interests
     yes
 
   @bind: (gremlinInstance) ->
-    #console.log "Adding Interests"
     addInterests.call gremlinInstance
-#Switchboard.register @

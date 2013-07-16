@@ -1,9 +1,9 @@
-goog.provide 'gremlin.gremlinDefinitions.extensions.DomElements'
+goog.provide 'extensions.DomElements'
 
 goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.util.FeatureDetector'
 
-class gremlin.gremlinDefinitions.extensions.DomElements
+class extensions.DomElements
   isSupported = gremlin.util.FeatureDetector.hasQuerySelectorAll
   addElements = () ->
     if typeof @elements is 'object'
