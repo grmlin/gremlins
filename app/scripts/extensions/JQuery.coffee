@@ -33,6 +33,8 @@ class extensions.JQuery
   @test: ->
     isSupported
 
+  @extend: ->
+
   @bind: (gremlinInstance) ->
     gremlinInstance.$el = $ gremlinInstance.el
     addElements.call gremlinInstance

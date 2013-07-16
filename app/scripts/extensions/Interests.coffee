@@ -15,9 +15,6 @@ class extensions.Interests
 
   addInterests = ->
     @interests = @interests ? {}
-    @emit = (name, data) ->
-      Controller.dispatch name, data
-
     for interest, handler of @interests
       #console.log interest, @[handler]
       throw new Error("Handler #{handler} for the interest #{interest} is missing!") if typeof @[handler] isnt 'function'
@@ -26,5 +23,9 @@ class extensions.Interests
   @test: ->
     yes
 
+  @extend: (Gremlin) ->
+    Gremlin::emit = (name, data) ->
+      Controller.dispatch name, data
+      
   @bind: (gremlinInstance) ->
     addInterests.call gremlinInstance

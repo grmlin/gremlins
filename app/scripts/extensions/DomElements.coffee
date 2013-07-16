@@ -14,6 +14,8 @@ class extensions.DomElements
 
   @test: ->
     isSupported
-
+    
+  @extend: ->
+    
   @bind: (gremlinInstance) ->
     addElements.call gremlinInstance

@@ -41,6 +41,10 @@ class gremlin.gremlinDefinitions.Pool
           constructor.call this
 
       Gremlin::klass = Gremlin
+
+      extensions = gremlin.gremlinDefinitions.ExtensionRegistry.getExtensions()
+      extension.extend Gremlin for extension in extensions when extension.test()
+        
       gremlin.util.Helper.mixin Gremlin, instanceMembers
       Gremlin[key] = member for own key, member of staticMembers
 

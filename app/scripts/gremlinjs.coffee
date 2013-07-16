@@ -4,6 +4,7 @@ goog.provide 'GremlinJS'
 goog.require 'gremlin.util.polyfill'
 goog.require 'gremlin.util.ready'
 goog.require 'gremlin.conf.Configuration'
+goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.util.Debug'
 goog.require 'gremlin.Application'
 goog.require 'gremlin.gremlinDefinitions.Pool'
@@ -32,9 +33,10 @@ class GremlinJS
     app?.refresh()
     GremlinClass
 
+  @Helper: gremlin.util.Helper
+  
   @registerExtension: (Extension) ->
     gremlin.gremlinDefinitions.ExtensionRegistry.addExtension Extension
-
 
 window.GremlinJS = GremlinJS
 

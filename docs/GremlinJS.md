@@ -5,7 +5,7 @@
 Global GremlinJS Namespace
 
 
-## debug:Object
+## .debug:Object
 
 Debugger instance used for console logging and gremlin highlighting in the document. With activated debugging, all gremlins
 will be highlighted visually by GremlinJS, listing components that are ready, pending or broken.
@@ -32,7 +32,7 @@ For more details see: [`gremlin.util.Debug`](gremlin/util/debug.html)
 ```
 
 
-## define(name, constructor, instanceMembers, staticMembers):Function
+## .define(name, constructor, instanceMembers, staticMembers):Function
 
 Defines a new gremlin.  
 Creates a gremlin definition (*"class"*) that later will be used to activate elements in the document for this gremlin.
@@ -87,13 +87,28 @@ All static members of this class as an object literal. <br> To access static mem
 <script async src="http://codepen.io/assets/embed/ei.js">
 </script>
 
-## registerExtension(Extension) 
+## .Helper:Function
+
+Object providing some useful utility methods.
+ 
+See [`gremlin.util.Helper`](gremlin/util/Helper.html) for details  
+
+## .registerExtension(Extension) 
 
 Add a new extension to GremlinJS.
 
 ### Arguments
 - **`Extension:Function|Object`**  
-The new extension implementing  [`gremlin.gremlinDefinitions.IExtension.`](gremlin/gremlinDefinitions/IExtension.html) 
+The new extension implementing  [`gremlin.gremlinDefinitions.IExtension`](gremlin/gremlinDefinitions/IExtension.html) 
 
 > The Interface does not exist in code and there is no error handling when registring extensions at all. Take care and provide
 the necessary methods. 
+
+### Example
+
+##### Live Preview
+
+<pre class="codepen" data-height="430" data-type="js" data-href="mAGDC" data-user="grmlin" data-safe="true">
+</pre>
+<script async src="http://codepen.io/assets/embed/ei.js">
+</script>
