@@ -67,6 +67,10 @@ module.exports = function (grunt) {
             gremlinjs : {
                 files : ['app/scripts/**/*.coffee', 'app/mantriConf.json'],
                 tasks : ['cs', 'mantriDeps:gremlinjs']
+            },
+            docs: {
+                files: ['docs/**/*.*'],
+                tasks: ['clean:docs','docs']
             }
         },
         connect : {
@@ -176,13 +180,15 @@ module.exports = function (grunt) {
             indexContentPath : 'docs/GremlinJS.md',
 
             templatePath : 'docs/_tpl',
-
+            headingLevel : 3,
             mapTocName: function (fileName, tocObject) {
              /*   console.log("\n\n")
                 //change the name displayed on the sidebar and on the index TOC
                 console.log(fileName)
                 console.log("\n\n")*/
-                return fileName.replace('.html','').replace(/\\/g,'.');
+                var fileNameIndex = fileName.lastIndexOf("\\") + 1;
+                var name = fileName.substr(fileNameIndex);
+                return name.replace('.html','');
             }
 
         });

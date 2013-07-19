@@ -4,7 +4,9 @@ goog.require 'gremlin.util.Debug'
 
 class gremlin.gremlinDefinitions.AbstractGremlin
 
-
+  data: null
+  el: null
+  id: null
   # #### constructor
 
   # The constructor function of each gremlin will get three parameters passed in:

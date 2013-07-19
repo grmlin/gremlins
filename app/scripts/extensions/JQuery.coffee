@@ -33,8 +33,9 @@ class extensions.JQuery
   @test: ->
     isSupported
 
-  @extend: ->
-
+  @extend: (AbstractGremlin) ->
+    AbstractGremlin.IS_JQUERY = extensions.JQuery.test()
+    
   @bind: (gremlinInstance) ->
     gremlinInstance.$el = $ gremlinInstance.el
     addElements.call gremlinInstance

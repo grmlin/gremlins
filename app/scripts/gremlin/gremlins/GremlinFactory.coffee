@@ -12,8 +12,7 @@ class gremlin.gremlins.GremlinFactory
 
   addExtensions =  ->
     extensions = gremlin.gremlinDefinitions.ExtensionRegistry.getExtensions()
-    
-    extension.bind @ for extension in extensions when extension.test()
+    Extension.bind @ for Extension in extensions
 
   # TODO bind gremlin extensions outside the abstract gremlins constructor
   @getInstance : (name, domEl, elData) ->

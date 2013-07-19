@@ -9,28 +9,29 @@ part of the site.
 
 > This class is not directly accessible from outside GremlinJS. Use the [`GremlinJS.debug`](../../GremlinJS.html#debug) instance to debug your gremlins!
 
-## constructor(isDebug)
+## Constructor
+
+### Debug()
 Creates a new `gremlin.util.Debug` instance.
 
-### Arguments
-- **`isDebug:Boolean`**   
-Set `isDebug` to `true`, if debugging should be enabled or `false` otherwise.
+#### `Debug(isDebug)`
 
+- **`isDebug`** : Boolean
+	Set `isDebug` to `true`, if debugging should be enabled and `false` otherwise.
 
-
-### Example
+#### Example
 ```js
     goog.require('gremlin.util.Debug');// Mantri dependency
     var debugger = new gremlin.util.Debug(true);
 ```
+## Instance Members
 
-## console
+### console
+A reference to the console object you know and love.
 
-A reference to the console object you know and love. **If** GremlinJS is in debug mode, the `console` methods are a
-direct reference to the native `console` object. Otherwise all your `console.log` statements will be muted.
+#### `#console:Object`
 
-
-
+**If** GremlinJS is in debug mode, the `console` methods are linked directly to the native `console` object. Otherwise all your `console.log` statements will be muted.
 
 ---
 

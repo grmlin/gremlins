@@ -11,34 +11,41 @@ Interface every extension has to implement.
 <script async src="http://codepen.io/assets/embed/ei.js">
 </script>
 
-## .bind(gremlinInstance)
+## Static Members
+
+### .bind
+
 Binds the extension to a gremlin instance. Do whatever yout want to do with a gremlins instance in here. 
 
-### Arguments
-- **`gremlinInstance:Object`**    
-The instance of a gremlin component the extension will be bound to.
+#### `.bind(gremlinInstance)`
+
+- **`gremlinInstance`** : Gremlin 
+
+	The instance of a gremlin component the extension will be bound to.
 
 > Will be called **for every gremlin element** in the document separately
 
-### Example
+#### Example
 
 ```js
     Extension.bind = function(gremlinInstance) {
         gremlinInstance.foo = 'bar';
     };
 ```
-## .extend(GremlinDefinition)
+### .extend
+
 Change and extend the gremlin definition (constructor function, aka. class) in this handler.  
+
+#### `.extend(AbstractGremlin)`
+- **`AbstractGremlin`** : gremlin.gremlinDefinitions.AbstractGremlin
+
+	The constructor function used to create gremlin instances.
+
 `extend` is the place where you might want to add static members to the classes or extend their prototypes. 
 
-### Arguments
-- **`GremlinDefinition:Function`**    
-The constructor function used to create gremlin instances.
+> Will be called **once when adding the extension**
 
-> Will be called **once for every gremlin definition** the moment the defintion is added to GremlinJS with 
-[`GremlinJS.define()`](../../GremlinJS.html#define)
-
-### Example
+#### Example
 
 ```js
     Extension.extend= function(Gremlin) {
@@ -48,13 +55,17 @@ The constructor function used to create gremlin instances.
         }
     };
 ```
-## .test():Boolean
-Should return true, if the extension is available, false otherwise
+### .test()
+Test the extensions availability
 
-> Will be called **for every gremlin element** in the document separately
+#### `.test():Boolean`
+Should return `true`, if the extension is available, `false` otherwise.
 
+This little helper is needed to prevent errors for the some of the build in extensions. In most cases you will return `true` here.
 
-### Example
+> Will be called **once when adding the extension**
+
+#### Example
 
 ```js
     Extension.test= function() {

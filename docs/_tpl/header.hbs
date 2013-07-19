@@ -6,8 +6,52 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{root_path}}assets_/css/shCore.css">
         <link rel="stylesheet" href="{{root_path}}assets_/css/shThemeDefault.css">
-        <link rel="stylesheet" href="{{root_path}}assets_/css/main.css">
+        <!--<link rel="stylesheet" href="{{root_path}}assets_/css/main.css">--!>
+        <link rel="stylesheet" href="{{root_path}}assets_/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{root_path}}assets_/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="{{root_path}}assets_/css/custom.css">
     </head>
     <body data-root-path="{{root_path}}">
-        <div id="wrapper">
-            <div id="content">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand with-icon" href="./index.html"><img src="{{root_path}}assets_/img/ico.png" alt="GremlinJS"/> GremlinJS</a>
+    
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li>
+                                <a>Get started</a>
+                            </li>
+                            <li class="">
+                                <a href="guides.html">Guides</a>
+                            </li>
+                            <li>
+                                <a href="samples/">Demos</a>
+                            </li>
+                            <li class="active">
+                                <a>API</a>
+                            </li>
+                        </ul>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container-fluid">
+          <div class="row-fluid">
+            <div id="sidebar-wrapper" class="span3 sidebar">
+              <!--Sidebar content-->
+            </div>
+            <div class="span9">
+              <!--Body content-->
+              <div id="wrapper">
+                          <div id="content">
+            
+        
+        

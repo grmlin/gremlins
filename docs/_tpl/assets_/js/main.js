@@ -23,7 +23,7 @@
 
 
         function init() {
-            $_sidebar = $('<div id="sidebar" />').prependTo('#wrapper');
+            $_sidebar = $('<div id="sidebar" />').prependTo('#sidebar-wrapper');
             $_sidebar.load(_rootPath +'sidebar_.html', onTocLoad);
         }
 
@@ -46,7 +46,7 @@
             $_search.on('keyup blur', filterOnSearch);
 
             $_sidebar.find('.toc-list:has(a)').prev().addClass('collapsible');
-            $_sidebar.find('.toc-mod-title:has(a[href*="'+ _curFile +'"])').click();
+            $_sidebar.find('.toc-mod-title a[href*="'+ _curFile +'"]:first').attr('href','#').click().parent().addClass("active");
         }
 
         function toggleNavOnClick(evt) {

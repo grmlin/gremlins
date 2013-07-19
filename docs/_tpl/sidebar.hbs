@@ -1,19 +1,17 @@
-<div class="hd">
-    <input id="search" type="search" placeholder="search" />
-    <label><input id="show-desc" type="checkbox" /> Show Description</label>
-</div>
-<div class="bd">
-    <div class="toc">
-        {{#modules}}
-            <h3 class="toc-mod-title" title="{{module}}"><a href="{{file}}">{{{module}}}</a></h3>
-            <div class="toc-list">
+<ul class="nav nav-list">
+    {{#modules}}
+        <li class="toc-mod-title">
+            <a href="{{file}}" data-toggle="collapse" data-target="#subnav-item-{{@index}}">{{{module}}}</a>
+                <ul id="subnav-item-{{@index}}" class="collapse">
                 {{#toc}}
-                <a class="toc-item" href="{{../file}}#{{href}}">
-                    <h4>{{{title}}}</h4>
-                    <span class="desc">{{{description}}}</span>
-                </a>
+                    <li>
+                        <a class="toc-item" href="{{../file}}#{{href}}">
+                            {{name}}
+                        </a>
+                    </li>
                 {{/toc}}
-            </div>
-        {{/modules}}
-    </div>
-</div>
+                </ul>
+            </a>
+        </li>
+    {{/modules}}
+</ul>

@@ -494,6 +494,7 @@ hr {
 }
 
 #topnav{
+    display: none;
     list-style:none;
     position:fixed;
     top:0;
@@ -520,17 +521,9 @@ hr {
 }
 
 #sidebar {
-    width: 250px;
-    position: absolute;
-    overflow-y: auto;
-    overflow-x: hidden;
+    /*overflow-y: auto;
+    overflow-x: hidden;*/
     background-color:#f5f5f5;
-    border-right:2px solid #ddd;
-    top:0;
-    bottom:0;
-    left:0;
-    padding-bottom:5em;
-    position:fixed;
 }
 
 #sidebar .hd {
@@ -617,9 +610,7 @@ hr {
 
 
 #content {
-    max-width:700px;
-    margin:0 auto;
-    padding:1em 2em 5em 280px;
+    
 }
 
 .h2-mod {
@@ -656,4 +647,13 @@ hr {
     #content {
         padding-left:2em;
     }
+}
+
+
+.instance-member {
+    display: inline-block;
+    background-image: url(../img/hash.svg);
+    background-size: contain;
+    width: 10.37px;
+    height: 15.60px;
 }

@@ -1,0 +1,282 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic,700italic|Source+Code+Pro:300,400,500,600,700);
+
+/*
+font-family: 'Source Sans Pro', sans-serif;
+font-family: 'Source Code Pro', sans-serif;
+*/
+
+body {
+    font-size: 16px;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+code,
+pre {
+    font-family: 'Source Code Pro', Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 14px;
+}
+
+.navbar .brand.with-icon {
+    padding-left: 85px;
+    position: relative;
+}
+
+.navbar .brand.with-icon img {
+    position: absolute;
+    left: 20px;
+    top: 0;
+}
+
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:hover {
+    cursor: default;
+    text-decoration: underline;
+}
+
+.logo {
+
+}
+
+.logo img {
+    display: inline-block;
+    margin-left: -66px;
+}
+
+.logo h1 {
+    display: inline-block;
+    font-size: 90px;
+    vertical-align: top;
+}
+
+.logo h1 small {
+    display: block;
+    text-align: right;
+    margin-top: -22px;
+}
+
+@media (max-width: 979px) {
+    .logo img {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .logo h1 {
+        display: block;
+        margin-bottom: 40px;
+    }
+
+    .logo h1 small {
+        text-align: left;
+        display: inline-block;
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .logo h1 {
+        font-size: 50px;
+        display: block;
+    }
+
+    .logo h1 small {
+        display: block;
+        text-align: left;
+        font-size: 16px;
+
+    }
+}
+
+
+@media (min-width: 979px) {
+    #sidebar {
+        position:fixed;
+        top:100px;
+        bottom: 0;
+        width:23.404%;
+        float:left;
+        overflow: auto;
+    }
+}
+
+#sidebar .nav-list > li > a {
+    font-weight: bold;
+}
+
+#sidebar .nav-list a {
+    cursor: pointer;
+    font-family: 'Source Code Pro', Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+#sidebar .nav-list ul {
+    margin-left: 0;
+}
+#sidebar .nav-list ul li {
+    margin: 5px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#sidebar .nav-list ul li a {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#sidebar .nav-list ul li a:hover {
+    text-decoration: none;
+    color: #000000;
+}
+#sidebar .nav-list ul li a::before {
+    content: '-';
+    display: inline-block;
+    -webkit-transition: all 150ms ease-out;
+    -moz-transition: all 150ms ease-out;
+    -o-transition: all 150ms ease-out;
+    transition: all 150ms ease-out;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+}
+
+#sidebar .nav-list ul li a:hover::before {
+    -webkit-transform: rotate(-30deg);
+    -moz-transform: rotate(-30deg);
+    -ms-transform: rotate(-30deg);
+    -o-transform: rotate(-30deg);
+    transform: rotate(-30deg);
+}
+#topnav {
+    display: none;
+}
+
+/*
+h3 {
+    font-family: 'Source Code Pro',Menlo, Monaco, Consolas, "Courier New", monospace;
+    background: #3299BB;
+    color: #fff;
+    padding: 4px 5px;
+    font-size: 1.1em;
+}
+
+h3:first-of-type {
+    font-family: 'Source Sans Pro', Arial, sans-serif; 
+    background: transparent;
+    color: #333;
+}
+*/
+body > .navbar + div {
+    margin-top: 100px;
+}
+
+#content h2 {
+    border-bottom: 1px solid #ccc;
+    margin: 60px -20px 40px;
+    color: #333;
+    padding: 10px 20px 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+#content h3 {
+    font-family: 'Source Code Pro', Menlo, Monaco, Consolas, "Courier New", monospace;
+    position: relative;
+    font-size: 36px;
+    font-weight: 300;
+    white-space: normal;
+    border-bottom: 1px solid #000000;
+    /*background-color: #777777;*/
+    padding: 12px 0 12px 20px; 
+    margin: 50px 0  15px -20px;
+
+    border-bottom: 1px solid #ccc;
+    background: #f5f5f5;
+    color: #333;
+}
+#content h3 a {
+    color: #FF9900;
+    opacity: 0;
+    visibility: hidden;
+    position:absolute;
+    top: -80px;
+    left: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+#content h3 a:focus {
+    outline: none;
+}
+
+h3 ~ p {
+    padding-left: 24px;
+}
+
+#content h4 {
+    position: relative;
+    z-index: 10;
+}
+#content h4 code {
+    font-weight: 300;
+    font-size: 18px;
+    background: #3299BB;
+    padding: 4px 20px;
+    margin-left: 0;
+    margin-right: 0;
+    color: #fff;
+    display: block;
+    white-space: normal;
+}
+
+#content h4 + ul {
+    margin: -11px 20px 10px;
+    list-style: none;
+    padding: 15px 10px 5px;
+    background: #E9E9E9;
+    border: 1px solid #BCBCBC;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 5;
+}
+
+#content h4 + ul li {
+
+}
+
+#content h4 + ul li p:first-child {
+    font-size: 20px;
+    margin-bottom: 0;
+    color: #666666;
+    font-weight: 300;
+}
+#content h4 + ul li p:first-child code {
+    display: inline-block;
+    color: #FF9900;
+    padding: 0;
+    margin-bottom: 6px;
+    background: none;
+    border: none;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+
+#content h4 + ul li p:first-child strong ~ em {
+    font-size: 16px;
+    position: relative;
+    color: #8b8b8b;
+}
+
+#content h3 ~ h5 {
+    margin-left: 20px;
+    font-size: 16px;
+    /*font-weight: normal;*/
+}
+
+#content iframe.cp_embed_iframe {
+    border: 1px solid #333 !important;
+}

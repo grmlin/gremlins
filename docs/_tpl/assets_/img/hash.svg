@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="10.368164"
+   height="15.599854"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="#.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="22.4"
+     inkscape:cx="19.085379"
+     inkscape:cy="1.2710338"
+     inkscape:document-units="px"
+     inkscape:current-layer="text2985"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="1911"
+     inkscape:window-y="46"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-207.80243,-519.61951)">
+    <g
+       style="font-size:24px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       id="text2985">
+      <path
+         d="m 209.69794,530.32312 -1.89551,0 0,-1.36743 2.06396,0 0.45557,-3.55225 -2.03979,0 0,-1.39233 2.18408,0 0.57568,-4.3916 1.27222,0 -0.55152,4.3916 3.16773,0 0.57568,-4.3916 1.27222,0 -0.55225,4.3916 1.94458,0 0,1.39233 -2.08813,0 -0.4563,3.55225 2.06396,0 0,1.36743 -2.23168,0 -0.57642,4.89624 -1.29566,0 0.59986,-4.89624 -3.1919,0 -0.57568,4.89624 -1.29639,0 z m 4.63257,-1.36743 0.45556,-3.55225 -3.19189,0 -0.43213,3.55225 z"
+         style="font-variant:normal;font-stretch:normal;font-family:Source Code Pro;-inkscape-font-specification:Source Code Pro"
+         id="path2990" />
+    </g>
+  </g>
+</svg>

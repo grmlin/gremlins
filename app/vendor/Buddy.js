@@ -13,4 +13,8 @@ GremlinJS.define("Buddy", function () {
             console.dir(data);
             this.$content.after('Holly talked!')
         }
-    });
+    },
+    {
+        BUDDY: 'HOLLY'
+    }
+);

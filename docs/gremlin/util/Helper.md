@@ -6,16 +6,16 @@ Utility methods used by GremlinJS.
 
 
 
-## .extend(target, objects...):Function|Object 
+### .extend(target, *objects):Function|Object 
 
-## .mixin(targetClass, mixinObject)
+### .mixin(targetClass, mixinObject)
 
-## .clone(obj):Object
+### .clone(obj):Object
 
-## .hasClass(element, className):Boolean
+### .hasClass(element, className):Boolean
 
-## .addClass(element, className)
+### .addClass(element, className)
 
-## .removeClass(element, className)
+### .removeClass(element, className)
 
-## .addStyleSheet(cssText) 
+### .addStyleSheet(cssText) 
