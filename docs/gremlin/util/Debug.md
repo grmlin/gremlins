@@ -9,6 +9,15 @@ part of the site.
 
 > This class is not directly accessible from outside GremlinJS. Use the [`GremlinJS.debug`](../../GremlinJS.html#debug) instance to debug your gremlins!
 
+### Example
+
+Open your console to see the logging there.
+
+<pre class="codepen" data-height="250" data-type="result" data-href="qpmEc" data-user="grmlin" data-safe="true">
+</pre>
+<script async src="http://codepen.io/assets/embed/ei.js">
+</script>
+
 ## Constructor
 
 ### Debug()
