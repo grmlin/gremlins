@@ -32,7 +32,8 @@ module.exports = function (grunt) {
         coffee : {
             gremlinjs : {
                 options : {
-                    bare : true
+                    bare : true,
+                    sourceMap: true
                 },
                 expand : true,
                 cwd : 'app/scripts',
@@ -76,7 +77,7 @@ module.exports = function (grunt) {
         connect : {
             gremlinjs : {
                 options : {
-                    port : 4242,
+                    port : 4243,
                     base : './app'
                     //keepalive: true
                 }

@@ -13,26 +13,40 @@ goog.require 'gremlin.gremlinDefinitions.ExtensionRegistry'
 # include the default extensions 
 goog.require 'extensions'
 
+# The globally available `GremlinJS` namespace
+# 
+# @example how to access GremlinJS
+#   var localCopy = window.GremlinJS;
 class GremlinJS
   app = null
 
   gremlin.util.ready ->
     app = new gremlin.Application()
-    GremlinJS.debug = new gremlin.util.Debug app.configuration.get(gremlin.conf.Configuration.options.DEBUG)
+    isDebug = app.configuration.get gremlin.conf.Configuration.options.DEBUG
+    GremlinJS.debug = new gremlin.util.Debug isDebug if isDebug 
 
     app.start()
     GremlinJS.debug.console.log "GremlinJS up and running..."
 
-
-  #@options: gremlin.conf.Configuration.options
-
+  # Instance of {gremlin.util.Debug}
+  # Used for console logging and gremlin highlighting in the document. With activated debugging, all gremlins
+  # will be highlighted visually by GremlinJS, listing components that are ready, pending or broken.
+  #
+  # @example Enable debug mode
   @debug: new gremlin.util.Debug false
-
+  
+  # @property [Stringz]
+  debug: 'moo'
+  
+   
+  
   @define: (name, constructor, instanceMembers, staticMembers) ->
     GremlinClass = gremlin.gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
     app?.refresh()
     GremlinClass
-
+    
+  # @property [gremlin.util.Helper] The person name
+  # @see gremlin.util.Helper
   @Helper: gremlin.util.Helper
   
   @registerExtension: (Extension) ->

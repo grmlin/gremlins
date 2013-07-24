@@ -6,15 +6,16 @@ GremlinJS.define("Buddy", function () {
         elements: {
             "div.content": "content"
         },
-        interests: {
-            'FOO': 'onFoo'
-        },
+        
         onFoo: function (data) {
             console.dir(data);
             this.$content.after('Holly talked!')
         }
     },
     {
+        interests: {
+            'FOO': 'onFoo'
+        },
         BUDDY: 'HOLLY'
     }
 );

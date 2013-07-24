@@ -2,7 +2,7 @@ goog.provide 'extensions.DomElements'
 
 goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.util.FeatureDetector'
-
+# @private
 class extensions.DomElements
   isSupported = gremlin.util.FeatureDetector.hasQuerySelectorAll
   addElements = () ->

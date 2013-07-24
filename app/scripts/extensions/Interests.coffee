@@ -1,7 +1,7 @@
 goog.provide 'extensions.Interests'
-
+# @private
 class extensions.Interests
-
+  # @private
   class Controller
     cache = {}
     @registerHandler: (interest, handler, ctx) ->
@@ -14,10 +14,10 @@ class extensions.Interests
 
 
   addInterests = ->
-    @interests = @interests ? {}
-    for interest, handler of @interests
+    interests = @klass.interests ? {}
+    for interest, handler of interests
       #console.log interest, @[handler]
-      throw new Error("Handler #{handler} for the interest #{interest} is missing!") if typeof @[handler] isnt 'function'
+      throw new Error("Handler \"#{handler}\" for the interest \"#{interest}\" is missing!") if typeof @[handler] isnt 'function'
       Controller.registerHandler interest, @[handler], @
 
   @test: ->

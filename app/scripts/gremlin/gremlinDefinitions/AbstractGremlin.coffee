@@ -3,24 +3,19 @@ goog.provide 'gremlin.gremlinDefinitions.AbstractGremlin'
 goog.require 'gremlin.util.Debug'
 
 class gremlin.gremlinDefinitions.AbstractGremlin
-
+  # @property [Object] the data object holding the dom element's data attributes
   data: null
   el: null
   id: null
-  # #### constructor
-
-  # The constructor function of each gremlin will get three parameters passed in:
-  #
-  # * `view` - The dom element of the gremlin
-  # * `data` - all custom data attributes (`data-...`) of the gremlin's dom element wrapped in an object
-  # * `id` - a unique id assigned to this gremlin instance
-  #
-  # than
-  #
-  # * jQuery elements and events are bound
-  # * interests list is prepared
-  # * the gremlin is registered in the Switchboard
-  # * the pseudo constructor is called
+  
+  # The constructor function used internally to instantiate gremlins.
+  # 
+  # 
+  # @param [Object] el The dom element the gremlin is bound to
+  # @param [Object] data The elements data attributes
+  # @param [Number] id A unique id for every gremlin in the page
+  # @param [Function] init A init function called inside the constructor. Here, the extensions will be bound to the newly created instance
+  # 
   constructor: (@el, @data, @id, init) ->
     init.call @
 

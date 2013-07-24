@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
+  <script src='../../../assets/codo.js'></script>
+  <script src='../../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../../README.md.html' title='Gremlinjs'>Gremlinjs</a>
+    &raquo;
+    <a href='../../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>gremlin</span>
+    &raquo;
+    <span class='title'>gremlins</span>
+    &raquo;
+    <span class='title'>GremlinDomElement</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
+      <a id='file_list_link' href='../../../file_list.html'>Files</a>
+      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../../../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        gremlin.gremlins.GremlinDomElement
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>app\scripts\gremlin\gremlins\GremlinDomElement.coffee</td>
+        </tr>
+      </table>
+      <h2>Constant Summary</h2>
+      <dl class='constants'>
+        <dt id='DATA_LAZY-constant'>
+          DATA_LAZY
+          =
+          <div class='tags'>
+</div>
+        </dt>
+        <dd>
+          <pre><code class='coffee'>"gremlinLazy"</code></pre>
+        </dd>
+        <dt id='CSS_CLASS_LOADING-constant'>
+          CSS_CLASS_LOADING
+          =
+          <div class='tags'>
+</div>
+        </dt>
+        <dd>
+          <pre><code class='coffee'>"gremlin-loading"</code></pre>
+        </dd>
+        <dt id='CSS_CLASS_READY-constant'>
+          CSS_CLASS_READY
+          =
+          <div class='tags'>
+</div>
+        </dt>
+        <dd>
+          <pre><code class='coffee'>'gremlin-ready'</code></pre>
+        </dd>
+        <dt id='CSS_CLASS_PENDING-constant'>
+          CSS_CLASS_PENDING
+          =
+          <div class='tags'>
+</div>
+        </dt>
+        <dd>
+          <pre><code class='coffee'>'gremlin-definition-pending'</code></pre>
+        </dd>
+        <dt id='GREMLIN_LAZY_BUFFER-constant'>
+          GREMLIN_LAZY_BUFFER
+          =
+          <div class='tags'>
+</div>
+        </dt>
+        <dd>
+          <pre><code class='coffee'>300</code></pre>
+        </dd>
+      </dl>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(_el, _name)
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#check-instance'>
+        - (void) <strong>check</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_isInViewport-instance'>
+        - (void) <strong>_isInViewport</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#_create-instance'>
+        - (void) <strong>_create</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#hasGremlin-instance'>
+        - (void) <strong>hasGremlin</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+</ul>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(_el, _name)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='check-instance'>
+      - (void) <strong>check</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_isInViewport-instance'>
+      - (void) <strong>_isInViewport</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='_create-instance'>
+      - (void) <strong>_create</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='hasGremlin-instance'>
+      - (void) <strong>hasGremlin</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Tue Jul 23 2013 00:03:30 GMT+0200 (Mitteleuropäische Sommerzeit)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.2).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

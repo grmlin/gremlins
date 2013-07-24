@@ -1,0 +1,9 @@
+--name       "gremlinjs"
+--readme     README.md
+--title      "GremlinJS Documentation"
+--private
+--quiet
+--output-dir ./doc
+./src
+-
+LICENSE

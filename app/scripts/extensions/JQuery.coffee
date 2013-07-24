@@ -1,5 +1,5 @@
 goog.provide 'extensions.JQuery'
-
+# @private
 class extensions.JQuery
   isSupported = typeof window.jQuery is 'function' or typeof window.Zepto is 'function'
 
