@@ -4,14 +4,15 @@ class extensions.JQuery
   isSupported = typeof window.jQuery is 'function' or typeof window.Zepto is 'function'
 
   addElements = () ->
-    if typeof @elements is 'object'
-      for own selector, propertyName of @elements
+    if typeof @klass.$elements is 'object'
+      for own selector, propertyName of @klass.$elements
         throw new TypeError "Element selector have to be referenced by strings!" unless (typeof selector is "string")
-        @["$" + propertyName] = @$el.find(selector)
+        @[propertyName] = @$el.find(selector)
 
   addEvents = () ->
-    if typeof @events is 'object'
-      for own event, handlerName of @events
+    ctx = @
+    if typeof @klass.$events is 'object'
+      for own event, handlerName of @klass.$events
         do (handlerName, event) =>
           throw new TypeError "Event selectors have to be referenced by strings!" unless (typeof event is "string")
 
@@ -24,9 +25,10 @@ class extensions.JQuery
           isDelegated = firstWhitespace isnt -1
           eventType = if isDelegated then event.substr(0, firstWhitespace) else event
           target = if isDelegated then event.substr(firstWhitespace + 1) else null
-
-          @$el.on eventType, target, =>
-            handler.apply(@, arguments)
+          
+            
+          @$el.on eventType, target, (e) ->
+            handler.call(ctx, e, @)
             true
       true
 
@@ -34,7 +36,7 @@ class extensions.JQuery
     isSupported
 
   @extend: (AbstractGremlin) ->
-    AbstractGremlin.IS_JQUERY = extensions.JQuery.test()
+    AbstractGremlin.IS_JQUERY = yes
     
   @bind: (gremlinInstance) ->
     gremlinInstance.$el = $ gremlinInstance.el
