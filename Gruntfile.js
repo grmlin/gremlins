@@ -68,10 +68,6 @@ module.exports = function (grunt) {
             gremlinjs : {
                 files : ['app/scripts/**/*.coffee', 'app/mantriConf.json'],
                 tasks : ['cs', 'mantriDeps:gremlinjs']
-            },
-            docs: {
-                files: ['docs/**/*.*'],
-                tasks: ['clean:docs','docs']
             }
         },
         connect : {
@@ -93,8 +89,7 @@ module.exports = function (grunt) {
         clean : {
             deps : ['app/.tmp/deps.js'],
             coffee : ["app/.tmp/scripts"],
-            dist : ["dist"],
-            docs: ["dist_docs"]
+            dist : ["dist"]
         },
         pkg : grunt.file.readJSON('package.json'),
         uglify : {
@@ -161,42 +156,10 @@ module.exports = function (grunt) {
     // Create shortcuts to main operations.
     grunt.registerTask('deps', ['clean:deps', 'mantriDeps:gremlinjs']);
 
-    grunt.registerTask('build', ['docs', 'cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:dist']);
+    grunt.registerTask('build', ['cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:dist']);
     grunt.registerTask('test', ['cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:test', 'mocha:test']);
     grunt.registerTask('server', ['cs', 'deps', 'connect:gremlinjs', 'watch:gremlinjs']);
-    grunt.registerTask('docs', ['clean:docs', 'mdoc']);
-
-    grunt.registerTask('mdoc', 'Generates documentation with mdoc', function() {
-
-        mdoc.run({
-
-            // === required settings === //
-
-            inputDir : 'docs',
-            outputDir : 'dist_docs',
-
-            // === optional settings === //
-            include : '*.mdown,*.md,*.markdown',
-            baseTitle : 'GremlinJS API Documentation',
-            indexContentPath : 'docs/GremlinJS.md',
-
-            templatePath : 'docs/_tpl',
-            headingLevel : 3,
-            mapTocName: function (fileName, tocObject) {
-             /*   console.log("\n\n")
-                //change the name displayed on the sidebar and on the index TOC
-                console.log(fileName)
-                console.log("\n\n")*/
-                var fileNameIndex = fileName.lastIndexOf("\\") + 1;
-                var name = fileName.substr(fileNameIndex);
-                return name.replace('.html','');
-            }
-
-        });
-
-        grunt.log.writeln('Generated docs.');
-    });
-
+        
     // the default task, when 'grunt' is executed with no options.
     grunt.registerTask('default', ['test']);
 
