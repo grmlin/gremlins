@@ -6,8 +6,6 @@ class gremlin.MutationObserverShim
   instance = null
 
   class MutationObserverShim extends gremlin.event.Event
-    @RESCAN_INTERVAL : 500
-
     constructor : ->
       super
       @_clock = gremlin.domObserver.clocks.ClockFactory.createClock()

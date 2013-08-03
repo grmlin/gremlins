@@ -14,11 +14,11 @@ class gremlin.gremlins.GremlinFactory
     extensions = gremlin.gremlinDefinitions.ExtensionRegistry.getExtensions()
     Extension.bind @ for Extension in extensions
 
-  # TODO bind gremlin extensions outside the abstract gremlins constructor
   @getInstance : (name, domEl, elData) ->
     GremlinClass = gremlin.gremlinDefinitions.Pool.getInstance().get name
     if typeof GremlinClass is 'function'
       gremlinInstance = new GremlinClass domEl, elData.toObject(), uid(), addExtensions
+      throw new Error("Abstract gremlin class not called. Did you miss a super in your coffeescript-class?") if gremlinInstance.el is null
       gremlinInstance
     else
       null

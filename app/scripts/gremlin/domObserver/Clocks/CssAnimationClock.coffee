@@ -4,7 +4,7 @@ goog.require 'gremlin.util.Helper'
 
 class gremlin.domObserver.clocks.CssAnimationClock
   ANIMATION_NAME = "gremlinInserted"
-  EVENT_NAMES = ['animationend', 'webkitAnimationEnd', 'oanimationend']
+  EVENT_NAMES = ['animationstart', 'webkitAnimationStart', 'oanimationstart']
 
   constructor: ->
     css = gremlin.domObserver.clocks.cssAnimationStyle ANIMATION_NAME

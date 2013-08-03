@@ -9,10 +9,12 @@ class gremlin.domObserver.clocks.ClockFactory
   hasMutationObserver = gremlin.util.FeatureDetector.hasMutationObserver
 
   @createClock: ->
+    
+    #if hasMutationObserver
+    #  Clock = gremlin.domObserver.clocks.MutationObserverClock
+    ##else
     if hasAnimations
       Clock = gremlin.domObserver.clocks.CssAnimationClock
-    else if hasMutationObserver
-      Clock = gremlin.domObserver.clocks.MutationObserverClock
     else
       Clock = gremlin.domObserver.clocks.LegacyTimeoutClock
 

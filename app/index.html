@@ -38,6 +38,7 @@
             src="/vendor/mantri.web.js"></script>
 </head>
 <body data-gremlin-config='{"debug":true}'>
+<div data-gremlin="Espresso"></div>
 <div data-gremlin="Buddy">
     <h2>Buddy</h2>
     <div class="content"></div>
@@ -52,6 +53,7 @@
     <div class="content"></div>
 </div>
 
+<div data-gremlin="Async"></div>
 <hr>
 <p>
     <button onclick="addGremlin('Buddy')">Add a Buddy gremlin</button>
@@ -63,8 +65,12 @@
 </div>
 
 
+<script type="text/javascript" src="/vendor/extensions/gremlin.interests.min.js"></script>
+<script type="text/javascript" src="/vendor/extensions/gremlin.jquery.min.js"></script>
+<script type="text/javascript" src="/vendor/extensions/gremlin.domelements.min.js"></script>
 <script type="text/javascript" src="/vendor/Buddy.js"></script>
 <script type="text/javascript" src="/vendor/Holly.js"></script>
+<script type="text/javascript" src="/vendor/Espresso.js"></script>
 
 <script type="text/javascript">
     var addGremlin = function (name) {

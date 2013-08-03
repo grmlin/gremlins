@@ -5,6 +5,7 @@ goog.require 'gremlin.gremlinDefinitions.AbstractGremlin'
 
 class gremlin.gremlinDefinitions.Pool
   'use strict'
+  nameRe = /function\s*([\w\$]*)\s*\(/
   instance = null
   definitions = {}
   noop = ->
@@ -47,7 +48,19 @@ class gremlin.gremlinDefinitions.Pool
 
       @set name, Gremlin
       return Gremlin
+    
+    addClass: (name, Gremlin) ->
+      unless typeof name is 'string'
+        throw new Error("Please provide the name of the gremlin ")
+        
+      unless typeof Gremlin is 'function'
+        throw new Error("When adding a gremlin, you have to provide a constructor function!")
+
+      Gremlin::klass = Gremlin
       
+      @set name, Gremlin
+      return Gremlin
+
   @getInstance : () ->
     instance ?= new Pool
     

@@ -7,11 +7,9 @@ goog.require 'gremlin.conf.Configuration'
 goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.util.Debug'
 goog.require 'gremlin.Application'
+goog.require 'gremlin.gremlinDefinitions.AbstractGremlin'
 goog.require 'gremlin.gremlinDefinitions.Pool'
 goog.require 'gremlin.gremlinDefinitions.ExtensionRegistry' 
-
-# include the default extensions 
-goog.require 'extensions'
 
 # The globally available `GremlinJS` namespace
 # 
@@ -41,10 +39,19 @@ class GremlinJS
    
   
   @define: (name, constructor, instanceMembers, staticMembers) ->
-    GremlinClass = gremlin.gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
+    Gremlin = gremlin.gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
     app?.refresh()
-    GremlinClass
+    Gremlin
+  
+  #@derive: (parentName, name, constructor, instanceMembers, staticMembers) ->
     
+  @add : (name, GremlinClass) ->
+    Gremlin = gremlin.gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
+    app?.refresh()
+    Gremlin    
+
+  @Gremlin : gremlin.gremlinDefinitions.AbstractGremlin
+     
   # @property [gremlin.util.Helper] The person name
   # @see gremlin.util.Helper
   @Helper: gremlin.util.Helper
@@ -53,6 +60,7 @@ class GremlinJS
     gremlin.gremlinDefinitions.ExtensionRegistry.addExtension Extension
 
 window.GremlinJS = GremlinJS
+window.G = GremlinJS if window.G is undefined
 
 if typeof window.define is "function" and window.define.amd
   define "GremlinJS", [], ->

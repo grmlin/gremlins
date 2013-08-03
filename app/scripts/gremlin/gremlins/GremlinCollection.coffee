@@ -1,7 +1,6 @@
 goog.provide 'gremlin.gremlins.GremlinCollection'
 goog.require 'gremlin.gremlins.NameProvider'
 goog.require 'gremlin.gremlins.GremlinDomElement'
-goog.require 'gremlin.gremlins.GremlinFactory'
 
 class gremlin.gremlins.GremlinCollection
   _queue : null

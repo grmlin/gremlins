@@ -1,12 +1,11 @@
 goog.provide 'gremlin.gremlinDefinitions.AbstractGremlin'
 
-goog.require 'gremlin.util.Debug'
-
 class gremlin.gremlinDefinitions.AbstractGremlin
   # @property [Object] the data object holding the dom element's data attributes
   data: null
   el: null
   id: null
+  klass: null
   
   # The constructor function used internally to instantiate gremlins.
   # 
