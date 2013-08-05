@@ -24,6 +24,7 @@ class gremlin.util.Debug
         padding: 4px 6px;
         -webkit-box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.3);
         box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.3);
+        z-index: 9999;
         }
 
         .#{CSS_CLASS_LOG} p {

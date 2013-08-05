@@ -87,6 +87,17 @@
         document.getElementById("adder").appendChild(el);
     };
 
+    
+    GremlinJS.on(GremlinJS.ON_DEFINITION_PENDING, function(el){
+        console.log("Definition pending ",el.getAttribute('data-gremlin-found'));
+        
+    });
+    GremlinJS.on(GremlinJS.ON_ELEMENT_FOUND, function(){
+       // alert("Element found")
+    });
+    GremlinJS.on(GremlinJS.ON_GREMLIN_LOADED, function(){
+       // alert("Gremlin loaded")
+    });
 </script>
 
 

@@ -1,4 +1,5 @@
-goog.provide 'gremlin.gremlins.GremlinDomElement'
+goog.provide 'gremlin.gremlins.GremlinDomElement'         
+
 goog.require 'gremlin.util.FeatureDetector'
 goog.require 'gremlin.util.ElementData.ElementData'
 goog.require 'gremlin.util.Helper'
@@ -25,8 +26,10 @@ class gremlin.gremlins.GremlinDomElement
     @_isLazy = if @_data.get(DATA_LAZY) is yes then yes else no
     @isLazy = @_isLazy
     @name = @_name
+    @_triggeredPending = no
     gremlin.util.Helper.addClass @_el, CSS_CLASS_LOADING
     GremlinJS.debug.registerGremlin @
+    GremlinJS.emit GremlinJS.ON_ELEMENT_FOUND, @_el
 
   check : ->
     @_create() if @_isInViewport()
@@ -46,10 +49,14 @@ class gremlin.gremlins.GremlinDomElement
       gremlin.util.Helper.removeClass @_el, CSS_CLASS_LOADING
       gremlin.util.Helper.removeClass @_el, CSS_CLASS_PENDING
       gremlin.util.Helper.addClass @_el, CSS_CLASS_READY
+      GremlinJS.emit GremlinJS.ON_GREMLIN_LOADED, @_el
 
     else
-      gremlin.util.Helper.addClass @_el, CSS_CLASS_PENDING
-      GremlinJS.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment."
+      unless @_triggeredPending
+        gremlin.util.Helper.addClass @_el, CSS_CLASS_PENDING
+        GremlinJS.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment." 
+        @_triggeredPending = yes
+        GremlinJS.emit GremlinJS.ON_DEFINITION_PENDING, @_el
 
   hasGremlin: -> 
     @_gremlinInstance isnt null
