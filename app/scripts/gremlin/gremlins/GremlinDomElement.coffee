@@ -53,9 +53,9 @@ class gremlin.gremlins.GremlinDomElement
 
     else
       unless @_triggeredPending
+        @_triggeredPending = yes
         gremlin.util.Helper.addClass @_el, CSS_CLASS_PENDING
         GremlinJS.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment." 
-        @_triggeredPending = yes
         GremlinJS.emit GremlinJS.ON_DEFINITION_PENDING, @_el
 
   hasGremlin: -> 

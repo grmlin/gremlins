@@ -12,12 +12,13 @@ goog.require 'gremlin.gremlinDefinitions.Pool'
 goog.require 'gremlin.gremlinDefinitions.ExtensionRegistry' 
 
 GremlinJS = do ->
+  app = null
+
   # The globally available `GremlinJS` namespace
   # 
   # @example how to access GremlinJS
   #   var localCopy = window.GremlinJS;
   class GremlinAdapter extends gremlin.event.Event
-    app = null
   
     ON_ELEMENT_FOUND: 'elementfound'
     ON_DEFINITION_PENDING : 'definitionpending'
@@ -35,9 +36,9 @@ GremlinJS = do ->
     #derive: (parentName, name, constructor, instanceMembers, staticMembers) ->
       
     add : (name, GremlinClass) ->
-      Gremlin = gremlin.gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
+      gremlin.gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
       app?.refresh()
-      Gremlin
+      
 
     Gremlin : gremlin.gremlinDefinitions.AbstractGremlin
        
