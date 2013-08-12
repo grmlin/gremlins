@@ -1,4 +1,5 @@
 goog.provide 'gremlin.gremlins.GremlinFactory'
+
 goog.require 'gremlin.gremlinDefinitions.Pool'
 goog.require 'gremlin.gremlinDefinitions.ExtensionRegistry'
 
