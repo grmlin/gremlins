@@ -111,7 +111,7 @@ module.exports = function (grunt) {
                     exportAll : true
                 },
                 files : {
-                    'test/gremlinjs/gremlin.js' : ['dist/' + DIST_NAME + '.js']
+                    'test/src/gremlin.js' : ['dist/' + DIST_NAME + '.js']
                 }
             }
         },
