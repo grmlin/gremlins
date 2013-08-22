@@ -1,6 +1,7 @@
 .idea/
 node_modules/
-dist
-dist_docs
-app/.tmp
+dist/
+src/.tmp
+test/vendor
+test/.tmp
 test/vendor
