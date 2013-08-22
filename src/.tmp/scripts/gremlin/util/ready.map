@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ready.js",
+  "sourceRoot": "..\\..\\..\\..\\scripts\\gremlin\\util/",
+  "sources": [
+    "ready.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,CAAK,GAAD,GAAJ,aAAA;;AAEA,CAFA,EAEqB,CAAT,CAAZ,CAA2B,CAApB,GAFP"
+}

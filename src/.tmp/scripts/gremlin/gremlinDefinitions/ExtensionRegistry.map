@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "ExtensionRegistry.js",
+  "sourceRoot": "..\\..\\..\\..\\scripts\\gremlin\\gremlinDefinitions/",
+  "sources": [
+    "ExtensionRegistry.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,CAAK,GAAD,GAAJ,uCAAA;;AAEA,CAFA,GAEI,GAAJ,qCAAA;;AAEM,CAJN,MAIa,WAAmB;CAC9B,KAAA,aAAA;;CAAA;;CAAA,CAAA,CAAsB,gBAAtB;;CAAA,CAEA,CAAe,MAAC,GAAhB,KAAC;CACC,GAAA,EAAA,CAAwB,EAAf,MAAT,GAA2C;CACvB,GAApB,KAAA,EAAA,QAAmB;CAJrB,EAEe;;CAFf,CAMA,CAAgB,MAAA,IAAhB,IAAC;CAAsC,IAApB,MAAA,QAAmB;CANtC,EAMgB;;CANhB;;CALF"
+}

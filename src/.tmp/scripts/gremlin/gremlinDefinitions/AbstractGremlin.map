@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "AbstractGremlin.js",
+  "sourceRoot": "..\\..\\..\\..\\scripts\\gremlin\\gremlinDefinitions/",
+  "sources": [
+    "AbstractGremlin.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA,CAAK,GAAD,GAAJ,qCAAA;;AAEM,CAFN,MAEa,WAAmB;CAE9B,EAAM,CAAN;;CAAA,CACA,CAAI,CADJ;;CAAA,CAEA,CAAI,CAFJ;;CAAA,EAGO,CAHP,CAGA;;CAUa,CAAA,CAAA,CAAA,qBAAE;CACb,CAAA,CADa,CAAD;CACZ,EADkB,CAAD;CACjB,CAAA,CADyB,CAAD;CACxB,GAAA;CAdF,EAaa;;CAbb;;CAJF"
+}
