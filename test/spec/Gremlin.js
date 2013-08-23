@@ -1,16 +1,19 @@
 describe('Gremlin', function () {
   it('The Gremlin namespace should exist', function () {
-    expect(Gremlin).to.be.an('object');
+    expect(gremlin).to.be.an('object');
     expect(G).to.be.an('object');
-    expect(G).to.equal(Gremlin);
+    expect(G).to.equal(gremlin);
   });
-  it('GremlinJS should expose the main GremlinJS API', function () {
+  it('Gremlin should expose the main gremlin.js API', function () {
     expect(G.add).to.be.a('function');
-    expect(G.debug).to.be.an.instanceof(gremlin.util.Debug);
-    expect(G.Gizmo).to.equal(gremlin.gremlinDefinitions.Gizmo);
-    /*expect(G.define).to.be.a('function');
-    expect(G.add).to.be.a('function');
-    expect(GremlinJS.config).to.be.a('function');
-    expect(GremlinJS.define).to.be.a('function');*/
+    expect(G.debug).to.be.an.instanceof(util.Debug);
+    expect(G.define).to.be.a('function');
+    expect(G.Gizmo).to.equal(gremlinDefinitions.Gizmo);
+    expect(G.Helper).to.equal(util.Helper);
+    expect(G.on).to.be.a('function');
+    expect(G.registerExtension).to.be.a('function');
+    expect(G.ON_ELEMENT_FOUND).to.be.a('string');
+    expect(G.ON_DEFINITION_PENDING).to.be.a('string');
+    expect(G.ON_GREMLIN_LOADED).to.be.a('string');
   });
 });

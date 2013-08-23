@@ -34,7 +34,7 @@
             };
         }
     </script>
-    <script data-require="GremlinJS" data-config="mantriConf" data-deps=".tmp/deps"
+    <script data-require="gremlin" data-config="mantriConf" data-deps=".tmp/deps"
             src="vendor/mantri.web.js"></script>
 </head>
 <body data-gremlin-config='{"debug":true}'>
@@ -91,14 +91,14 @@
     };
 
     
-    GremlinJS.on(GremlinJS.ON_DEFINITION_PENDING, function(el){
+    Gremlin.on(Gremlin.ON_DEFINITION_PENDING, function(el){
         console.log("Definition pending ",el.getAttribute('data-gremlin-found'));
         
     });
-    GremlinJS.on(GremlinJS.ON_ELEMENT_FOUND, function(){
+    Gremlin.on(Gremlin.ON_ELEMENT_FOUND, function(){
        // alert("Element found")
     });
-    GremlinJS.on(GremlinJS.ON_GREMLIN_LOADED, function(){
+    Gremlin.on(Gremlin.ON_GREMLIN_LOADED, function(){
        // alert("Gremlin loaded")
     });
 </script>

@@ -10,7 +10,6 @@
     function Espresso() {
       Espresso.__super__.constructor.apply(this, arguments);
       this.el.innerHTML = "Espresso " + this.id + ", hmmmm";
-      console.dir(this.klass);
     }
 
     return Espresso;
