@@ -7,6 +7,10 @@
 - get a gremlin Class by it's name
 - Javascript Gremlin inheritance `GremlinJS.derive()`
 
+## Docs
+- GremlinJS -> gremlin.js
+- G.Gizmo
+
 ## Extensions
 - binding 
 - Knockout 

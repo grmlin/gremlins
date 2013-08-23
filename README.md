@@ -3,16 +3,16 @@
 ![GremlinJS](logo.png)  
 
 
-#GremlinJS
+#GREMLIN.JS
 *cuddly* javascript components
 
 
+---
 
 
+**GREMLIN.JS**, a dependency-free library to build reusable Javascript components.
 
-**GremlinJS**, a dependency-free library to build reusable Javascript components.
 
-
-[**Open Website**](http://grml.in)
+[**Visit Website**](http://grml.in)
 
 
