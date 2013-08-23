@@ -65,13 +65,16 @@ module.exports = function (grunt) {
     },
 
     watch: {
-      gremlinjs: {
-        files: ['src/scripts/**/*.coffee', 'src/mantriConf.json'],
-        tasks: ['cs', 'mantriDeps:gremlinjs']
-      },
       test: {
         files: ['src/scripts/**/*.coffee', 'src/mantriConf.json'],
         tasks: ['prepareTest'],
+        options: {
+          livereload: true
+        }
+      },
+      spec: {
+        files: ['test/spec/**/*.js'],
+        tasks: [],
         options: {
           livereload: true
         }
@@ -182,8 +185,8 @@ module.exports = function (grunt) {
 
 
   grunt.registerTask('prepareTest', ['cs', 'clean:test', 'deps', 'copy:test']);
-  grunt.registerTask('test', ['prepareTest', 'connect:test', 'watch:test'/*, 'mocha:test'*/]);
-  grunt.registerTask('server', ['cs', 'deps', 'connect:gremlinjs', 'watch:gremlinjs']);
+  grunt.registerTask('test', ['prepareTest', 'connect:test', 'watch'/*, 'mocha:test'*/]);
+  //grunt.registerTask('server', ['cs', 'deps', 'connect:gremlinjs', 'watch:gremlinjs']);
 
   // the default task, when 'grunt' is executed with no options.
   grunt.registerTask('default', ['test']);

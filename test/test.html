@@ -8,10 +8,9 @@
         // This will be overridden by mocha-helper if you run with grunt
         mocha.setup('bdd');
     </script>
-    <script type="text/javascript" src="gremlinjs/GremlinJS.js"></script>
-    <script type="text/javascript">
-        gremlin = gremlin.gremlin
-    </script>
+    <script data-require="GremlinJS" data-config="mantriConf" data-deps=".tmp/deps"
+            src="vendor/mantri.web.js"></script>
+
 </head>
 <body>
 <div id="mocha"></div>
@@ -21,7 +20,7 @@
     var expect = chai.expect;
 </script>
 
-<script type="text/javascript" src="spec/GremlinJS.js"></script>
+<script type="text/javascript" src="spec/Gremlin.js"></script>
 
 <!-- run mocha -->
 <script type="text/javascript" charset="utf-8">
