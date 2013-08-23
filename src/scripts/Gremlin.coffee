@@ -7,7 +7,7 @@ goog.require 'gremlin.conf.Configuration'
 goog.require 'gremlin.util.Helper'
 goog.require 'gremlin.util.Debug'
 goog.require 'gremlin.Application'
-goog.require 'gremlin.gremlinDefinitions.AbstractGremlin'
+goog.require 'gremlin.gremlinDefinitions.Gizmo'
 goog.require 'gremlin.gremlinDefinitions.Pool'
 goog.require 'gremlin.gremlinDefinitions.ExtensionRegistry' 
 
@@ -40,7 +40,7 @@ GremlinJS = do ->
       app?.refresh()
       
 
-    Gremlin : gremlin.gremlinDefinitions.AbstractGremlin
+    Gizmo : gremlin.gremlinDefinitions.Gizmo
        
     # @property [gremlin.util.Helper] The person name
     # @see gremlin.util.Helper
@@ -64,8 +64,9 @@ GremlinJS = do ->
   return g
 
 window.GremlinJS = GremlinJS
-window.G = window.GremlinJS if window.G is undefined
+window.Gremlin = GremlinJS
+window.G = window.Gremlin if window.G is undefined
 
 if typeof window.define is "function" and window.define.amd
-  define "GremlinJS", [], ->
+  define "Gremlin", [], ->
     GremlinJS 

@@ -1,6 +1,6 @@
 goog.provide 'gremlin.gremlinDefinitions.Pool'
 goog.require 'gremlin.util.Helper'
-goog.require 'gremlin.gremlinDefinitions.AbstractGremlin'
+goog.require 'gremlin.gremlinDefinitions.Gizmo'
 
 
 class gremlin.gremlinDefinitions.Pool
@@ -36,7 +36,7 @@ class gremlin.gremlinDefinitions.Pool
 
       #constructor = noop if typeof constructor is 'object'
 
-      class Gremlin extends gremlin.gremlinDefinitions.AbstractGremlin
+      class Gremlin extends gremlin.gremlinDefinitions.Gizmo
         constructor: ->
           super
           constructor.call this
