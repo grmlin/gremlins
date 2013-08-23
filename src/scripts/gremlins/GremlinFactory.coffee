@@ -1,10 +1,10 @@
-goog.provide 'gremlin.gremlins.GremlinFactory'
+goog.provide 'gremlins.GremlinFactory'
 
-goog.require 'gremlin.gremlinDefinitions.Pool'
-goog.require 'gremlin.gremlinDefinitions.ExtensionRegistry'
+goog.require 'gremlinDefinitions.Pool'
+goog.require 'gremlinDefinitions.ExtensionRegistry'
 
 
-class gremlin.gremlins.GremlinFactory
+class gremlins.GremlinFactory
 # A unique id counter used for gremlin instantiation
   uid = do ->
     i = 0
@@ -12,11 +12,11 @@ class gremlin.gremlins.GremlinFactory
       i++
 
   addExtensions =  ->
-    extensions = gremlin.gremlinDefinitions.ExtensionRegistry.getExtensions()
+    extensions = gremlinDefinitions.ExtensionRegistry.getExtensions()
     Extension.bind @ for Extension in extensions
 
   @getInstance : (name, domEl, elData) ->
-    GremlinClass = gremlin.gremlinDefinitions.Pool.getInstance().get name
+    GremlinClass = gremlinDefinitions.Pool.getInstance().get name
     if typeof GremlinClass is 'function'
       gremlinInstance = new GremlinClass domEl, elData.toObject(), uid(), addExtensions
       throw new Error("Abstract gremlin class not called. Did you miss a super in your coffeescript-class?") if gremlinInstance.el is null

@@ -1,6 +1,6 @@
-goog.provide 'gremlin.gremlinDefinitions.Gizmo'
+goog.provide 'gremlinDefinitions.Gizmo'
 
-class gremlin.gremlinDefinitions.Gizmo
+class gremlinDefinitions.Gizmo
   # @property [Object] the data object holding the dom element's data attributes
   data: null
   el: null

@@ -1,7 +1,7 @@
-goog.provide 'gremlin.util.ElementData.DataValue'
+goog.provide 'util.ElementData.DataValue'
 
 # Inspired by jQuery. See https://github.com/jquery/jquery/blob/master/src/data.js
-class gremlin.util.ElementData.DataValue
+class util.ElementData.DataValue
   rbrace = /(?:\{[\s\S]*\}|\[[\s\S]*\])$/
   constructor: (@_dataString) ->
     

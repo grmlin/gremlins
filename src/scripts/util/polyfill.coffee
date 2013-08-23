@@ -1,4 +1,4 @@
-goog.provide 'gremlin.util.polyfill'
+goog.provide 'util.polyfill'
 
 # string trim polyfill
 unless typeof String.prototype.trim is "function"

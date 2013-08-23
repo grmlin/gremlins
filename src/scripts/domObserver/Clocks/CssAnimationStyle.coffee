@@ -1,7 +1,7 @@
-goog.provide 'gremlin.domObserver.clocks.cssAnimationStyle'
-goog.require 'gremlin.gremlins.NameProvider'
+goog.provide 'domObserver.clocks.cssAnimationStyle'
+goog.require 'gremlins.NameProvider'
 
-gremlin.domObserver.clocks.cssAnimationStyle = (animationName) ->
+domObserver.clocks.cssAnimationStyle = (animationName) ->
   css = """
       @keyframes {{ANIMATION_NAME}} {
         0%   { opacity: 0.9; }
@@ -36,4 +36,4 @@ gremlin.domObserver.clocks.cssAnimationStyle = (animationName) ->
   """
 
   css = css.replace /{{ANIMATION_NAME}}/g, animationName
-  css.replace /{{GREMLIN_ATTRIBUTE}}/g, gremlin.gremlins.NameProvider.DATA_NAME_ATTR
+  css.replace /{{GREMLIN_ATTRIBUTE}}/g, gremlins.NameProvider.DATA_NAME_ATTR

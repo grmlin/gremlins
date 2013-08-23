@@ -1,5 +1,5 @@
-goog.provide 'gremlin.domObserver.clocks.LegacyTimeoutClock'
-class gremlin.domObserver.clocks.LegacyTimeoutClock
+goog.provide 'domObserver.clocks.LegacyTimeoutClock'
+class domObserver.clocks.LegacyTimeoutClock
   RESCAN_INTERVAL = 500
   constructor: ->
 

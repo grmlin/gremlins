@@ -1,8 +1,8 @@
-goog.provide 'gremlin.gremlins.GremlinCollection'
-goog.require 'gremlin.gremlins.NameProvider'
-goog.require 'gremlin.gremlins.GremlinDomElement'
+goog.provide 'gremlins.GremlinCollection'
+goog.require 'gremlins.NameProvider'
+goog.require 'gremlins.GremlinDomElement'
 
-class gremlin.gremlins.GremlinCollection
+class gremlins.GremlinCollection
   _queue : null
 
   constructor : ->
@@ -19,13 +19,13 @@ class gremlin.gremlins.GremlinCollection
 
   add : (elArray) ->
     @_addGremlinElements el for el in elArray
-    #@_queue = (new gremlin.gremlins.GremlinDomElement(el, cssClass) for el in elArray)
+    #@_queue = (new gremlins.GremlinDomElement(el, cssClass) for el in elArray)
     @_processQueue()
 
   _addGremlinElements : (el) ->
-    names = gremlin.gremlins.NameProvider.getNames el
-    gremlin.gremlins.NameProvider.flagProcessedElement el
-    @_queue.push new gremlin.gremlins.GremlinDomElement(el, name) for name in names
+    names = gremlins.NameProvider.getNames el
+    gremlins.NameProvider.flagProcessedElement el
+    @_queue.push new gremlins.GremlinDomElement(el, name) for name in names
 
   _processQueue : ->
     #console.log "processing gremlin queue"
@@ -35,7 +35,7 @@ class gremlin.gremlins.GremlinCollection
       remaining.push(element) unless element.hasGremlin()
 
     @_queue = remaining
-    GremlinJS.debug.updateGremlinLog()
+    gremlin.debug.updateGremlinLog()
     #console.log "processing gremlins finished, remaining: "
     #console.dir @_queue
 

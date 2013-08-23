@@ -1,6 +1,6 @@
-goog.provide 'gremlin.util.FeatureDetector'
+goog.provide 'util.FeatureDetector'
 
-class gremlin.util.FeatureDetector
+class util.FeatureDetector
   @hasQuerySelectorAll : typeof document.querySelectorAll isnt "undefined"
   @hasMutationObserver : !!(window.MutationObserver or window.WebKitMutationObserver or window.MozMutationObserver)
   @hasGetClientRect : document.documentElement.getBoundingClientRect isnt undefined

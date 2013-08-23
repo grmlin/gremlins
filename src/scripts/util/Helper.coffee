@@ -1,6 +1,6 @@
-goog.provide 'gremlin.util.Helper'
+goog.provide 'util.Helper'
 
-class gremlin.util.Helper
+class util.Helper
   mixin = (target, mixinObject) ->
     target[name] = val for own name, val of mixinObject
     target
@@ -31,7 +31,7 @@ class gremlin.util.Helper
     newInstance = new obj.constructor()
 
     for key of obj
-      newInstance[key] = gremlin.util.Helper.clone obj[key]
+      newInstance[key] = util.Helper.clone obj[key]
 
     return newInstance
 
@@ -39,11 +39,11 @@ class gremlin.util.Helper
     element.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
     
   @addClass : (element, className) ->
-    element.className += " " + className if (!gremlin.util.Helper.hasClass(element, className))
+    element.className += " " + className if (!util.Helper.hasClass(element, className))
     element.className = element.className.trim()
     
   @removeClass : (element, className) ->
-    if (gremlin.util.Helper.hasClass(element, className))
+    if (util.Helper.hasClass(element, className))
       reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
       element.className = element.className.replace(reg, ' ')
       element.className = element.className.trim()

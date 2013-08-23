@@ -1,12 +1,12 @@
-goog.provide 'gremlin.gremlinDefinitions.ExtensionRegistry'
+goog.provide 'gremlinDefinitions.ExtensionRegistry'
 
-goog.require 'gremlin.gremlinDefinitions.Gizmo'
+goog.require 'gremlinDefinitions.Gizmo'
 
-class gremlin.gremlinDefinitions.ExtensionRegistry
+class gremlinDefinitions.ExtensionRegistry
   availableExtensions = []
   
   @addExtension: (Extension) ->
-    Extension.extend gremlin.gremlinDefinitions.Gizmo
+    Extension.extend gremlinDefinitions.Gizmo
     availableExtensions.push Extension
     
   @getExtensions: -> availableExtensions.slice 0 

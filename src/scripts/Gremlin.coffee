@@ -1,24 +1,24 @@
-goog.provide 'GremlinJS'
+goog.provide 'gremlin'
 
-goog.require 'gremlin.util.polyfill'
-goog.require 'gremlin.util.ready'          
-goog.require 'gremlin.event.Event'
-goog.require 'gremlin.conf.Configuration'
-goog.require 'gremlin.util.Helper'
-goog.require 'gremlin.util.Debug'
-goog.require 'gremlin.Application'
-goog.require 'gremlin.gremlinDefinitions.Gizmo'
-goog.require 'gremlin.gremlinDefinitions.Pool'
-goog.require 'gremlin.gremlinDefinitions.ExtensionRegistry' 
+goog.require 'util.polyfill'
+goog.require 'util.ready'
+goog.require 'event.Event'
+goog.require 'conf.Configuration'
+goog.require 'util.Helper'
+goog.require 'util.Debug'
+goog.require 'Application'
+goog.require 'gremlinDefinitions.Gizmo'
+goog.require 'gremlinDefinitions.Pool'
+goog.require 'gremlinDefinitions.ExtensionRegistry'
 
-GremlinJS = do ->
+gremlin = do ->
   app = null
 
   # The globally available `GremlinJS` namespace
   # 
   # @example how to access GremlinJS
   #   var localCopy = window.GremlinJS;
-  class GremlinAdapter extends gremlin.event.Event
+  class GremlinAdapter extends event.Event
   
     ON_ELEMENT_FOUND: 'elementfound'
     ON_DEFINITION_PENDING : 'definitionpending'
@@ -26,47 +26,46 @@ GremlinJS = do ->
     
     constructor : ->
       super
-      @debug = new gremlin.util.Debug false
+      @debug = new util.Debug false
     
     define: (name, constructor, instanceMembers, staticMembers) ->
-      Gremlin = gremlin.gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
+      Gremlin = gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
       app?.refresh()
       Gremlin
     
     #derive: (parentName, name, constructor, instanceMembers, staticMembers) ->
       
     add : (name, GremlinClass) ->
-      gremlin.gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
+      gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
       app?.refresh()
       
 
-    Gizmo : gremlin.gremlinDefinitions.Gizmo
+    Gizmo : gremlinDefinitions.Gizmo
        
-    # @property [gremlin.util.Helper] The person name
-    # @see gremlin.util.Helper
-    Helper: gremlin.util.Helper
+    # @property [util.Helper] The person name
+    # @see util.Helper
+    Helper: util.Helper
     
     registerExtension: (Extension) ->
-      gremlin.gremlinDefinitions.ExtensionRegistry.addExtension Extension
+      gremlinDefinitions.ExtensionRegistry.addExtension Extension
   
       
       
   g = new GremlinAdapter
   
-  gremlin.util.ready ->
-    app = new gremlin.Application()
-    isDebug = app.configuration.get gremlin.conf.Configuration.options.DEBUG
-    g.debug = new gremlin.util.Debug isDebug if isDebug
+  util.ready ->
+    app = new Application()
+    isDebug = app.configuration.get conf.Configuration.options.DEBUG
+    g.debug = new util.Debug isDebug if isDebug
 
     app.start()
-    g.debug.console.log "GremlinJS up and running..." 
+    g.debug.console.log "gremlin up and running..."
     
   return g
 
-window.GremlinJS = GremlinJS
-window.Gremlin = GremlinJS
+window.Gremlin = gremlin
 window.G = window.Gremlin if window.G is undefined
 
 if typeof window.define is "function" and window.define.amd
   define "Gremlin", [], ->
-    GremlinJS 
+    gremlin

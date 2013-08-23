@@ -11,7 +11,7 @@
     },
 
     "build": {
-        "input": "./.tmp/scripts/GremlinJS.js",
+        "input": "./.tmp/scripts/gremlin.js",
         "xoutputWrapper": "(function(){<%=output%>}());",
         "exclude": [""]
     }

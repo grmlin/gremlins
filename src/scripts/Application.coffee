@@ -1,16 +1,17 @@
-goog.provide 'gremlin.Application'
-goog.require 'gremlin.domObserver.DomObserver'
-goog.require 'gremlin.gremlins.GremlinCollection'
-goog.require 'gremlin.conf.Configuration'
+goog.provide 'Application'
 
-class gremlin.Application
+goog.require 'domObserver.DomObserver'
+goog.require 'gremlins.GremlinCollection'
+goog.require 'conf.Configuration'
+
+class Application
   GREMLIN_CONFIG_NAME = 'gremlinConfig'
 
   constructor : ->
-    userConfig = new gremlin.util.ElementData.ElementData(document.body).get(GREMLIN_CONFIG_NAME) ? {}
-    @configuration = new gremlin.conf.Configuration userConfig
-    @_observer = new gremlin.domObserver.DomObserver
-    @_coll = new gremlin.gremlins.GremlinCollection
+    userConfig = new util.ElementData.ElementData(document.body).get(GREMLIN_CONFIG_NAME) ? {}
+    @configuration = new conf.Configuration userConfig
+    @_observer = new domObserver.DomObserver
+    @_coll = new gremlins.GremlinCollection
 
     @_observer.onNewElements = @_onNew
 

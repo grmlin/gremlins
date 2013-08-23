@@ -1,17 +1,17 @@
-goog.provide 'gremlin.gremlins.GremlinDomElement'         
+goog.provide 'gremlins.GremlinDomElement'
 
-goog.require 'gremlin.util.FeatureDetector'
-goog.require 'gremlin.util.ElementData.ElementData'
-goog.require 'gremlin.util.Helper'
-goog.require 'gremlin.gremlins.GremlinFactory'
+goog.require 'util.FeatureDetector'
+goog.require 'util.ElementData.ElementData'
+goog.require 'util.Helper'
+goog.require 'gremlins.GremlinFactory'
 
 #helper      = require "./../helper.coffee"
 #ElementData = require "././ElementData.coffee"
 #Factory     = require "./GremlinFactory.coffee"
 
-isModern = gremlin.util.FeatureDetector.hasGetClientRect
+isModern = util.FeatureDetector.hasGetClientRect
 
-class gremlin.gremlins.GremlinDomElement
+class gremlins.GremlinDomElement
   DATA_LAZY = "gremlinLazy"
   CSS_CLASS_LOADING = "gremlin-loading"
   CSS_CLASS_READY = 'gremlin-ready'
@@ -22,14 +22,14 @@ class gremlin.gremlins.GremlinDomElement
   _gremlinInstance : null
 
   constructor : (@_el, @_name) ->
-    @_data = new gremlin.util.ElementData.ElementData @_el
+    @_data = new util.ElementData.ElementData @_el
     @_isLazy = if @_data.get(DATA_LAZY) is yes then yes else no
     @isLazy = @_isLazy
     @name = @_name
     @_triggeredPending = no
-    gremlin.util.Helper.addClass @_el, CSS_CLASS_LOADING
-    GremlinJS.debug.registerGremlin @
-    GremlinJS.emit GremlinJS.ON_ELEMENT_FOUND, @_el
+    util.Helper.addClass @_el, CSS_CLASS_LOADING
+    gremlin.debug.registerGremlin @
+    gremlin.emit gremlin.ON_ELEMENT_FOUND, @_el
 
   check : ->
     @_create() if @_isInViewport()
@@ -44,19 +44,19 @@ class gremlin.gremlins.GremlinDomElement
     distance < GREMLIN_LAZY_BUFFER
 
   _create : ->
-    @_gremlinInstance = gremlin.gremlins.GremlinFactory.getInstance @_name, @_el, @_data 
+    @_gremlinInstance = gremlins.GremlinFactory.getInstance @_name, @_el, @_data
     if @hasGremlin()
-      gremlin.util.Helper.removeClass @_el, CSS_CLASS_LOADING
-      gremlin.util.Helper.removeClass @_el, CSS_CLASS_PENDING
-      gremlin.util.Helper.addClass @_el, CSS_CLASS_READY
-      GremlinJS.emit GremlinJS.ON_GREMLIN_LOADED, @_el
+      util.Helper.removeClass @_el, CSS_CLASS_LOADING
+      util.Helper.removeClass @_el, CSS_CLASS_PENDING
+      util.Helper.addClass @_el, CSS_CLASS_READY
+      gremlin.emit gremlin.ON_GREMLIN_LOADED, @_el
 
     else
       unless @_triggeredPending
         @_triggeredPending = yes
-        gremlin.util.Helper.addClass @_el, CSS_CLASS_PENDING
-        GremlinJS.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment." 
-        GremlinJS.emit GremlinJS.ON_DEFINITION_PENDING, @_el
+        util.Helper.addClass @_el, CSS_CLASS_PENDING
+        gremlin.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment."
+        gremlin.emit gremlin.ON_DEFINITION_PENDING, @_el
 
   hasGremlin: -> 
     @_gremlinInstance isnt null

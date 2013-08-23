@@ -1,7 +1,7 @@
-goog.provide 'gremlin.util.Debug'
-goog.require 'gremlin.util.Helper'
+goog.provide 'util.Debug'
+goog.require 'util.Helper'
 
-class gremlin.util.Debug
+class util.Debug
   CSS_CLASS_LOG = 'gremlinjs-log'
   CSS_CLASS_LOG_READY = 'gremlinjs-log-ready'
   CSS_CLASS_LOG_WAITING = 'gremlinjs-log-waiting'
@@ -106,7 +106,7 @@ class gremlin.util.Debug
   _createConsole: ->
     @console = {}
     if @_isDebug
-      gremlin.util.Helper.addStyleSheet css
+      util.Helper.addStyleSheet css
 
     if hasConsole and @_isDebug
       for fn in NAMES
@@ -121,7 +121,7 @@ class gremlin.util.Debug
     else
       @console[fn] = noop for fn in NAMES
       
-  ###gremlin.gremlins.GremlinDomElement### 
+  ###gremlins.GremlinDomElement###
   registerGremlin: (gremlinDomElement) ->
     @_gremlins.push gremlinDomElement
     #@_updateGremlinLog()

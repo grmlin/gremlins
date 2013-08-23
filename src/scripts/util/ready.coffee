@@ -1,3 +1,3 @@
-goog.provide 'gremlin.util.ready'
+goog.provide 'util.ready'
 
-gremlin.util.ready = window.onDomReady
+util.ready = window.onDomReady

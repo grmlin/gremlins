@@ -1,6 +1,6 @@
-goog.provide 'gremlin.domObserver.clocks.MutationObserverClock'
+goog.provide 'domObserver.clocks.MutationObserverClock'
 
-class gremlin.domObserver.clocks.MutationObserverClock
+class domObserver.clocks.MutationObserverClock
   MutationObserver = window.MutationObserver or window.WebKitMutationObserver or window.MozMutationObserver or null
 
   mutationTypes =

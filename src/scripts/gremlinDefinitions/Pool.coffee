@@ -1,9 +1,9 @@
-goog.provide 'gremlin.gremlinDefinitions.Pool'
-goog.require 'gremlin.util.Helper'
-goog.require 'gremlin.gremlinDefinitions.Gizmo'
+goog.provide 'gremlinDefinitions.Pool'
+goog.require 'util.Helper'
+goog.require 'gremlinDefinitions.Gizmo'
 
 
-class gremlin.gremlinDefinitions.Pool
+class gremlinDefinitions.Pool
   'use strict'
   nameRe = /function\s*([\w\$]*)\s*\(/
   instance = null
@@ -36,14 +36,14 @@ class gremlin.gremlinDefinitions.Pool
 
       #constructor = noop if typeof constructor is 'object'
 
-      class Gremlin extends gremlin.gremlinDefinitions.Gizmo
+      class Gremlin extends gremlinDefinitions.Gizmo
         constructor: ->
           super
           constructor.call this
 
       Gremlin::klass = Gremlin
 
-      gremlin.util.Helper.mixin Gremlin, instanceMembers
+      util.Helper.mixin Gremlin, instanceMembers
       Gremlin[key] = member for own key, member of staticMembers
 
       @set name, Gremlin

@@ -1,9 +1,9 @@
-goog.provide 'gremlin.util.ElementData.ElementData'
+goog.provide 'util.ElementData.ElementData'
 
-goog.require 'gremlin.util.ElementData.DataValue'
-goog.require 'gremlin.util.Helper'
+goog.require 'util.ElementData.DataValue'
+goog.require 'util.Helper'
 
-class gremlin.util.ElementData.ElementData
+class util.ElementData.ElementData
   camelize = (string) ->
     return string.toLowerCase().replace /-(.)/g, (match, group1) ->
       return group1.toUpperCase()
@@ -24,7 +24,7 @@ class gremlin.util.ElementData.ElementData
       )
 
     for own key, value of data
-      dataVal = new gremlin.util.ElementData.DataValue value
+      dataVal = new util.ElementData.DataValue value
       resultObj[key] = dataVal.parse()
 
     return resultObj
@@ -36,4 +36,4 @@ class gremlin.util.ElementData.ElementData
     @_obj[key] ? null
 
   toObject : ->
-    gremlin.util.Helper.clone @_obj
+    util.Helper.clone @_obj

@@ -1,22 +1,22 @@
-goog.provide 'gremlin.domObserver.clocks.ClockFactory'
-goog.require 'gremlin.util.FeatureDetector'
-goog.require 'gremlin.domObserver.clocks.MutationObserverClock'
-goog.require 'gremlin.domObserver.clocks.CssAnimationClock'
-goog.require 'gremlin.domObserver.clocks.LegacyTimeoutClock'
+goog.provide 'domObserver.clocks.ClockFactory'
+goog.require 'util.FeatureDetector'
+goog.require 'domObserver.clocks.MutationObserverClock'
+goog.require 'domObserver.clocks.CssAnimationClock'
+goog.require 'domObserver.clocks.LegacyTimeoutClock'
 
-class gremlin.domObserver.clocks.ClockFactory
-  hasAnimations = gremlin.util.FeatureDetector.hasCssAnimations
-  hasMutationObserver = gremlin.util.FeatureDetector.hasMutationObserver
+class domObserver.clocks.ClockFactory
+  hasAnimations = util.FeatureDetector.hasCssAnimations
+  hasMutationObserver = util.FeatureDetector.hasMutationObserver
 
   @createClock: ->
     
     #if hasMutationObserver
-    #  Clock = gremlin.domObserver.clocks.MutationObserverClock
+    #  Clock = domObserver.clocks.MutationObserverClock
     ##else
     if hasAnimations
-      Clock = gremlin.domObserver.clocks.CssAnimationClock
+      Clock = domObserver.clocks.CssAnimationClock
     else
-      Clock = gremlin.domObserver.clocks.LegacyTimeoutClock
+      Clock = domObserver.clocks.LegacyTimeoutClock
 
     #console.log "MutationObserverFactory uses clock:", Clock.name
 

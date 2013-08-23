@@ -1,9 +1,9 @@
-goog.provide 'gremlin.conf.Configuration'
+goog.provide 'conf.Configuration'
 
-goog.require 'gremlin.util.Helper'
-goog.require 'gremlin.event.Event'
+goog.require 'util.Helper'
+goog.require 'event.Event'
 
-class gremlin.conf.Configuration
+class conf.Configuration
 
   instance = null
   defaultOptions =
@@ -12,7 +12,7 @@ class gremlin.conf.Configuration
 
   constructor : (customOptions) ->
 
-    @_options = gremlin.util.Helper.extend {}, defaultOptions, customOptions
+    @_options = util.Helper.extend {}, defaultOptions, customOptions
 
   get         : (key) ->
     @_options[key] ? null

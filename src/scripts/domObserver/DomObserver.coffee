@@ -1,18 +1,18 @@
-goog.provide 'gremlin.domObserver.DomObserver'
-goog.require 'gremlin.MutationObserverShim'
-goog.require 'gremlin.domObserver.ElementList'
-goog.require 'gremlin.util.Helper'
+goog.provide 'domObserver.DomObserver'
+goog.require 'MutationObserverShim'
+goog.require 'domObserver.ElementList'
+goog.require 'util.Helper'
 
 
-class gremlin.domObserver.DomObserver
+class domObserver.DomObserver
   TAG_SELECTOR = '*'
 
   constructor : ->
-    @_elementList = new gremlin.domObserver.ElementList
+    @_elementList = new domObserver.ElementList
 
   _bindMutations : ->
-    observer = gremlin.MutationObserverShim.get()
-    observer.on gremlin.MutationObserverShim.ON_MUTATION, @_handleMutation
+    observer = MutationObserverShim.get()
+    observer.on MutationObserverShim.ON_MUTATION, @_handleMutation
     observer.observe()
 
   _handleMutation : =>

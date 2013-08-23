@@ -1,20 +1,20 @@
-goog.provide 'gremlin.domObserver.ElementList'
+goog.provide 'domObserver.ElementList'
 
-goog.require 'gremlin.util.FeatureDetector'
-goog.require 'gremlin.gremlins.NameProvider'
+goog.require 'util.FeatureDetector'
+goog.require 'gremlins.NameProvider'
 
-class gremlin.domObserver.ElementList
+class domObserver.ElementList
   class NativeQuerySelector
     @get: (attributeName) ->
-      elements = document.querySelectorAll "[#{gremlin.gremlins.NameProvider.DATA_NAME_ATTR}]"
+      elements = document.querySelectorAll "[#{gremlins.NameProvider.DATA_NAME_ATTR}]"
       (element for element in elements)
 
   class LegacySelector
     @get: (attributeName) ->
       elements = document.getElementsByTagName '*'
-      (element for element in elements when gremlin.gremlins.NameProvider.isGremlin(element))
+      (element for element in elements when gremlins.NameProvider.isGremlin(element))
 
-  isNative = gremlin.util.FeatureDetector.hasQuerySelectorAll
+  isNative = util.FeatureDetector.hasQuerySelectorAll
   Selector = if isNative then NativeQuerySelector else LegacySelector
 
   constructor: (@_attributeName) ->

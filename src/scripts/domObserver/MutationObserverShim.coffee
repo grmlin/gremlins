@@ -1,18 +1,18 @@
-goog.provide 'gremlin.MutationObserverShim'
-goog.require 'gremlin.event.Event'
-goog.require 'gremlin.domObserver.clocks.ClockFactory'
+goog.provide 'MutationObserverShim'
+goog.require 'event.Event'
+goog.require 'domObserver.clocks.ClockFactory'
 
-class gremlin.MutationObserverShim
+class MutationObserverShim
   instance = null
 
-  class MutationObserverShim extends gremlin.event.Event
+  class MutationObserverShim extends event.Event
     constructor : ->
       super
-      @_clock = gremlin.domObserver.clocks.ClockFactory.createClock()
+      @_clock = domObserver.clocks.ClockFactory.createClock()
       @_clock.onMutation = @_onMutation
 
     _onMutation : =>
-      @emit gremlin.MutationObserverShim.ON_MUTATION
+      @emit MutationObserverShim.ON_MUTATION
 
     observe: ->
       @_clock.observe()
