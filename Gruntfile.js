@@ -80,14 +80,14 @@ module.exports = function (grunt) {
     connect: {
       gremlinjs: {
         options: {
-          port: 4243,
+          port: 4242,
           base: './src'
           //keepalive: true
         }
       },
       test: {
         options: {
-          port: 4243,
+          port: 4242,
           base: './test'
           //keepalive: true
         }
