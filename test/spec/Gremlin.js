@@ -5,15 +5,16 @@ describe('Gremlin', function () {
     expect(G).to.equal(gremlin);
   });
   it('Gremlin should expose the main gremlin.js API', function () {
-    expect(G.add).to.be.a('function');
-    expect(G.debug).to.be.an.instanceof(util.Debug);
-    expect(G.define).to.be.a('function');
-    expect(G.Gizmo).to.equal(gremlinDefinitions.Gizmo);
-    expect(G.Helper).to.equal(util.Helper);
-    expect(G.on).to.be.a('function');
-    expect(G.registerExtension).to.be.a('function');
-    expect(G.ON_ELEMENT_FOUND).to.be.a('string');
-    expect(G.ON_DEFINITION_PENDING).to.be.a('string');
-    expect(G.ON_GREMLIN_LOADED).to.be.a('string');
+    //expect(G).to.have.property('add', 'debug','define','Gizmo','Helper','on','registerExtension','ON_ELEMENT_FOUND','ON_DEFINITION_PENDING','ON_GREMLIN_LOADED');
+    expect(G).to.have.property('add').that.is.a('function');
+    expect(G).to.have.property('debug').that.is.an.instanceof(util.Debug);
+    expect(G).to.have.property('define').that.is.a('function');
+    expect(G).to.have.property('Gizmo').that.equals(gremlinDefinitions.Gizmo);
+    expect(G).to.have.property('Helper').that.equals(util.Helper);
+    expect(G).to.have.property('on').that.is.a('function');
+    expect(G).to.have.property('registerExtension').that.is.a('function');
+    expect(G).to.have.property('ON_ELEMENT_FOUND').that.is.a('string');
+    expect(G).to.have.property('ON_DEFINITION_PENDING').that.is.a('string');
+    expect(G).to.have.property('ON_GREMLIN_LOADED').that.is.a('string');
   });
 });
