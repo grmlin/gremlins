@@ -1,4 +1,4 @@
-describe('Helper', function () {
+describe('util.Helper', function () {
   it('should expose a public API');
 
   it('can extend objects');

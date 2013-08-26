@@ -41,30 +41,8 @@ describe('Gremlin', function () {
 
   });
 
-  it('can debug', function () {
-    var i = 0,
-      consoles = ["clear", "debug", "error", "info", "log", "warn", "dir", "dirxml", "trace", "assert", "count", "markTimeline",
-        "profile", "profileEnd", "time", "timeEnd", "timeStamp", "group", "groupCollapsed", "groupEnd"]
-
-    util.ready(function () {
-      for (; i < consoles.length; i++) {
-        console.log(consoles[i])
-        expect(G.debug).to.have.deep.property("console." + consoles[i]).that.is.a('function');
-        G.debug.console[consoles[i]]('Logging with ' + consoles[i] + ' console');
-      }
-
-    });
+  it('can define new gremlin classes', function () {
 
   });
-
-  it('can define new gremlin classes', function() {
-
-  });
-
-  it('provides the abstract gremlin Gizmo', function(){
-
-  });
-
-
 
 });
