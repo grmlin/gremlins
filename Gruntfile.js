@@ -181,7 +181,7 @@ module.exports = function (grunt) {
   // Create shortcuts to main operations.
   grunt.registerTask('deps', ['clean:deps', 'mantriDeps:gremlinjs']);
 
-  grunt.registerTask('build', ['cs', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:dist']);
+  grunt.registerTask('build', ['cs', 'mocha:test', 'clean:dist', 'mantriBuild:gremlinjs', 'uglify:dist']);
 
 
   grunt.registerTask('prepareTest', ['cs', 'clean:test', 'deps', 'copy:test']);

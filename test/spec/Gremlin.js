@@ -61,4 +61,10 @@ describe('Gremlin', function () {
 
   });
 
+  it('provides the abstract gremlin Gizmo', function(){
+
+  });
+
+
+
 });
