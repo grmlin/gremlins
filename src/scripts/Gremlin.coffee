@@ -27,18 +27,18 @@ gremlin = do ->
     constructor : ->
       super
       @debug = new util.Debug false
-    
-    define: (name, constructor, instanceMembers, staticMembers) ->
-      Gremlin = gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
-      app?.refresh()
-      Gremlin
-    
-    #derive: (parentName, name, constructor, instanceMembers, staticMembers) ->
-      
+
     add : (name, GremlinClass) ->
-      gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
+      GremlinClass = gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
       app?.refresh()
-      
+      GremlinClass
+
+    define: (name, constructor, instanceMembers, staticMembers) ->
+      GremlinClass = gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
+      app?.refresh()
+      GremlinClass
+
+    #derive: (parentName, name, constructor, instanceMembers, staticMembers) ->
 
     Gizmo : gremlinDefinitions.Gizmo
        

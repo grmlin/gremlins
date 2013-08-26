@@ -10,9 +10,10 @@
     </script>
     <script data-require="gremlin" data-config="mantriConf" data-deps=".tmp/deps"
             src="vendor/mantri.web.js"></script>
+    <script src="js/gremlins/cs/AddTest.js"></script>
 
 </head>
-<body>
+<body data-gremlin-config='{"debug":true}'>
 <div id="mocha"></div>
 <script src="lib/chai.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
@@ -21,7 +22,7 @@
 </script>
 
 <script type="text/javascript" src="spec/Gremlin.js"></script>
-<script type="text/javascript" src="spec/Application.js"></script>
+<!--<script type="text/javascript" src="spec/Application.js"></script>-->
 
 <!-- run mocha -->
 <script type="text/javascript" charset="utf-8">

@@ -1,8 +1,11 @@
 describe('Application', function () {
-  it('An gremlin.js application can be created', function () {
-    var app = new Application();
-//    expect(Application.GREMLIN_CONFIG_NAME).to.equal('gremlinConfig');
-    expect(Application).to.be.a('function');
-    expect(app).to.exist;
-  })
+  var app = new Application();
+
+  it('can be started', function () {
+    app.start();
+  });
+  it('can be refreshed', function () {
+    app.refresh();
+  });
+
 });
