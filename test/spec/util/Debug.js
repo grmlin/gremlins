@@ -9,7 +9,9 @@ describe('util.Debug', function () {
     util.ready(function () {
       for (; i < consoles.length; i++) {
         expect(debug).to.have.deep.property("console." + consoles[i]).that.is.a('function');
-        debug.console[consoles[i]]('Logging with ' + consoles[i] + ' console');
+        if (consoles[i] !== 'clear') {
+          debug.console[consoles[i]]('Logging with ' + consoles[i] + ' console');
+        }
       }
 
     });

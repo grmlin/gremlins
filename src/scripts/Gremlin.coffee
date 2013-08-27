@@ -59,7 +59,7 @@ gremlin = do ->
     g.debug = new util.Debug isDebug if isDebug
 
     app.start()
-    g.debug.console.log "gremlin up and running..."
+    g.debug.console.log "gremlin.js up and running..."
     
   return g
 
