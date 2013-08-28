@@ -1,7 +1,7 @@
 goog.provide 'conf.Configuration'
 
 goog.require 'util.Helper'
-goog.require 'event.Event'
+goog.require 'EventDispatcher'
 
 class conf.Configuration
 

@@ -36,13 +36,23 @@ class util.Helper
     return newInstance
 
   @hasClass : (element, className) ->
-    element.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+    className = className.trim()
+
+    match = element.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+    if match is null
+      return no
+    else
+      return yes
     
   @addClass : (element, className) ->
+    className = className.trim()
+
     element.className += " " + className if (!util.Helper.hasClass(element, className))
     element.className = element.className.trim()
     
   @removeClass : (element, className) ->
+    className = className.trim()
+
     if (util.Helper.hasClass(element, className))
       reg = new RegExp('(\\s|^)' + className + '(\\s|$)')
       element.className = element.className.replace(reg, ' ')

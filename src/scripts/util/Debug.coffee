@@ -9,7 +9,7 @@ class util.Debug
   CSS_CLASS_LOG_ERROR = 'gremlinjs-log-error'
 
   NAMES = ["debug", "error", "info", "log", "warn", "dir", "dirxml", "trace", "assert", "count", "markTimeline",
-           "profile", "profileEnd", "time", "timeEnd", "timeStamp", "group", "groupCollapsed", "groupEnd", "clear"]
+           "profile", "profileEnd", "time", "timeEnd", "timeStamp", "group", "groupCollapsed", "groupEnd"]
 
   canBind = typeof Function.prototype.bind is 'function'
   hasConsole = typeof window.console?.log is 'function'
@@ -113,7 +113,7 @@ class util.Debug
         if canBind
           @console[fn] = if console[fn] then Function.prototype.bind.call(console[fn], console) else noop
         else
-          if console[fn]
+          if console[fn] isnt undefined
             @console[fn] = ->
               Function.prototype.apply.call(console[fn], console, arguments)
           else

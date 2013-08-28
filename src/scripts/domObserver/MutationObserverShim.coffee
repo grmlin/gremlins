@@ -1,11 +1,11 @@
 goog.provide 'MutationObserverShim'
-goog.require 'event.Event'
+goog.require 'EventDispatcher'
 goog.require 'domObserver.clocks.ClockFactory'
 
 class MutationObserverShim
   instance = null
 
-  class MutationObserverShim extends event.Event
+  class MutationObserverShim extends EventDispatcher
     constructor : ->
       super
       @_clock = domObserver.clocks.ClockFactory.createClock()

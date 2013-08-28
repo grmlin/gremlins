@@ -2,7 +2,7 @@ goog.provide 'gremlin'
 
 goog.require 'util.polyfill'
 goog.require 'util.ready'
-goog.require 'event.Event'
+goog.require 'EventDispatcher'
 goog.require 'conf.Configuration'
 goog.require 'util.Helper'
 goog.require 'util.Debug'
@@ -18,7 +18,7 @@ gremlin = do ->
   # 
   # @example how to access GremlinJS
   #   var localCopy = window.GremlinJS;
-  class GremlinAdapter extends event.Event
+  class GremlinAdapter extends EventDispatcher
   
     ON_ELEMENT_FOUND: 'elementfound'
     ON_DEFINITION_PENDING : 'definitionpending'
