@@ -1,8 +1,7 @@
 # js source by https://github.com/mrappleton/microevent.js
+goog.provide "EventDispatcher"
 
-goog.provide "event.Event"
-
-class event.Event
+class EventDispatcher
   constructor: ->
     @_events = new Object()
 
