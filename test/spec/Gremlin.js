@@ -134,6 +134,8 @@ describe('Gremlin', function () {
         }, 600)
     });
 
+    it('instantiates multiple gremlins on a singe element');
+
     it('handles data attributes correctly', function (done) {
         var el = document.createElement('div'),
             complex = {
