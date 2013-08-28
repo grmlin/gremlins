@@ -1,3 +1,4 @@
-class window.AddTest extend G.Gizmo
+class window.CreateTest extends G.Gizmo
   constructor : ->
     super
+    @el.__gremlin = @

@@ -1,3 +1,3 @@
-class window.AddTest extend G.Gizmo
+class window.AddTest extends G.Gizmo
   constructor : ->
     super
