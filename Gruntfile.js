@@ -94,6 +94,13 @@ module.exports = function (grunt) {
           base: './test'
           //keepalive: true
         }
+      },
+      phantom: {
+          options: {
+              port: 4242,
+              base: './test',
+              keepalive: true
+          }
       }
     },
     clean: {
@@ -155,17 +162,16 @@ module.exports = function (grunt) {
       // environment check before you run `mocha.run` in your HTML.
       test: {
         // Test files
-        src: [ 'test/test.html' ],
         options: {
           // mocha options
           mocha: {
             //    ignoreLeaks : false,
             //    grep : 'food'
           },
-
+            log: true,
           // Select a Mocha reporter - http://visionmedia.github.com/mocha/#reporters
           reporter: 'Nyan',
-
+          urls: [ 'http://localhost:4242/test.html' ],
           // Indicates whether 'mocha.run()' should be executed in
           // 'bridge.js'. If you include `mocha.run()` in your html spec, you
           // must wrap it in a conditional check to not run if it is opened
@@ -186,6 +192,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('prepareTest', ['cs', 'clean:test', 'deps', 'copy:test']);
   grunt.registerTask('test', ['prepareTest', 'connect:test', 'watch'/*, 'mocha:test'*/]);
+  grunt.registerTask('phantomTest', ['prepareTest', 'connect:test', 'mocha']);
+
   //grunt.registerTask('server', ['cs', 'deps', 'connect:gremlinjs', 'watch:gremlinjs']);
 
   // the default task, when 'grunt' is executed with no options.
