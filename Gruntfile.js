@@ -10,8 +10,6 @@
 
 module.exports = function (grunt) {
   'use strict';
-  var mdoc = require('mdoc');
-
   var DIST_NAME = 'gremlin';
 
   grunt.loadNpmTasks('mantri');
