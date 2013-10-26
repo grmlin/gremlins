@@ -6,6 +6,8 @@ goog.require 'EventDispatcher'
 goog.require 'conf.Configuration'
 goog.require 'util.Helper'
 goog.require 'util.Debug'
+goog.require 'pkg'
+goog.require 'modules.Module'
 goog.require 'Application'
 goog.require 'gremlinDefinitions.Gizmo'
 goog.require 'gremlinDefinitions.Pool'
@@ -45,6 +47,12 @@ gremlin = do ->
     # @property [util.Helper] The person name
     # @see util.Helper
     Helper: util.Helper
+
+    packages: pkg
+    pkg: pkg
+
+    Module: modules.Module
+
     
     registerExtension: (Extension) ->
       gremlinDefinitions.ExtensionRegistry.addExtension Extension

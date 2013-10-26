@@ -1,0 +1,3 @@
+goog.provide 'pkg'
+
+pkg = {}
