@@ -1,6 +1,7 @@
 goog.provide 'gremlinDefinitions.Pool'
 goog.require 'util.Helper'
 goog.require 'gremlinDefinitions.Gizmo'
+goog.require 'modules.ModuleCollection'
 
 
 class gremlinDefinitions.Pool
@@ -18,6 +19,7 @@ class gremlinDefinitions.Pool
       if typeof definitions[name] isnt 'undefined'
         throw new Error("Trying to add new Gremlin definition, but a definition for #{name} already exists.")
 
+      modules.ModuleCollection.extendGizmo definition
       definitions[name] = definition
       
     define: (name, constructor, instanceMembers, staticMembers) ->

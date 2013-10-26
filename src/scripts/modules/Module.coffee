@@ -1,23 +1,21 @@
 goog.provide 'modules.Module'
 
-goog.require 'pkg'
+goog.require 'modules.ModuleCollection'
 
 class modules.Module
-  root = pkg
 
-  namespace = (name, source = null) ->
-    items = name.split '.'
-    last = items.pop()
-    target = root
-
-    target = target[item] or= {} for item in items
-
-    target[last] = source or (target[last] or= {})
-
-  constructor: (ns, source) ->
+  constructor: (name, module) ->
     return new modules.Module arguments... if this not instanceof modules.Module
-    @_module  = namespace ns, source
 
-  @get: (ns) -> namespace ns
+    hasExtend = typeof module.extend is 'function'
+    hasBind = typeof module.bind is 'function'
+
+    throw new Error("Missing .extend method in your module #{name}") unless hasExtend
+    throw new Error("Missing .bind method in your module #{name}") unless hasBind
 
 
+    @name = name
+    @extend = module.extend
+    @bind = module.bind
+
+    modules.ModuleCollection.registerModule @
