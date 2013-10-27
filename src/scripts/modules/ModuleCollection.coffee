@@ -19,7 +19,7 @@ class modules.ModuleCollection
         else
           includesList = []
 
-      moduleGizmoMap[name] = (modulesRegistry[moduleName] for moduleName in includesList)
+      moduleGizmoMap[name] = (modulesRegistry[moduleName] ? throw new Error("The module #{moduleName} does not exists!") for moduleName in includesList)
 
     return moduleGizmoMap[name]
 

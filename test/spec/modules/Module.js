@@ -49,8 +49,8 @@ describe('modules.Module', function () {
                 Gizmo.FOO = "BAR";
             },
             bind: function (gizmo) {
-                gizmo.onClick = function(){
-                  return "onClick";
+                gizmo.onClick = function () {
+                    return "onClick";
                 };
 
             }
@@ -61,8 +61,8 @@ describe('modules.Module', function () {
                 Gizmo.BAZ = "BOZ";
             },
             bind: function (gizmo) {
-                gizmo.onWhatever = function(){
-                  return "onWhatever";
+                gizmo.onWhatever = function () {
+                    return "onWhatever";
                 };
 
             }
@@ -98,5 +98,16 @@ describe('modules.Module', function () {
                 include: ['moduleTestModule', 'moduleTestModule2']
             }
         );
+
+        expect(function () {
+            TestGremlin3 = G.define('ModuleTest3', function () {
+                },
+                {},
+                {
+                    include: ['foo']
+                }
+            );
+
+        }).to.throwError();
     });
 });
