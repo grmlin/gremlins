@@ -1,22 +1,22 @@
 goog.provide 'packages.Package'
 
-goog.require 'pkg'
+goog.require 'namespace'
 
 class packages.Package
 
-  root = pkg
+  root = namespace
 
-  namespace = (name, source = null) ->
+  getNamespace = (name, content = null) ->
     items = name.split '.'
     last = items.pop()
     target = root
 
     target = target[item] or= {} for item in items
 
-    target[last] = source or (target[last] or= {})
+    target[last] = content or (target[last] or= {})
 
-  constructor: (ns, source) ->
+  constructor: (ns, content) ->
     return new packages.Package arguments... if this not instanceof packages.Package
-    @_package  = namespace ns, source
+    @_package  = getNamespace ns, content
 
-  @get: (ns) -> namespace ns
+  @get: (ns) -> getNamespace ns

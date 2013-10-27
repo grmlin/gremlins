@@ -1,8 +1,8 @@
 describe('packages.Package', function () {
     it('has a namespace for all packages', function () {
 
-        expect(pkg).to.equal(G.pkg);
-        expect(pkg).to.be.an('object');
+        expect(namespace).to.equal(G.namespace);
+        expect(namespace).to.be.an('object');
 
     });
 
@@ -19,8 +19,8 @@ describe('packages.Package', function () {
 
         G.Package(ns, data);
 
-        expect(G.pkg.foo.bar).to.equal(data);
-        expect(G.pkg.foo.bar).to.equal(G.Package.get(ns));
+        expect(G.namespace.foo.bar).to.equal(data);
+        expect(G.namespace.foo.bar).to.equal(G.Package.get(ns));
         expect(G.Package.get(ns)).to.equal(data);
 
     });

@@ -6,7 +6,7 @@ goog.require 'EventDispatcher'
 goog.require 'conf.Configuration'
 goog.require 'util.Helper'
 goog.require 'util.Debug'
-goog.require 'pkg'
+goog.require 'namespace'
 goog.require 'packages.Package'
 goog.require 'modules.Module'
 goog.require 'Application'
@@ -49,7 +49,8 @@ Gremlin = do ->
     # @see util.Helper
     Helper: util.Helper
 
-    pkg: pkg
+    namespace: namespace
+    ns : namespace
     Package: packages.Package
 
     Module: modules.Module
