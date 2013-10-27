@@ -2,29 +2,36 @@ goog.provide 'modules.ModuleCollection'
 
 class modules.ModuleCollection
 
-  modules = {}
+  modulesRegistry = {}
+  moduleGizmoMap = {}
 
-  getModules = (Gizmo) ->
-    include = Gizmo.include
-    type = typeof include
-    switch type
-      when 'string'
-        console.log "includes: #{include}"
-        includesList = [include]
+  getModules = (name, Gizmo) ->
+    unless moduleGizmoMap[name]
+      include = Gizmo.include
+      type = typeof include
 
-      when 'object'
-        console.log "includes: ", include
-        includesList = include
-      else
-        console.log "nothing to include here..."
-        includesList = []
+      switch type
+        when 'string'
+          includesList = [include]
+
+        when 'object'
+          includesList = if Array.isArray(include) then include else []
+        else
+          includesList = []
+
+      moduleGizmoMap[name] = (modulesRegistry[moduleName] for moduleName in includesList)
+
+    return moduleGizmoMap[name]
 
   @registerModule: (module) ->
-    modules[module.name] = module
+    modulesRegistry[module.name] = module
 
-  @extendGizmo: (Gizmo) ->
-    modules = getModules Gizmo
+  @extendGizmo: (name, Gizmo) ->
+    modules = getModules name, Gizmo
+    module.extend Gizmo for module in modules
 
-  @bindGizmo: (gizmo) ->
+  @bindGizmo: (name, gizmo) ->
+    modules = getModules name, gizmo.klass
+    module.bind gizmo for module in modules
 
 

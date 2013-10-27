@@ -15,12 +15,12 @@ class gremlinDefinitions.Pool
     get: (name) -> 
       definitions[name] ? null
         
-    set: (name, definition) ->
+    set: (name, Definition) ->
       if typeof definitions[name] isnt 'undefined'
         throw new Error("Trying to add new Gremlin definition, but a definition for #{name} already exists.")
 
-      modules.ModuleCollection.extendGizmo definition
-      definitions[name] = definition
+      modules.ModuleCollection.extendGizmo name, Definition
+      definitions[name] = Definition
       
     define: (name, constructor, instanceMembers, staticMembers) ->
       unless typeof name is 'string'

@@ -1,4 +1,4 @@
-goog.provide 'gremlin'
+goog.provide 'Gremlin'
 
 goog.require 'util.polyfill'
 goog.require 'util.ready'
@@ -14,7 +14,7 @@ goog.require 'gremlinDefinitions.Gizmo'
 goog.require 'gremlinDefinitions.Pool'
 goog.require 'gremlinDefinitions.ExtensionRegistry'
 
-gremlin = do ->
+Gremlin = do ->
   app = null
 
   # The globally available `GremlinJS` namespace
@@ -72,9 +72,9 @@ gremlin = do ->
     
   return g
 
-window.Gremlin = gremlin
+window.Gremlin = Gremlin
 window.G = window.Gremlin if window.G is undefined
 
 if typeof window.define is "function" and window.define.amd
   define "Gremlin", [], ->
-    gremlin
+    Gremlin
