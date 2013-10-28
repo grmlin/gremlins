@@ -2,8 +2,6 @@ goog.provide 'gremlins.GremlinFactory'
 
 goog.require 'gremlinDefinitions.Pool'
 goog.require 'modules.ModuleCollection'
-goog.require 'gremlinDefinitions.ExtensionRegistry'
-
 
 class gremlins.GremlinFactory
 # A unique id counter used for gremlin instantiation
@@ -15,8 +13,6 @@ class gremlins.GremlinFactory
   addModules =  (name) ->
     return ->
       modules.ModuleCollection.bindGizmo name, @
-      #extensions = gremlinDefinitions.ExtensionRegistry.getExtensions()
-      #Extension.bind @ for Extension in extensions
 
   @getInstance : (name, domEl, elData) ->
     GremlinClass = gremlinDefinitions.Pool.getInstance().get name

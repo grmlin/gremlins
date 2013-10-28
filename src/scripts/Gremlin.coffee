@@ -12,7 +12,6 @@ goog.require 'modules.Module'
 goog.require 'Application'
 goog.require 'gremlinDefinitions.Gizmo'
 goog.require 'gremlinDefinitions.Pool'
-goog.require 'gremlinDefinitions.ExtensionRegistry'
 
 Gremlin = do ->
   app = null
@@ -55,11 +54,6 @@ Gremlin = do ->
 
     Module: modules.Module
 
-    
-    registerExtension: (Extension) ->
-      gremlinDefinitions.ExtensionRegistry.addExtension Extension
-  
-      
       
   g = new GremlinAdapter
   
