@@ -16,21 +16,17 @@ goog.require 'gremlinDefinitions.Pool'
 Gremlin = do ->
   app = null
 
-  # The globally available `GremlinJS` namespace
-  # 
-  # @example how to access GremlinJS
-  #   var localCopy = window.GremlinJS;
   class GremlinAdapter extends EventDispatcher
-  
+
     ON_ELEMENT_FOUND: 'elementfound'
-    ON_DEFINITION_PENDING : 'definitionpending'
-    ON_GREMLIN_LOADED : 'gremlinloaded'
-    
-    constructor : ->
+    ON_DEFINITION_PENDING: 'definitionpending'
+    ON_GREMLIN_LOADED: 'gremlinloaded'
+
+    constructor: ->
       super
       @debug = new util.Debug false
 
-    add : (name, GremlinClass) ->
+    add: (name, GremlinClass) ->
       GremlinClass = gremlinDefinitions.Pool.getInstance().addClass name, GremlinClass
       app?.refresh()
       GremlinClass
@@ -42,21 +38,15 @@ Gremlin = do ->
 
     #derive: (parentName, name, constructor, instanceMembers, staticMembers) ->
 
-    Gizmo : gremlinDefinitions.Gizmo
-       
-    # @property [util.Helper] The person name
-    # @see util.Helper
+    Gizmo: gremlinDefinitions.Gizmo
     Helper: util.Helper
-
+    Module: modules.Module
     namespace: namespace
-    ns : namespace
+    ns: namespace
     Package: packages.Package
 
-    Module: modules.Module
-
-      
   g = new GremlinAdapter
-  
+
   util.ready ->
     app = new Application()
     isDebug = app.configuration.get conf.Configuration.options.DEBUG
@@ -64,7 +54,7 @@ Gremlin = do ->
 
     app.start()
     g.debug.console.log "gremlin.js up and running..."
-    
+
   return g
 
 window.Gremlin = Gremlin
