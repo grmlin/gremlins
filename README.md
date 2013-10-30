@@ -6,6 +6,7 @@
 #GREMLIN.JS
 *cuddly* javascript components
 
+[Release Notes](https://github.com/grmlin/gremlinjs/blob/master/release-notes.md)
 
 ---
 
