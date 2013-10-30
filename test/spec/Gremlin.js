@@ -26,9 +26,6 @@ describe('Gremlin', function () {
         expect(G).to.have.property('on');
         expect(G.on).to.be.a('function');
 
-        expect(G).to.have.property('registerExtension');
-        expect(G.registerExtension).to.be.a('function')
-
         expect(G).to.have.property('ON_ELEMENT_FOUND');
         expect(G.ON_ELEMENT_FOUND).to.be.a('string');
 

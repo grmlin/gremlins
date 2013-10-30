@@ -28,8 +28,8 @@ class gremlins.GremlinDomElement
     @name = @_name
     @_triggeredPending = no
     util.Helper.addClass @_el, CSS_CLASS_LOADING
-    gremlin.debug.registerGremlin @
-    gremlin.emit gremlin.ON_ELEMENT_FOUND, @_el
+    Gremlin.debug.registerGremlin @
+    Gremlin.emit Gremlin.ON_ELEMENT_FOUND, @_el
 
   check : ->
     @_create() if @_isInViewport()
@@ -49,14 +49,14 @@ class gremlins.GremlinDomElement
       util.Helper.removeClass @_el, CSS_CLASS_LOADING
       util.Helper.removeClass @_el, CSS_CLASS_PENDING
       util.Helper.addClass @_el, CSS_CLASS_READY
-      gremlin.emit gremlin.ON_GREMLIN_LOADED, @_el
+      Gremlin.emit Gremlin.ON_GREMLIN_LOADED, @_el
 
     else
       unless @_triggeredPending
         @_triggeredPending = yes
         util.Helper.addClass @_el, CSS_CLASS_PENDING
-        gremlin.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment."
-        gremlin.emit gremlin.ON_DEFINITION_PENDING, @_el
+        Gremlin.debug.console.info "Gremlin <#{@_name}> found in the dom, but there is no definition for it at the moment."
+        Gremlin.emit Gremlin.ON_DEFINITION_PENDING, @_el
 
   hasGremlin: -> 
     @_gremlinInstance isnt null

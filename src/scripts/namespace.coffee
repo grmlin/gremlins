@@ -1,0 +1,3 @@
+goog.provide 'namespace'
+
+namespace = {}

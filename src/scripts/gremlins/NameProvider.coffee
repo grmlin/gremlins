@@ -26,7 +26,7 @@ class gremlins.NameProvider
     if names is ""
       html = el.outerHTML ? ""
       gremlins.NameProvider.flagBrokenElement el
-      gremlin.debug.console.log "Couldn't process gremlin element, no gremlin names available, '#{DATA_NAME}' is empty!\n" + html
+      Gremlin.debug.console.log "Couldn't process gremlin element, no gremlin names available, '#{DATA_NAME}' is empty!\n" + html
       []
     else
       nameList = (name.trim() for name in names.split(NAME_SEPARATOR))
@@ -34,7 +34,7 @@ class gremlins.NameProvider
   @flagBrokenElement: (el) ->
     util.Helper.addClass el, CSS_CLASS_GREMLIN_BROKEN
     gremlins.NameProvider.flagProcessedElement el
-    gremlin.debug.reportBrokenGremlin el
+    Gremlin.debug.reportBrokenGremlin el
 
   @flagProcessedElement : (el) ->
     names = el.getAttribute DATA_NAME
