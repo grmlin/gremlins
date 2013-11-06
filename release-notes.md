@@ -1,5 +1,11 @@
 # Release notes
 
+## v0.5.1 *2013-11-6*
+
+### New
+
+- `G.require` to reference packages
+
 ## v0.5.0 *2013-10-30*
 
 ### New

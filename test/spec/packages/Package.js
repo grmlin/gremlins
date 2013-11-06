@@ -19,9 +19,11 @@ describe('packages.Package', function () {
 
         G.Package(ns, data);
 
+        var thePackage = G.require('foo.bar');
         expect(G.namespace.foo.bar).to.equal(data);
         expect(G.namespace.foo.bar).to.equal(G.Package.get(ns));
         expect(G.Package.get(ns)).to.equal(data);
+        expect(thePackage).to.equal(data);
 
     });
 });

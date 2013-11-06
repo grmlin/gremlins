@@ -44,6 +44,7 @@ Gremlin = do ->
     namespace: namespace
     ns: namespace
     Package: packages.Package
+    require: packages.Package.get
 
   g = new GremlinAdapter
 
