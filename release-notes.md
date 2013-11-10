@@ -1,5 +1,19 @@
 # Release notes
 
+## v0.6.0 *2013-11-10*
+
+### New
+
+- `G.Gizmo.extend` to inherit from gremlin classes
+- `G.Package.require` to reference packages
+
+### Removed
+
+- `G.define`, use `G.Gizmo.extend`
+- `G.require`, use `G.Package.require`
+- `G.namespace`, `G.ns`, use `G.Package.require`
+- `G.Gizmo#klass`, use `G.Gizmo#constructor` 
+
 ## v0.5.1 *2013-11-6*
 
 ### New

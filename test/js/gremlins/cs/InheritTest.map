@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "InheritTest.js",
+  "sourceRoot": "",
+  "sources": [
+    "InheritTest.coffee"
+  ],
+  "names": [],
+  "mappings": ";AAAA;CAAA,KAAA;oSAAA;;CAAA,CAAM,IAAM;CACV;;CAAA,EAAA,CAAA,CAAA,YAAC;;CACa,EAAA,CAAA,uBAAA;CACZ,KAAA,GAAA,2CAAA;CAFF,IACc;;CADd,EAIA,MAAK;;CAJL,EAMA,EANA;;CAAA;;CADqC;;CAAvC,CASM,IAAM;CACV;;CAAa,EAAA,CAAA,sBAAA;CACX,KAAA,GAAA,0CAAA;CADF,IAAa;;CAAb;;CADoC,KAAM;CAT5C"
+}

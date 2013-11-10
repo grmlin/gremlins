@@ -1,4 +1,5 @@
 goog.provide 'gremlinDefinitions.Pool'
+
 goog.require 'util.Helper'
 goog.require 'gremlinDefinitions.Gizmo'
 goog.require 'modules.ModuleCollection'
@@ -22,35 +23,6 @@ class gremlinDefinitions.Pool
       modules.ModuleCollection.extendGizmo name, Definition
       definitions[name] = Definition
       
-    define: (name, constructor, instanceMembers, staticMembers) ->
-      unless typeof name is 'string'
-        throw new Error("The first parameter when defining a gremlin has to be a string, the gremlin definition's name!")
-
-      unless typeof constructor is 'function'
-        throw new Error("The second parameter when defining a gremlin has to be the constructor function!")
-
-      unless instanceMembers is undefined or typeof instanceMembers is 'object'
-        throw new Error("The third parameter when defining a gremlin has to be an object providing the instance members of the gremlin!")
-
-      unless staticMembers is undefined or typeof staticMembers is 'object'
-        throw new Error("The fourth parameter when defining a gremlin has to be an object providing the static members of the gremlin!")
-
-
-      #constructor = noop if typeof constructor is 'object'
-
-      class Gremlin extends gremlinDefinitions.Gizmo
-        constructor: ->
-          super
-          constructor.call this
-
-      Gremlin::klass = Gremlin
-
-      util.Helper.mixin Gremlin, instanceMembers
-      Gremlin[key] = member for own key, member of staticMembers
-
-      @set name, Gremlin
-      return Gremlin
-    
     addClass: (name, Gremlin) ->
       unless typeof name is 'string'
         throw new Error("Please provide the name of the gremlin!")
@@ -58,8 +30,6 @@ class gremlinDefinitions.Pool
       unless typeof Gremlin is 'function'
         throw new Error("When adding a gremlin, you have to provide a constructor function!")
 
-      Gremlin::klass = Gremlin
-      
       @set name, Gremlin
       return Gremlin
 

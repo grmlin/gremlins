@@ -6,7 +6,6 @@ goog.require 'EventDispatcher'
 goog.require 'conf.Configuration'
 goog.require 'util.Helper'
 goog.require 'util.Debug'
-goog.require 'namespace'
 goog.require 'packages.Package'
 goog.require 'modules.Module'
 goog.require 'Application'
@@ -31,20 +30,11 @@ Gremlin = do ->
       app?.refresh()
       GremlinClass
 
-    define: (name, constructor, instanceMembers, staticMembers) ->
-      GremlinClass = gremlinDefinitions.Pool.getInstance().define name, constructor, instanceMembers, staticMembers
-      app?.refresh()
-      GremlinClass
-
-    #derive: (parentName, name, constructor, instanceMembers, staticMembers) ->
-
     Gizmo: gremlinDefinitions.Gizmo
+
     Helper: util.Helper
     Module: modules.Module
-    namespace: namespace
-    ns: namespace
     Package: packages.Package
-    require: packages.Package.get
 
   g = new GremlinAdapter
 

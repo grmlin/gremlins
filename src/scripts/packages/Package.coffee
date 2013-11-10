@@ -1,10 +1,8 @@
 goog.provide 'packages.Package'
 
-goog.require 'namespace'
-
 class packages.Package
 
-  root = namespace
+  root = {}
 
   getNamespace = (name, content = null) ->
     items = name.split '.'
@@ -19,4 +17,4 @@ class packages.Package
     return new packages.Package arguments... if this not instanceof packages.Package
     @_package  = getNamespace ns, content
 
-  @get: (ns) -> getNamespace ns
+  @require: (ns) -> getNamespace ns

@@ -68,9 +68,9 @@ describe('modules.Module', function () {
             }
         });
 
-        TestGremlin = G.define('ModuleTest', function () {
+        TestGremlin = G.Gizmo.extend(function () {
                 try {
-                    expect(this.klass.FOO).to.equal("BAR");
+                    expect(this.constructor.FOO).to.equal("BAR");
                     expect(this.onClick()).to.equal("onClick");
                     //done();
                 } catch (e) {
@@ -82,10 +82,12 @@ describe('modules.Module', function () {
                 include: 'moduleTestModule'
             }
         );
-        TestGremlin2 = G.define('ModuleTest2', function () {
+        G.add('ModuleTest', TestGremlin);
+
+        TestGremlin2 = G.Gizmo.extend(function () {
                 try {
-                    expect(this.klass.FOO).to.equal("BAR");
-                    expect(this.klass.BAZ).to.equal("BOZ");
+                    expect(this.constructor.FOO).to.equal("BAR");
+                    expect(this.constructor.BAZ).to.equal("BOZ");
                     expect(this.onClick()).to.equal("onClick");
                     expect(this.onWhatever()).to.equal("onWhatever");
                     done();
@@ -98,16 +100,19 @@ describe('modules.Module', function () {
                 include: ['moduleTestModule', 'moduleTestModule2']
             }
         );
+        G.add('ModuleTest2', TestGremlin2);
+
+        TestGremlin3 = G.Gizmo.extend(function () {
+            },
+            {},
+            {
+                include: ['foo']
+            }
+        );
+
 
         expect(function () {
-            TestGremlin3 = G.define('ModuleTest3', function () {
-                },
-                {},
-                {
-                    include: ['foo']
-                }
-            );
-
+            G.add('ModuleTest3', TestGremlin3);
         }).to.throwError();
     });
 });

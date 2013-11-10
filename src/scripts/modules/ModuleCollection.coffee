@@ -31,7 +31,7 @@ class modules.ModuleCollection
     module.extend Gizmo for module in modules
 
   @bindGizmo: (name, gizmo) ->
-    modules = getModules name, gizmo.klass
+    modules = getModules name, gizmo.constructor
     module.bind gizmo for module in modules
 
 

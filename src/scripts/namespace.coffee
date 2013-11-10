@@ -1,3 +1,0 @@
-goog.provide 'namespace'
-
-namespace = {}

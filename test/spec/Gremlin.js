@@ -7,15 +7,17 @@ describe('Gremlin', function () {
     });
 
     it('should expose the main gremlin.js API', function () {
-        //expect(G).to.have.property('add', 'debug','define','Gizmo','Helper','on','registerExtension','ON_ELEMENT_FOUND','ON_DEFINITION_PENDING','ON_GREMLIN_LOADED');
         expect(G).to.have.property('add')
         expect(G.add).to.be.a('function');
 
         expect(G).to.have.property('debug');
         expect(G.debug).to.be.a(util.Debug);
 
-        expect(G).to.have.property('define');
-        expect(G.define).to.be.a('function');
+        expect(G).to.have.property('Module');
+        expect(G.Module).to.be.a('function');
+
+        expect(G).to.have.property('Package');
+        expect(G.Package).to.be.a('function');
 
         expect(G).to.have.property('Gizmo');
         expect(G.Gizmo).to.equal(gremlinDefinitions.Gizmo);
@@ -57,28 +59,80 @@ describe('Gremlin', function () {
 
     });
 
-    it('can define new gremlin classes', function () {
-        expect(function () {
-            G.define('DefineTest');
-        }).to.throwError(Error);
+    it('can inherit from gremlin classes', function (done) {
 
-        expect(function () {
-            G.define(function () {
+        var elChild = document.createElement('div'),
+            elChildCoffee = document.createElement('div');
+        elChild.setAttribute('data-gremlin', 'InheritChild');
+        elChildCoffee.setAttribute('data-gremlin', 'InheritChild2');
+
+        document.body.appendChild(elChild);
+        document.body.appendChild(elChildCoffee);
+
+        var Parent = G.Gizmo.extend(function () {
+            },
+            {
+                foo: 'bar'
+            }, {
+                FOO: "BAR"
             });
+
+        var Child = Parent.extend(function () {
+                try {
+                    expect(this.el).to.equal(elChild);
+                    expect(this.constructor).to.equal(Child);
+                    done();
+                } catch (e) {
+                    done(e);
+                }
+            },
+            {
+
+            }, {
+
+            });
+
+        G.add('InheritParent', Parent);
+        G.add('InheritChild', Child);
+
+        expect(Child).to.have.property('FOO');
+        expect(Child.FOO).to.equal('BAR');
+
+        expect(Child.prototype).to.have.property('foo');
+        expect(Child.prototype.foo).to.equal('bar');
+
+        expect(InheritTestChild).to.have.property('FOO');
+        expect(InheritTestChild.FOO).to.equal('FOO');
+
+        expect(InheritTestChild.prototype).to.have.property('foo');
+        expect(InheritTestChild.prototype).to.have.property('bar');
+        expect(InheritTestChild.prototype.foo).to.be.a('function');
+        expect(InheritTestChild.prototype.bar).to.equal('bar');
+
+    })
+
+    it('can create new gremlin classes without coffeescript', function () {
+        expect(function () {
+            G.add('DefineTest');
         }).to.throwError(Error);
 
         expect(function () {
-            G.define('DefineTest', function () {
+            G.Gizmo.extend();
+        }).to.throwError(Error);
+
+        expect(function () {
+            G.Gizmo.extend(function () {
             }, 'foo', 'foo');
         }).to.throwError(Error);
 
         expect(function () {
-            G.define('DefineTest', function () {
+            G.Gizmo.extend(function () {
             }, function () {
             });
         }).to.throwError(Error);
 
-        var TestGremlin = G.define('DefineTest', function () {
+
+        var TestGremlin = G.Gizmo.extend(function () {
         }, {
             foo: 'bar'
         }, {
@@ -102,10 +156,10 @@ describe('Gremlin', function () {
         document.body.appendChild(el);
         document.body.appendChild(elCoffee);
 
-        var TestGremlin = G.define('CreateTest', function () {
+        var TestGremlin = G.Gizmo.extend(function () {
             try {
                 expect(this.el).to.equal(el);
-                expect(this.klass).to.equal(TestGremlin);
+                expect(this.constructor).to.equal(TestGremlin);
                 expect(this.id).to.be.a('number');
                 expect(this.data).to.be.an('object');
                 //done();
@@ -114,6 +168,8 @@ describe('Gremlin', function () {
             }
         });
 
+
+        TestGremlin = G.add('CreateTest', TestGremlin);
         var CreateTestGremlin = G.add('CreateTestCoffee', CreateTest);
 
         window.setTimeout(function () {
@@ -121,7 +177,7 @@ describe('Gremlin', function () {
                 var g = elCoffee.__gremlin;
                 expect(elCoffee.className).to.equal('gremlin-ready');
                 expect(g.el).to.equal(elCoffee);
-                expect(g.klass).to.equal(CreateTestGremlin);
+                expect(g.constructor).to.equal(CreateTestGremlin);
                 expect(g.id).to.be.a('number');
                 expect(g.data).to.be.an('object');
                 done();
@@ -150,7 +206,7 @@ describe('Gremlin', function () {
         el.setAttribute('data-with-long-name', 'foo');
 
         document.body.appendChild(el);
-        var TestGremlin = G.define('DataTest', function () {
+        var TestGremlin = G.Gizmo.extend(function () {
             try {
                 expect(this.data).to.have.property('string')
                 expect(this.data.string).to.be('foo');
@@ -175,6 +231,8 @@ describe('Gremlin', function () {
                 done(e);
             }
         });
+
+        G.add('DataTest', TestGremlin);
     });
 
     it('puts unavailble gremlins into a queue', function (done) {
@@ -216,7 +274,7 @@ describe('Gremlin', function () {
         el.style.marginTop = "3000px";
         document.body.appendChild(el);
 
-        G.define('LazyTest', function () {
+        var LazyTest = G.Gizmo.extend(function () {
             try {
                 expect(this.el).to.equal(el);
                 done();
@@ -226,6 +284,8 @@ describe('Gremlin', function () {
                 done(e);
             }
         });
+        G.add('LazyTest', LazyTest);
+
         window.setTimeout(function () {
             try {
                 expect(el.className).to.equal('gremlin-loading');
@@ -292,8 +352,10 @@ describe('Gremlin', function () {
         G.on(G.ON_GREMLIN_LOADED, onCreated);
         document.body.appendChild(el);
 
-        G.define('EventOnLoadedTest', function () {
+        var EventOnLoadedTest = G.Gizmo.extend(function () {
 
         });
+
+        G.add('EventOnLoadedTest', EventOnLoadedTest);
     });
 });

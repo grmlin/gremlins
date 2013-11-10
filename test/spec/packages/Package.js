@@ -1,11 +1,4 @@
 describe('packages.Package', function () {
-    it('has a namespace for all packages', function () {
-
-        expect(namespace).to.equal(G.namespace);
-        expect(namespace).to.be.an('object');
-
-    });
-
     it('can add packages', function () {
 
         expect(packages.Package).to.equal(G.Package);
@@ -19,10 +12,7 @@ describe('packages.Package', function () {
 
         G.Package(ns, data);
 
-        var thePackage = G.require('foo.bar');
-        expect(G.namespace.foo.bar).to.equal(data);
-        expect(G.namespace.foo.bar).to.equal(G.Package.get(ns));
-        expect(G.Package.get(ns)).to.equal(data);
+        var thePackage = G.Package.require('foo.bar');
         expect(thePackage).to.equal(data);
 
     });
