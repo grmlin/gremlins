@@ -1,4 +1,4 @@
-describe('Gremlin', function () {
+describe('gremlins', function () {
 
     it('the namespace should exist', function () {
         expect(Gremlin).to.be.an('object');

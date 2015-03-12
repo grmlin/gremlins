@@ -1,22 +1,42 @@
 {
-  "name": "GremlinJS",
-  "version": "0.6.0",
-  "main": "./src/scripts/GremlinJS.coffee",
+  "name": "gremlins",
+  "version": "0.8.0",
+  "description": "A dependency-free library to build Javascript components for all your websites.",
+  "main": "gremlins.js",
+  "keywords": [
+    "MutationObserver",
+    "components"
+  ],
+  "author": {
+    "name": "Andreas Wehr"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/grmlin/gremlinjs.git"
+    "url": "https://github.com/grmlin/gremlins.git"
   },
-  "dependencies": {},
+  "bugs": {
+    "url": "https://github.com/grmlin/gremlins/issues"
+  },
+  "homepage": "http://grml.in",
+  "dependencies": {
+    "object-assign": "^2.0.0",
+    "watched": "^0.3.2"
+  },
   "devDependencies": {
-    "grunt-contrib-watch": "~0.5.2",
-    "grunt": "~0.4.0",
-    "grunt-contrib-connect": "~0.1.2",
-    "mantri": "~0.1.5",
-    "grunt-contrib-coffee": "~0.6.4",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-mocha": "~0.3.1",
-    "grunt-contrib-copy": "~0.4.1"
+    "browserify": "^9.0.3",
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-connect": "~0.7.0",
+    "gulp-gzip": "0.0.5",
+    "gulp-include": "~0.2.1",
+    "gulp-jsdoc": "^0.1.4",
+    "gulp-markdox": "^0.1.1",
+    "gulp-rename": "~1.0.0",
+    "gulp-sizereport": "^1.0.2",
+    "gulp-sourcemaps": "^1.5.0",
+    "gulp-uglify": "^1.1.0",
+    "gulp-util": "^3.0.4",
+    "vinyl-transform": "^1.0.0"
   }
 }
