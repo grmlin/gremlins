@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="vendor/mocha.css"/>
+	<style type="text/css">
+		#mocha ul#mocha-report {
+			margin-bottom: 20px;
+		}
+
+		div[data-gremlin-found] {
+			margin: 15px 0;
+			padding: 20px
+		}
+
+		.foo {
+			color: lightcoral;
+			display: inline-block;
+			margin-right: 4px;
+		}
+	</style>
+	<script type="text/javascript" src="vendor/json2.js"></script>
+	<script type="text/javascript" src="vendor/mocha.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		// This will be overridden by mocha-helper if you run with grunt
+		mocha.setup('bdd');
+	</script>
+
+
+</head>
+<body data-gremlin-config='{"debug":true}'>
+<div id="mocha"></div>
+
+<div class="dom-element-test"></div>
+<div class="dom-element-test"></div>
+
+<div class="node-list-test"></div>
+<div class="node-list-test"></div>
+<div class="node-list-test"></div>
+<div class="node-list-test"></div>
+<div class="node-list-test"></div>
+<div class="node-list-test"></div>
+<div class="node-list-test"></div>
+<div class="node-list-test"></div>
+
+<div class="query-strategy-test"></div>
+<div class="query-strategy-test"></div>
+<div class="query-strategy-test"></div>
+<div class="query-strategy-test"></div>
+
+<script src="vendor/expect.js" type="text/javascript" charset="utf-8"></script>
+<!--
+<script src="lib/chai.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" charset="utf-8">
+    // Setup chai
+    var expect = chai.expect;
+</script>
+-->
+
+<script src="specs/spec.js"></script>
+
+
+<!-- run mocha -->
+<script type="text/javascript" charset="utf-8">
+	// If tests run in a real browser
+	// Can alternatively do a check on window.PHANTOMJS
+
+	setTimeout(function () {
+		if (navigator.userAgent.indexOf('PhantomJS') < 0) {
+			mocha
+				// .globals(['Wombat', 'Apple']) // acceptable globals
+				.run();
+		}
+	}, 0);
+
+</script>
+
+</body>
+</html>

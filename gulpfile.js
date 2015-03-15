@@ -9,30 +9,42 @@ var wrap = require("gulp-wrap");
 var version = require('./package.json').version;
 var pkg = require('./package.json');
 var jsdoc = require("gulp-jsdoc");
+var jshint = require('gulp-jshint');
 
+var through2 = require('through2');
 var browserify = require('browserify');
+var babelify = require("babelify");
 var transform = require('vinyl-transform');
 var sourcemaps = require('gulp-sourcemaps');
 
-//var browserified = transform(function(filename) {
-//    var b = browserify(filename, {
-//			standalone: 'watched'
-//		});
-//    return b.bundle();
-//});
 
-gulp.task('scriptsTest', function () {
+gulp.task('lint', function () {
+	// Note: To have the process exit with an error code (1) on
+	//  lint error, return the stream and pipe to failOnError last.
+	return gulp.src(["index.js", "./lib/**/*.js", '!./lib/**/{__tests__,__tests__/**}'])
+		.pipe(jshint('.jshintrc'))
+		.pipe(jshint.reporter('jshint-stylish'));
+});
 
-	var browserified = transform(function (filename) {
-		var b = browserify(filename, {
-			standalone: 'gremlins',
-			debug: false
-		});
-		return b.bundle();
-	});
 
-	return gulp.src('src/**/__tests__/*.js')
-		.pipe(browserified)
+gulp.task('scriptsTest', ['lint'], function () {
+
+
+
+	return gulp.src('lib/**/__tests__/*.js')
+		.pipe(through2.obj(function (file, enc, next){
+			browserify(file.path,{
+				standalone: 'gremlins',
+				debug: true
+			})
+				.transform('babelify')
+				.bundle(function(err, res){
+					// assumes file.contents is a Buffer
+					file.contents = res;
+					next(null, file);
+				});
+		}))
+		//.pipe(browserified)
 		//.pipe(sourcemaps.init({loadMaps: true}))
 		// Add transformation tasks to the pipeline here.
 		//.pipe(uglify())
@@ -43,26 +55,22 @@ gulp.task('scriptsTest', function () {
 		.pipe(gulp.dest('./test/specs'));
 });
 
-gulp.task('connect', function () {
-	connect.server({
-		root: ['test'],
-		port: 8000,
-		livereload: false
-	})();
-});
+gulp.task('uglify', ['lint'], function () {
 
+	var b, browserified;
 
-gulp.task('uglify', function () {
+	b = browserify({
+		standalone: 'gremlins',
+		debug: false
+	})
+		.transform(babelify);
 
-	var browserified = transform(function (filename) {
-		var b = browserify(filename, {
-			standalone: 'gremlins',
-			debug: false
-		});
+	browserified = transform(function (filename) {
+		b.add(filename);
 		return b.bundle();
 	});
 
-	return gulp.src('gremlins.js')
+	return gulp.src('index.js')
 		.pipe(browserified)
 		.pipe(wrap({src: 'build/licenseHeader.tpl'}, {version: version}, {variable: 'data'}))
 		.pipe(gulp.dest('./dist'))
@@ -79,6 +87,15 @@ gulp.task('uglify', function () {
 		.pipe(gulp.dest("dist"));
 });
 
+gulp.task('connect', function () {
+	connect.server({
+		root: ['test'],
+		port: 8000,
+		livereload: false
+	})();
+});
+
+
 gulp.task("compress", function () {
 	gulp.src("dist/watched.min.js")
 		.pipe(gzip())
@@ -91,7 +108,7 @@ gulp.task("reload", function () {
 });
 
 gulp.task('watch', function () {
-	gulp.watch(['src/**/*'], ['scriptsTest', 'reload', 'doc']);
+	gulp.watch(['lib/**/*'], ['scriptsTest', 'reload'/*, 'doc'*/]);
 });
 
 gulp.task('sizereport', function () {
@@ -121,7 +138,7 @@ var tpl = {
 };
 
 gulp.task("doc", function () {
-	return gulp.src([".index.js", "./src/**/*.js", '!./src/**/{__tests__,__tests__/**}', "README.md"])
+	return gulp.src(["index.js", "./lib/**/*.js", '!./lib/**/{__tests__,__tests__/**}', "README.md"])
 		.pipe(jsdoc.parser({
 			plugins: ['plugins/markdown'],
 			name: pkg.name,
@@ -138,5 +155,5 @@ gulp.task("doc", function () {
 		}));
 });
 
-gulp.task('default', ['connect', 'scriptsTest', 'doc', 'watch']);
+gulp.task('default', ['connect', 'scriptsTest', /*'doc',*/ 'watch']);
 gulp.task('build', ['uglify', 'sizereport']);
