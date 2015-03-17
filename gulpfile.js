@@ -9,7 +9,7 @@ var wrap = require("gulp-wrap");
 var version = require('./package.json').version;
 var pkg = require('./package.json');
 var jsdoc = require("gulp-jsdoc");
-var jshint = require('gulp-jshint');
+var eslint = require('gulp-eslint')
 
 var through2 = require('through2');
 var browserify = require('browserify');
@@ -22,8 +22,9 @@ gulp.task('lint', function () {
 	// Note: To have the process exit with an error code (1) on
 	//  lint error, return the stream and pipe to failOnError last.
 	return gulp.src(["index.js", "./lib/**/*.js", '!./lib/**/{__tests__,__tests__/**}'])
-		.pipe(jshint('.jshintrc'))
-		.pipe(jshint.reporter('jshint-stylish'));
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failOnError());
 });
 
 

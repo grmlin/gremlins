@@ -20,7 +20,9 @@
   },
   "homepage": "http://grml.in",
   "dependencies": {
+    "domready": "^1.0.7",
     "object-assign": "^2.0.0",
+    "setprototypeof": "^1.0.0",
     "watched": "^0.3.2"
   },
   "devDependencies": {
@@ -29,10 +31,10 @@
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
     "gulp-connect": "~0.7.0",
+    "gulp-eslint": "^0.7.0",
     "gulp-gzip": "0.0.5",
     "gulp-include": "~0.2.1",
     "gulp-jsdoc": "^0.1.4",
-    "gulp-jshint": "^1.9.2",
     "gulp-markdox": "^0.1.1",
     "gulp-rename": "~1.0.0",
     "gulp-sizereport": "^1.0.2",
