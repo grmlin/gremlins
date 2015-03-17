@@ -28,15 +28,15 @@ gulp.task('lint', function () {
 });
 
 
-gulp.task('scriptsTest', ['lint'], function () {
+gulp.task('scriptsTest', [/*'lint'*/], function () {
 
 
 
-	return gulp.src('lib/**/__tests__/*.js')
+	return gulp.src('lib/__tests__/index.js')
 		.pipe(through2.obj(function (file, enc, next){
 			browserify(file.path,{
 				standalone: 'gremlins',
-				debug: true
+				debug: false
 			})
 				.transform('babelify')
 				.bundle(function(err, res){
@@ -50,7 +50,7 @@ gulp.task('scriptsTest', ['lint'], function () {
 		// Add transformation tasks to the pipeline here.
 		//.pipe(uglify())
 		//.pipe(sourcemaps.write())
-		.pipe(concat('spec.js'))
+		//.pipe(concat('spec.js'))
 		//.pipe(sourcemaps.init({loadMaps: true}))
 		//.pipe(sourcemaps.write())
 		.pipe(gulp.dest('./test/specs'));
@@ -71,7 +71,7 @@ gulp.task('uglify', ['lint'], function () {
 		return b.bundle();
 	});
 
-	return gulp.src('index.js')
+	return gulp.src('lib/gremlins.js')
 		.pipe(browserified)
 		.pipe(wrap({src: 'build/licenseHeader.tpl'}, {version: version}, {variable: 'data'}))
 		.pipe(gulp.dest('./dist'))
