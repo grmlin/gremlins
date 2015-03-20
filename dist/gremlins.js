@@ -52,7 +52,7 @@ module.exports = {
 };
 /*removedElements*/
 
-},{"./Factory":3,"watched":22}],2:[function(require,module,exports){
+},{"./Factory":3,"watched":23}],2:[function(require,module,exports){
 "use strict";
 
 var uuid = require("./uuid");
@@ -83,40 +83,49 @@ module.exports = {
 		return cache[id] && cache[id][name] !== undefined;
 	},
 
-	addGremlin: function addGremlin(element, name, gremlin) {
-		var id = getId(element);
+	addGremlin: function addGremlin(gremlin) {
+		var element = gremlin.el,
+		    name = gremlin.name,
+		    id = getId(element);
 		cache[id] = cache[id] || {};
 		cache[id][name] = gremlin;
-		//console.log(cache);
 	}
 };
 
-},{"./uuid":8}],3:[function(require,module,exports){
+},{"./uuid":9}],3:[function(require,module,exports){
 "use strict";
 
-var Data = require("./Data");
-var Pool = require("./Pool");
+var Data = require("./Data"),
+    Pool = require("./Pool");
+
+function initialize(gremlin, element) {
+
+	function init() {
+		this.el = element;
+		// call the constructor
+		this.initialize();
+	}
+
+	init.call(gremlin);
+}
 
 module.exports = {
 	createInstance: function createInstance(element, name) {
 
-		Pool.fetch(name).then(function (Spec) {
+		Pool.fetch(name, function (Spec) {
 			if (Data.hasGremlin(element, name)) {
 				console.warn("Element already has a gremlin " + name, element);
 			} else {
 				console.info("Creating gremlin " + name, element);
 				var gremlin = Object.create(Spec);
-				Data.addGremlin(element, name, gremlin);
-
-				gremlin.__init__(element);
+				initialize(gremlin, element);
+				Data.addGremlin(gremlin);
 			}
-		}, function () {});
+		});
 	}
 };
 
-// TODO
-
-},{"./Data":2,"./Pool":5}],4:[function(require,module,exports){
+},{"./Data":2,"./Pool":6}],4:[function(require,module,exports){
 "use strict";
 
 var setPrototypeOf = require("setprototypeof"),
@@ -125,22 +134,12 @@ var setPrototypeOf = require("setprototypeof"),
 
 var Gremlin = {
 
-	__init__: function __init__(element) {
-		this.el = element;
-		// Init plugins
-
-		this.initialize();
-	},
-
 	create: function create(Spec) {
 		var Parent = this,
 		    newSpec = objectAssign({}, Spec);
 
 		if (typeof newSpec.name !== "string") {
 			throw new Error("A gremlin spec needs a »name« property! It can't be found otherwise");
-		}
-		if (newSpec.__init__ !== undefined) {
-			throw new Error("The internal constructor »__init__« for the gremlin spec " + newSpec.name + " can't be overridden");
 		}
 		if (newSpec.create !== undefined) {
 			console.warn("You are replacing the original create method for the spec " + newSpec.name + ". You know what you're doing, right?");
@@ -149,18 +148,64 @@ var Gremlin = {
 			newSpec.initialize = function () {};
 		}
 
-		// TODO extend with mixins
-		// TODO extend with plugins
 		setPrototypeOf(newSpec, Parent);
-		return Pool.add(Object.create(newSpec));
+		return Pool.add(newSpec);
 	}
 
 };
 
 module.exports = Gremlin;
 
-},{"./Pool":5,"object-assign":10,"setprototypeof":11}],5:[function(require,module,exports){
+},{"./Pool":6,"object-assign":11,"setprototypeof":12}],5:[function(require,module,exports){
 "use strict";
+
+var getMixins = function (gremlin) {
+	return Array.isArray(gremlin.mixins) ? gremlin.mixins : gremlin.mixins ? [gremlin.mixins] : [];
+};
+
+function mixinModule(gremlin, Module) {
+
+	Object.keys(Module).forEach(function (propertyName) {
+		var property = Module[propertyName];
+
+		if (gremlin[propertyName] === undefined) {
+			gremlin[propertyName] = property;
+		} else {
+			decorateProperty(gremlin, propertyName, property);
+		}
+	});
+}
+function decorateProperty(gremlin, propertyName, property) {
+	var gremlinProperty = gremlin[propertyName],
+	    moduleProperty = property,
+	    gremlinPropertyType = typeof gremlinProperty,
+	    modulePropertyType = typeof moduleProperty,
+	    isSamePropType = gremlinPropertyType === modulePropertyType;
+
+	if (isSamePropType && modulePropertyType === "function") {
+		gremlin[propertyName] = function () {
+			// call the module first
+			return [moduleProperty.apply(this, arguments), gremlinProperty.apply(this, arguments)];
+		};
+	} else {
+		console.warn("Can't decorate gremlin property »" + gremlin.name + "#" + propertyName + ":" + gremlinPropertyType + "« with »Module#" + propertyName + ":" + modulePropertyType + "«.\n\t\tOnly functions can be decorated!");
+	}
+}
+
+module.exports = {
+	mixinProps: function mixinProps(gremlin) {
+		var modules = getMixins(gremlin);
+		// reverse the modules array to call decorated functions in the right order
+		modules.reverse().forEach(function (Module) {
+			return mixinModule(gremlin, Module);
+		});
+	}
+};
+
+},{}],6:[function(require,module,exports){
+"use strict";
+
+var Mixins = require("./Mixins");
 
 var specMap = {},
     pending = {},
@@ -175,8 +220,8 @@ var hasSpec = function (name) {
 	return specMap[name] !== undefined;
 };
 
-function createRequest(name, resolve, reject) {
-	var pendingRequest = { name: name, resolve: resolve, reject: reject };
+function createRequest(name, callback) {
+	var pendingRequest = { name: name, callback: callback };
 
 	if (hasSpec(name)) {
 		resolveRequest(pendingRequest);
@@ -194,10 +239,10 @@ function createRequest(name, resolve, reject) {
 
 function resolveRequest(_ref) {
 	var name = _ref.name;
-	var resolve = _ref.resolve;
+	var callback = _ref.callback;
 
 	var Spec = specMap[name];
-	resolve(Object.create(Spec));
+	callback(Spec);
 }
 
 function resolveAllPendingFor(name) {
@@ -217,21 +262,21 @@ module.exports = {
 			throw new Error("Trying to add new Gremlin spec, but a spec for " + name + " already exists.");
 		}
 
+		// extend the spec with it's Mixins
+		Mixins.mixinProps(Spec);
 		addSpec(name, Spec);
 		resolveAllPendingFor(name);
 		return Spec; //easy chaining
 	},
 
-	fetch: function fetch(name) {
-		return new Promise(function (resolve, reject) {
-			setTimeout(function () {
-				return createRequest(name, resolve, reject);
-			}, 10);
-		});
+	fetch: function fetch(name, cb) {
+		setTimeout(function () {
+			return createRequest(name, cb);
+		}, 10);
 	}
 };
 
-},{}],6:[function(require,module,exports){
+},{"./Mixins":5}],7:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -251,7 +296,7 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 var domready = require("domready");
@@ -278,7 +323,7 @@ domready(function () {
 	observe();
 });
 
-},{"./Collection":1,"./Gremlin":4,"./consoleShim":6,"domready":9}],8:[function(require,module,exports){
+},{"./Collection":1,"./Gremlin":4,"./consoleShim":7,"domready":10}],9:[function(require,module,exports){
 "use strict";
 
 module.exports = function b(a) {
@@ -286,7 +331,7 @@ module.exports = function b(a) {
 };
 // see https://gist.github.com/jed/982883
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /*!
   * domready (c) Dustin Diaz 2014 - License MIT
   */
@@ -318,7 +363,7 @@ module.exports = function b(a) {
 
 });
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 function ToObject(val) {
@@ -346,7 +391,7 @@ module.exports = Object.assign || function (target, source) {
 	return to;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = Object.setPrototypeOf || {__proto__:[]} instanceof Array ? setProtoOf : mixinProperties;
 
 function setProtoOf(obj, proto) {
@@ -359,7 +404,7 @@ function mixinProperties(obj, proto) {
 	}
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 (function (global){
 var existed = false;
 var old;
@@ -381,7 +426,7 @@ else {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./smokesignals":13}],13:[function(require,module,exports){
+},{"./smokesignals":14}],14:[function(require,module,exports){
 smokesignals = {
     convert: function(obj, handlers) {
         // we store the list of handlers as a local variable inside the scope
@@ -456,7 +501,7 @@ smokesignals = {
     }
 }
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 var helper = require('./util/helper'),
 	constants = require('./util/constants'),
 	LiveNodeList = require('./LiveNodeList'),
@@ -564,7 +609,7 @@ module.exports = function(element){
 	});
 	return domElement;
 };
-},{"./LiveNodeList":15,"./domQueries/QueryStrategyFactory":17,"./util/constants":20,"./util/helper":21}],15:[function(require,module,exports){
+},{"./LiveNodeList":16,"./domQueries/QueryStrategyFactory":18,"./util/constants":21,"./util/helper":22}],16:[function(require,module,exports){
 var smokesignals = require('smokesignals'),
 	constants = require('./util/constants'),
 	helper = require('./util/helper'),
@@ -862,7 +907,7 @@ module.exports = function (queryStrategy) {
 
 
 
-},{"./domQueries/DomQuery":16,"./observers/IntervalObserver":18,"./observers/NativeObserver":19,"./util/constants":20,"./util/helper":21,"smokesignals":12}],16:[function(require,module,exports){
+},{"./domQueries/DomQuery":17,"./observers/IntervalObserver":19,"./observers/NativeObserver":20,"./util/constants":21,"./util/helper":22,"smokesignals":13}],17:[function(require,module,exports){
 var helper = require('../util/helper');
 
 /**
@@ -904,7 +949,7 @@ module.exports = {
 		return helper.arrayClone(this._old);
 	}
 };
-},{"../util/helper":21}],17:[function(require,module,exports){
+},{"../util/helper":22}],18:[function(require,module,exports){
 /**
  * @module watched/domQueries/QueryStrategyFactory
  */
@@ -1014,7 +1059,7 @@ module.exports = {
 		return Strategies[strategyType](element, selector);
 	}
 };
-},{"../util/constants":20,"../util/helper":21}],18:[function(require,module,exports){
+},{"../util/constants":21,"../util/helper":22}],19:[function(require,module,exports){
 var smokesignals = require('smokesignals'),
 		helper       = require('../util/helper'),
 		constants    = require('../util/constants');
@@ -1073,7 +1118,7 @@ smokesignals.convert(IntervalObserver);
 
 module.exports = IntervalObserver;
 
-},{"../util/constants":20,"../util/helper":21,"smokesignals":12}],19:[function(require,module,exports){
+},{"../util/constants":21,"../util/helper":22,"smokesignals":13}],20:[function(require,module,exports){
 /**
  * Native dom observer using {@link external:MutationObserver}
  *
@@ -1108,7 +1153,7 @@ var NativeObserver = {
 smokesignals.convert(NativeObserver);
 
 module.exports = NativeObserver;
-},{"../util/constants":20,"../util/helper":21,"smokesignals":12}],20:[function(require,module,exports){
+},{"../util/constants":21,"../util/helper":22,"smokesignals":13}],21:[function(require,module,exports){
 /**
  * Constants used throughout the library
  *
@@ -1139,7 +1184,7 @@ Object.keys(constants.queries).forEach(function(index){
 });
 
 module.exports = constants;
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var constants = require('./constants');
 
 var INDEX_OF_FAIL = -1;
@@ -1242,7 +1287,7 @@ module.exports = {
 		}
 	}
 };
-},{"./constants":20}],22:[function(require,module,exports){
+},{"./constants":21}],23:[function(require,module,exports){
 var DomElement = require('./src/DomElement');
 /**
  * @module watched
@@ -1276,5 +1321,5 @@ module.exports = function (element) {
 		return DomElement(element);
 	}
 };
-},{"./src/DomElement":14}]},{},[7])(7)
+},{"./src/DomElement":15}]},{},[8])(8)
 });

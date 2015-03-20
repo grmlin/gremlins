@@ -36,7 +36,7 @@ gulp.task('scriptsTest', [/*'lint'*/], function () {
 		.pipe(through2.obj(function (file, enc, next){
 			browserify(file.path,{
 				standalone: 'gremlins',
-				debug: true
+				debug: false
 			})
 				.transform('babelify')
 				.bundle(function(err, res){
