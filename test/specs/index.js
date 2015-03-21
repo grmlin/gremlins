@@ -3,80 +3,7 @@
 
 module.exports = require("./lib/gremlins");
 
-},{"./lib/gremlins":15}],2:[function(require,module,exports){
-"use strict";
-
-//var watched = require('watched');
-var Factory = require("./Factory");
-
-var DATA_NAME = "data-gremlin";
-var NAME_SEPARATOR = ",";
-
-function getNames(el) {
-	var names = el.getAttribute(DATA_NAME);
-
-	if (names) {
-		var nameItems = names.split(NAME_SEPARATOR);
-		return nameItems.map(function (name) {
-			return name.trim();
-		});
-	} else {
-		// TODO Error message
-		return [];
-	}
-}
-
-function addGremlins(element) {
-	var names = getNames(element);
-	names.forEach(function (name) {
-		return createInstance(element, name);
-	});
-}
-
-function checkAdded(addedElements) {
-	addedElements.forEach(function (element) {
-		return addGremlins(element);
-	});
-}
-
-function checkRemoved() {
-	removedElements.forEach(function (element) {
-		return removeGremlins(element);
-	});
-}
-
-function createInstance(element, name) {
-	Factory.createInstance(element, name);
-}
-
-function destroyInstance(element) {
-	Data.getGremlins(element).forEach(function (g) {
-		return g.destroy();
-	});
-}
-
-module.exports = {
-
-	observe: function observe() {},
-
-	add: function add(element, name) {
-		createInstance(element, name);
-	},
-
-	remove: function remove(element) {
-		destroyInstance(element);
-	}
-};
-/*removedElements*/
-//var list = watched(`[${DATA_NAME}]`);
-//list.on('added', checkAdded);
-//list.on('removed', checkRemoved);
-//
-//// check the current Elements
-//var elements = Array.prototype.slice.call(list);
-//checkAdded(elements);
-
-},{"./Factory":4}],3:[function(require,module,exports){
+},{"./lib/gremlins":14}],2:[function(require,module,exports){
 "use strict";
 
 var uuid = require("./uuid");
@@ -102,34 +29,29 @@ var hasId = function (element) {
 };
 
 module.exports = {
-	hasGremlin: function hasGremlin(element, name) {
+	addGremlin: function addGremlin(gremlin, element) {
 		var id = getId(element);
-		return cache[id] && cache[id][name] !== undefined;
+
+		if (cache[id] !== undefined) {
+			console.warn("You can't add another gremlin to this element, it already uses one!", element);
+		} else {
+			cache[id] = gremlin;
+		}
 	},
 
-	addGremlin: function addGremlin(gremlin) {
-		var element = gremlin.el,
-		    name = gremlin.name,
-		    id = getId(element);
-		cache[id] = cache[id] || {};
-		cache[id][name] = gremlin;
-	},
-
-	getGremlins: function getGremlins(element) {
+	getGremlin: function getGremlin(element) {
 		var id = getId(element),
-		    gremlins = cache[id];
+		    gremlin = cache[id];
 
-		return typeof gremlins === "object" ? Object.keys(gremlins).map(function (name) {
-			return gremlins[name];
-		}) : [];
+		if (gremlin === undefined) {
+			console.warn("This dom element does not use any gremlins!", element);
+		}
+		return gremlin;
 	}
 };
 
-},{"./uuid":16}],4:[function(require,module,exports){
+},{"./uuid":15}],3:[function(require,module,exports){
 "use strict";
-
-var Data = require("./Data"),
-    Pool = require("./Pool");
 
 function initialize(gremlin, element) {
 
@@ -143,27 +65,43 @@ function initialize(gremlin, element) {
 }
 
 module.exports = {
-	createInstance: function createInstance(element, name) {
-
-		Pool.fetch(name, function (Spec) {
-			if (Data.hasGremlin(element, name)) {
-				console.warn("Element already has a gremlin " + name, element);
-			} else {
-				console.info("Creating gremlin " + name, element);
-				var gremlin = Object.create(Spec);
-				initialize(gremlin, element);
-				Data.addGremlin(gremlin);
-			}
-		});
+	createInstance: function createInstance(element, Spec) {
+		//var Spec = Pool.get(name);
+		//var name = Spec.name;
+		//console.info(`Creating gremlin ${name}`, element);
+		var gremlin = Object.create(Spec);
+		initialize(gremlin, element);
+		return gremlin;
 	}
 };
 
-},{"./Data":3,"./Pool":8}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
-var setPrototypeOf = require("setprototypeof"),
-    objectAssign = require("object-assign"),
-    Pool = require("./Pool");
+var objectAssign = require("object-assign"),
+    Mixins = require("./Mixins"),
+    GremlinElement = require("./GremlinElement");
+
+/**
+ * ## `Gremlin`
+ * The base prototype used for all gremlin components/specs
+ *
+ *
+ */
+
+/*!
+ * All the Specs already added.
+ *
+ * Used to detect multi adds
+ */
+var specMap = {};
+
+var addSpec = function (name, Spec) {
+	return specMap[name] = Spec;
+};
+var hasSpec = function (name) {
+	return specMap[name] !== undefined;
+};
 
 var Gremlin = {
 
@@ -173,59 +111,84 @@ var Gremlin = {
 
 	create: function create(Spec) {
 		var Parent = this,
-		    newSpec = objectAssign({}, Spec);
+		    NewSpec = Object.create(Parent),
+		    name = Spec.name;
 
-		if (typeof newSpec.name !== "string") {
+		if (typeof name !== "string") {
 			throw new Error("A gremlin spec needs a »name« property! It can't be found otherwise");
 		}
-		if (newSpec.create !== undefined) {
-			console.warn("You are replacing the original create method for the spec " + newSpec.name + ". You know what you're doing, right?");
+		if (hasSpec(name)) {
+			throw new Error("Trying to add new Gremlin spec, but a spec for " + name + " already exists.");
+		}
+		if (Spec.create !== undefined) {
+			console.warn("You are replacing the original create method for the spec " + name + ". You know what you're doing, right?");
 		}
 
-		setPrototypeOf(newSpec, Parent);
-		return Pool.add(newSpec);
+		// set up the prototype chain
+		objectAssign(NewSpec, Spec);
+		// extend the spec with it's Mixins
+		Mixins.mixinProps(NewSpec);
+		// remember this name
+		addSpec(name, NewSpec);
+		// and create the custom element for it
+		GremlinElement.register(NewSpec);
+		return NewSpec;
 	}
 
 };
 
 module.exports = Gremlin;
 
-},{"./Pool":8,"object-assign":18,"setprototypeof":19}],6:[function(require,module,exports){
+},{"./GremlinElement":5,"./Mixins":6,"object-assign":16}],5:[function(require,module,exports){
 "use strict";
 
-var Collection = require("./Collection");
+var Factory = require("./Factory"),
+    Data = require("./Data");
 
-function register(name) {
-	if (typeof document.registerElement === "function") {
-		var tagName = name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-		document.registerElement("gremlin-" + tagName, {
-			prototype: Object.create(HTMLElement.prototype, {
-				createdCallback: {
-					value: function value() {
-						console.log("here I am ^_^ ");
-						console.log("with content: ", this.textContent);
-					}
-				},
-				attachedCallback: {
-					value: function value() {
-						console.log("live on DOM ;-) ", this);
-						Collection.add(this, name);
-					}
-				},
-				detachedCallback: {
-					value: function value() {
-						console.log("leaving the DOM :-( )", this);
-						Collection.remove(this);
-					}
-				}
-			})
-		});
-	}
+var canRegisterElements = typeof document.registerElement === "function";
+
+if (!canRegisterElements) {
+	throw new Error("registerElement not available. Did you include the polyfill for older browsers?");
 }
 
-module.exports = { register: register };
+var addInstance = function addInstance(element, Spec) {
+	var gremlin = Factory.createInstance(element, Spec);
+	Data.addGremlin(gremlin, element);
+};
 
-},{"./Collection":2}],7:[function(require,module,exports){
+var removeInstance = function removeInstance(element) {
+	Data.getGremlin(element).destroy();
+};
+
+module.exports = {
+	register: function register(Spec) {
+		var name = Spec.name,
+		    tagName = Spec.tagName,
+		    hasTagName = typeof tagName === "string",
+		    proto = {
+			attachedCallback: {
+				value: function value() {
+					addInstance(this, Spec);
+				}
+			},
+			detachedCallback: {
+				value: function value() {
+					removeInstance(this);
+				}
+			}
+		};
+
+		tagName = hasTagName ? tagName : name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase() + "-gremlin";
+
+		var El = document.registerElement(tagName, {
+			name: tagName,
+			prototype: Object.create(HTMLElement.prototype, proto)
+		});
+		return El;
+	}
+};
+
+},{"./Data":2,"./Factory":3}],6:[function(require,module,exports){
 "use strict";
 
 var getMixins = function (gremlin) {
@@ -271,83 +234,7 @@ module.exports = {
 	}
 };
 
-},{}],8:[function(require,module,exports){
-"use strict";
-
-var Mixins = require("./Mixins"),
-    GremlinElement = require("./GremlinElement");
-
-var specMap = {},
-    pending = {},
-    pendingTimers = {};
-
-var PENDING_TIMEOUT = 3000;
-
-var addSpec = function (name, Spec) {
-	return specMap[name] = Spec;
-};
-var hasSpec = function (name) {
-	return specMap[name] !== undefined;
-};
-
-function createRequest(name, callback) {
-	var pendingRequest = { name: name, callback: callback };
-
-	if (hasSpec(name)) {
-		resolveRequest(pendingRequest);
-	} else {
-		pending[name] = pending[name] || [];
-		pending[name].push(pendingRequest);
-		pendingTimers[name] = pendingTimers[name] || setTimeout(function () {
-			var requests = pending[name];
-			if (requests) {
-				console.warn("A spec for gremlin " + name + " is still missing. Did you include it?");
-			}
-		}, PENDING_TIMEOUT);
-	}
-}
-
-function resolveRequest(_ref) {
-	var name = _ref.name;
-	var callback = _ref.callback;
-
-	var Spec = specMap[name];
-	callback(Spec);
-}
-
-function resolveAllPendingFor(name) {
-	var requests = pending[name];
-	clearTimeout(pendingTimers[name]);
-	if (requests !== undefined && hasSpec(name)) {
-		requests.forEach(resolveRequest);
-		delete pending[name];
-	}
-}
-
-module.exports = {
-	add: function add(Spec) {
-		var name = Spec.name;
-
-		if (hasSpec(name)) {
-			throw new Error("Trying to add new Gremlin spec, but a spec for " + name + " already exists.");
-		}
-
-		// extend the spec with it's Mixins
-		Mixins.mixinProps(Spec);
-		GremlinElement.register(Spec.name);
-		addSpec(name, Spec);
-		resolveAllPendingFor(name);
-		return Spec; //easy chaining
-	},
-
-	fetch: function fetch(name, cb) {
-		setTimeout(function () {
-			return createRequest(name, cb);
-		}, 10);
-	}
-};
-
-},{"./GremlinElement":6,"./Mixins":7}],9:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 var Gremlin = require("../Gremlin");
@@ -355,14 +242,30 @@ var Gremlin = require("../Gremlin");
 describe("Gremlin", function () {
 	var Gizmo = Gremlin.create({
 		name: "Gizmo",
+		initialize: function initialize() {
+			this.el.innerHTML = "Gizmo created: " + this.foo();
+		},
 		foo: function foo() {
 			return "foo";
 		}
 	});
 
-	it("can create gremlins", function () {
+	it("gremlins can create gremlins", function () {
 		expect(Gizmo.create).to.be.a("function");
 		expect(Gizmo.foo).to.be.a("function");
+	});
+
+	it("cannot create more than one of a name", function () {
+		var G1 = {
+			name: "G"
+		};
+		var G2 = {
+			name: "G"
+		};
+		Gizmo.create(G1);
+		expect(function () {
+			Gizmo.create(G2);
+		}).to["throw"]();
 	});
 
 	// TODO: not in IE<11
@@ -373,11 +276,12 @@ describe("Gremlin", function () {
 				return this.foo() + " bar";
 			}
 		};
-		var Stripe = Gizmo.create(proto);
+		var Stripe = Gremlin.create(proto);
 		var g = Object.create(Stripe);
-
-		expect(proto.isPrototypeOf(Stripe));
-		expect(proto.isPrototypeOf(g));
+		expect(g.name).to.equal("Stripe");
+		expect(g.hasOwnProperty("name")).to.not.be.ok();
+		//expect(proto.isPrototypeOf(Stripe)).to.be.ok();
+		//expect(proto.isPrototypeOf(g)).to.be.ok();
 	});
 
 	it("inheritance works", function () {
@@ -412,30 +316,30 @@ describe("Gremlin", function () {
 		}).to["throw"]();
 	});
 
-	it("uses modules", function (done) {
+	it("uses mixins", function (done) {
 		var called = 0;
 
-		var Module = {
+		var Mixin = {
 			initialize: function initialize() {},
 			foo: function foo() {
 				called++;
 			},
-			module1: "Module1"
+			Mixin1: "Mixin1"
 		};
-		var Module2 = {
+		var Mixin2 = {
 			initialize: function initialize() {},
 			foo: function foo() {
 				called++;
 			},
-			module2: "Module2"
+			Mixin2: "Mixin2"
 		};
 		Gremlin.create({
-			mixins: [Module, Module2],
+			mixins: [Mixin, Mixin2],
 			name: "G2",
 			foo: function foo() {
 				called++;
 				if (called !== 3) {
-					done(new Error("Modules not called correctly"));
+					done(new Error("Mixins not called correctly"));
 				} else {
 					done();
 				}
@@ -445,8 +349,7 @@ describe("Gremlin", function () {
 			}
 		});
 
-		var el = document.createElement("div");
-		el.setAttribute("data-gremlin", "G2");
+		var el = document.createElement("g2-gremlin");
 		document.body.appendChild(el);
 	});
 
@@ -464,8 +367,7 @@ describe("Gremlin", function () {
 			}
 		});
 
-		var el = document.createElement("div");
-		el.setAttribute("data-gremlin", "G3");
+		var el = document.createElement("g3-gremlin");
 		document.body.appendChild(el);
 	});
 
@@ -490,8 +392,7 @@ describe("Gremlin", function () {
 			}
 		});
 
-		var el = document.createElement("div");
-		el.setAttribute("data-gremlin", "G4");
+		var el = document.createElement("g4-gremlin");
 		document.body.appendChild(el);
 
 		setTimeout(function () {
@@ -500,14 +401,52 @@ describe("Gremlin", function () {
 	});
 });
 
-},{"../Gremlin":5}],10:[function(require,module,exports){
+},{"../Gremlin":4}],8:[function(require,module,exports){
 "use strict";
 
-var Modules = require("../Mixins");
+var nameGenerator = require("./nameGenerator");
+var GremlinElement = require("../GremlinElement");
 
-describe("Modules", function () {
+describe("GremlinElement", function () {
 
-	it("mixes modules into objects", function () {
+	it("creates custom elements", function () {
+		expect(GremlinElement.register).to.be.a("function");
+		expect(function () {
+			GremlinElement.register({
+				foo: "foo"
+			});
+		}).to["throw"]();
+
+		var El = GremlinElement.register({
+			name: "GremlinElementTest"
+		});
+		var el = document.createElement("gremlin-element-test-gremlin");
+		expect(El).to.be.a("function");
+		expect(el).to.be.a(HTMLElement);
+		expect(el.tagName.toUpperCase()).to.equal("gremlin-element-test-gremlin".toUpperCase());
+	});
+
+	it("uses custom tag names", function () {
+		var El = GremlinElement.register({
+			name: "GremlinElementTagTest",
+			tagName: "tag-name-test-gremlin"
+		});
+		var el = document.createElement("tag-name-test-gremlin");
+
+		expect(El).to.be.a("function");
+		expect(el).to.be.a(HTMLElement);
+		expect(el.tagName.toUpperCase()).to.equal("tag-name-test-gremlin".toUpperCase());
+	});
+});
+
+},{"../GremlinElement":5,"./nameGenerator":12}],9:[function(require,module,exports){
+"use strict";
+
+var Mixins = require("../Mixins");
+
+describe("Mixins", function () {
+
+	it("mixes Mixins into objects", function () {
 		var Module = {
 			foo: function foo() {
 				return "foo";
@@ -516,7 +455,7 @@ describe("Modules", function () {
 		var G = {
 			mixins: Module };
 
-		Modules.mixinProps(G);
+		Mixins.mixinProps(G);
 
 		expect(G).to.have.property("foo");
 		expect(G.foo()).to.equal("foo");
@@ -537,7 +476,7 @@ describe("Modules", function () {
 			}
 		};
 
-		Modules.mixinProps(G);
+		Mixins.mixinProps(G);
 
 		expect(G).to.have.property("foo");
 		G.foo();
@@ -553,13 +492,13 @@ describe("Modules", function () {
 			foo: "foo"
 		};
 
-		Modules.mixinProps(G);
+		Mixins.mixinProps(G);
 
 		expect(G).to.have.property("foo");
 		expect(G.foo).to.equal("foo");
 	});
 
-	it("respects the order modules are included", function () {
+	it("respects the order Mixins are included", function () {
 		var fooStr = "";
 		var Module = {
 			foo: function foo() {
@@ -579,32 +518,23 @@ describe("Modules", function () {
 			}
 		};
 
-		Modules.mixinProps(G);
+		Mixins.mixinProps(G);
 		G.foo();
 		expect(fooStr).to.equal("module1module2gremlin");
 	});
 });
 
-},{"../Mixins":7}],11:[function(require,module,exports){
-"use strict";
-
-describe("Pool", function () {
-	//var Pool = require('../Pool');
-
-	it("stores object specs", function () {});
-});
-
-},{}],12:[function(require,module,exports){
+},{"../Mixins":6}],10:[function(require,module,exports){
 "use strict";
 
 var gremlins = require("../../index");
-var Gizmo = require("../Gremlin");
+var Gremlin = require("../Gremlin");
 
 describe("gremlins", function () {
 
 	it("the namespace should exist", function () {
 		expect(gremlins).to.be.an("object");
-		expect(gremlins.create).to.be(Gizmo.create);
+		expect(gremlins.create).to.be(Gremlin.create);
 		//expect(G).to.be.an('object');
 		//expect(G).to.equal(Gremlin);
 	});
@@ -619,8 +549,8 @@ describe("gremlins", function () {
   expect(G.Module).to.be.a('function');
  	 expect(G).to.have.property('Package');
   expect(G.Package).to.be.a('function');
- 	 expect(G).to.have.property('Gizmo');
-  expect(G.Gizmo).to.equal(gremlinDefinitions.Gizmo);
+ 	 expect(G).to.have.property('Gremlin');
+  expect(G.Gremlin).to.equal(gremlinDefinitions.Gremlin);
  	 expect(G).to.have.property('Helper')
   expect(G.Helper).to.equal(util.Helper);
  	 expect(G).to.have.property('on');
@@ -653,7 +583,7 @@ describe("gremlins", function () {
   elChildCoffee.setAttribute('data-gremlin', 'InheritChild2');
  	 document.body.appendChild(elChild);
   document.body.appendChild(elChildCoffee);
- 	 var Parent = G.Gizmo.extend(function () {
+ 	 var Parent = G.Gremlin.extend(function () {
   },
   {
   foo: 'bar'
@@ -690,19 +620,19 @@ describe("gremlins", function () {
   G.add('DefineTest');
   }).to.throwError(Error);
  	 expect(function () {
-  G.Gizmo.extend();
+  G.Gremlin.extend();
   }).to.throwError(Error);
  	 expect(function () {
-  G.Gizmo.extend(function () {
+  G.Gremlin.extend(function () {
   }, 'foo', 'foo');
   }).to.throwError(Error);
  	 expect(function () {
-  G.Gizmo.extend(function () {
+  G.Gremlin.extend(function () {
   }, function () {
   });
   }).to.throwError(Error);
  
-  var TestGremlin = G.Gizmo.extend(function () {
+  var TestGremlin = G.Gremlin.extend(function () {
   }, {
   foo: 'bar'
   }, {
@@ -720,7 +650,7 @@ describe("gremlins", function () {
   elCoffee.setAttribute('data-gremlin', 'CreateTestCoffee');
  	 document.body.appendChild(el);
   document.body.appendChild(elCoffee);
- 	 var TestGremlin = G.Gizmo.extend(function () {
+ 	 var TestGremlin = G.Gremlin.extend(function () {
   try {
   expect(this.el).to.equal(el);
   expect(this.constructor).to.equal(TestGremlin);
@@ -765,7 +695,7 @@ describe("gremlins", function () {
   el.setAttribute('data-object', JSON.stringify(complex));
   el.setAttribute('data-with-long-name', 'foo');
  	 document.body.appendChild(el);
-  var TestGremlin = G.Gizmo.extend(function () {
+  var TestGremlin = G.Gremlin.extend(function () {
   try {
   expect(this.data).to.have.property('string')
   expect(this.data.string).to.be('foo');
@@ -818,7 +748,7 @@ describe("gremlins", function () {
   el.setAttribute('data-gremlin-lazy', 'true');
   el.style.marginTop = "3000px";
   document.body.appendChild(el);
- 	 var LazyTest = G.Gizmo.extend(function () {
+ 	 var LazyTest = G.Gremlin.extend(function () {
   try {
   expect(this.el).to.equal(el);
   done();
@@ -885,22 +815,31 @@ describe("gremlins", function () {
   el.setAttribute('data-gremlin', 'EventOnLoadedTest');
   G.on(G.ON_GREMLIN_LOADED, onCreated);
   document.body.appendChild(el);
- 	 var EventOnLoadedTest = G.Gizmo.extend(function () {
+ 	 var EventOnLoadedTest = G.Gremlin.extend(function () {
  	 });
  	 G.add('EventOnLoadedTest', EventOnLoadedTest);
   });
  	 */
 });
 
-},{"../../index":1,"../Gremlin":5}],13:[function(require,module,exports){
+},{"../../index":1,"../Gremlin":4}],11:[function(require,module,exports){
 "use strict";
 
 require("./gremlins-tests");
 require("./Gremlin-tests");
 require("./Mixins-tests");
-require("./Pool-tests");
+require("./GremlinElement-tests");
 
-},{"./Gremlin-tests":9,"./Mixins-tests":10,"./Pool-tests":11,"./gremlins-tests":12}],14:[function(require,module,exports){
+},{"./Gremlin-tests":7,"./GremlinElement-tests":8,"./Mixins-tests":9,"./gremlins-tests":10}],12:[function(require,module,exports){
+"use strict";
+
+var id = 0;
+
+module.exports = function () {
+	return "G" + id++;
+};
+
+},{}],13:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -920,34 +859,51 @@ module.exports = {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
-var domready = require("domready");
-var consoleShim = require("./consoleShim");
-var _require = require("./Gremlin");
+/**
+ * # gremlin.js
+ * dead simple web components
+ *
+ * ## `gremlins`
+ * The gremlin.js public namespace/module
+ *
+ */
+/*!
+ * Dependencies
+ */
+var consoleShim = require("./consoleShim"),
+    Gremlin = require("./Gremlin");
 
-var create = _require.create;
-var _require2 = require("./Collection");
-
-var observe = _require2.observe;
-
+// let's add a branding so we can't include more than one instance of gremlin.js
 var BRANDING = "gremlins_connected";
+
+if (document.documentElement[BRANDING]) {
+  throw new Error("You tried to include gremlin.js multiple times. This will not work");
+}
 consoleShim.create();
 
-module.exports = { create: create };
+document.documentElement[BRANDING] = true;
 
-domready(function () {
-	// we don't allow multiple gremlin.js scripts in a single page, strange and hard to debug things will happen otherwise
-	if (document.documentElement[BRANDING]) {
-		throw new Error("You tried to include gremlin.js multiple times. Don't do that.");
-	}
+/**
+ * Creates a new gremlin specification.
+ *
+ * ### Example
+ *     var gremlins = require('gremlins');
+ *
+ *     gremlins.create({
+ *       name: 'Foo'
+ *     });
+ *
+ * @param {Object} Spec The gremlin specification
+ * @return {Object} The final spec created, later used as a prototype for new components of this type
+ * @method create
+ * @api public
+ */
+exports.create = Gremlin.create;
 
-	document.documentElement[BRANDING] = true;
-	observe();
-});
-
-},{"./Collection":2,"./Gremlin":5,"./consoleShim":14,"domready":17}],16:[function(require,module,exports){
+},{"./Gremlin":4,"./consoleShim":13}],15:[function(require,module,exports){
 "use strict";
 
 module.exports = function b(a) {
@@ -955,39 +911,7 @@ module.exports = function b(a) {
 };
 // see https://gist.github.com/jed/982883
 
-},{}],17:[function(require,module,exports){
-/*!
-  * domready (c) Dustin Diaz 2014 - License MIT
-  */
-!function (name, definition) {
-
-  if (typeof module != 'undefined') module.exports = definition()
-  else if (typeof define == 'function' && typeof define.amd == 'object') define(definition)
-  else this[name] = definition()
-
-}('domready', function () {
-
-  var fns = [], listener
-    , doc = document
-    , hack = doc.documentElement.doScroll
-    , domContentLoaded = 'DOMContentLoaded'
-    , loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(doc.readyState)
-
-
-  if (!loaded)
-  doc.addEventListener(domContentLoaded, listener = function () {
-    doc.removeEventListener(domContentLoaded, listener)
-    loaded = 1
-    while (listener = fns.shift()) listener()
-  })
-
-  return function (fn) {
-    loaded ? fn() : fns.push(fn)
-  }
-
-});
-
-},{}],18:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 function ToObject(val) {
@@ -1015,18 +939,658 @@ module.exports = Object.assign || function (target, source) {
 	return to;
 };
 
-},{}],19:[function(require,module,exports){
-module.exports = Object.setPrototypeOf || {__proto__:[]} instanceof Array ? setProtoOf : mixinProperties;
+},{}],17:[function(require,module,exports){
+/*!
+Copyright (C) 2014 by WebReflection
 
-function setProtoOf(obj, proto) {
-	obj.__proto__ = proto;
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+(function(window, document, Object, REGISTER_ELEMENT){'use strict';
+
+// in case it's there or already patched
+if (REGISTER_ELEMENT in document) return;
+
+// DO NOT USE THIS FILE DIRECTLY, IT WON'T WORK
+// THIS IS A PROJECT BASED ON A BUILD SYSTEM
+// THIS FILE IS JUST WRAPPED UP RESULTING IN
+// build/document-register-element.js
+// and its .max.js counter part
+
+var
+  // IE < 11 only + old WebKit for attributes + feature detection
+  EXPANDO_UID = '__' + REGISTER_ELEMENT + (Math.random() * 10e4 >> 0),
+
+  // shortcuts and costants
+  ATTACHED = 'attached',
+  DETACHED = 'detached',
+  EXTENDS = 'extends',
+  ADDITION = 'ADDITION',
+  MODIFICATION = 'MODIFICATION',
+  REMOVAL = 'REMOVAL',
+  DOM_ATTR_MODIFIED = 'DOMAttrModified',
+  DOM_CONTENT_LOADED = 'DOMContentLoaded',
+  DOM_SUBTREE_MODIFIED = 'DOMSubtreeModified',
+  PREFIX_TAG = '<',
+  PREFIX_IS = '=',
+
+  // valid and invalid node names
+  validName = /^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$/,
+  invalidNames = [
+    'ANNOTATION-XML',
+    'COLOR-PROFILE',
+    'FONT-FACE',
+    'FONT-FACE-SRC',
+    'FONT-FACE-URI',
+    'FONT-FACE-FORMAT',
+    'FONT-FACE-NAME',
+    'MISSING-GLYPH'
+  ],
+
+  // registered types and their prototypes
+  types = [],
+  protos = [],
+
+  // to query subnodes
+  query = '',
+
+  // html shortcut used to feature detect
+  documentElement = document.documentElement,
+
+  // ES5 inline helpers || basic patches
+  indexOf = types.indexOf || function (v) {
+    for(var i = this.length; i-- && this[i] !== v;){}
+    return i;
+  },
+
+  // other helpers / shortcuts
+  OP = Object.prototype,
+  hOP = OP.hasOwnProperty,
+  iPO = OP.isPrototypeOf,
+
+  defineProperty = Object.defineProperty,
+  gOPD = Object.getOwnPropertyDescriptor,
+  gOPN = Object.getOwnPropertyNames,
+  gPO = Object.getPrototypeOf,
+  sPO = Object.setPrototypeOf,
+
+  // jshint proto: true
+  hasProto = !!Object.__proto__,
+
+  // used to create unique instances
+  create = Object.create || function Bridge(proto) {
+    // silly broken polyfill probably ever used but short enough to work
+    return proto ? ((Bridge.prototype = proto), new Bridge()) : this;
+  },
+
+  // will set the prototype if possible
+  // or copy over all properties
+  setPrototype = sPO || (
+    hasProto ?
+      function (o, p) {
+        o.__proto__ = p;
+        return o;
+      } : (
+    (gOPN && gOPD) ?
+      (function(){
+        function setProperties(o, p) {
+          for (var
+            key,
+            names = gOPN(p),
+            i = 0, length = names.length;
+            i < length; i++
+          ) {
+            key = names[i];
+            if (!hOP.call(o, key)) {
+              defineProperty(o, key, gOPD(p, key));
+            }
+          }
+        }
+        return function (o, p) {
+          do {
+            setProperties(o, p);
+          } while ((p = gPO(p)));
+          return o;
+        };
+      }()) :
+      function (o, p) {
+        for (var key in p) {
+          o[key] = p[key];
+        }
+        return o;
+      }
+  )),
+
+  // DOM shortcuts and helpers, if any
+
+  MutationObserver = window.MutationObserver ||
+                     window.WebKitMutationObserver,
+
+  HTMLElementPrototype = (
+    window.HTMLElement ||
+    window.Element ||
+    window.Node
+  ).prototype,
+
+  IE8 = !iPO.call(HTMLElementPrototype, documentElement),
+
+  isValidNode = IE8 ?
+    function (node) {
+      return node.nodeType === 1;
+    } :
+    function (node) {
+      return iPO.call(HTMLElementPrototype, node);
+    },
+
+  targets = IE8 && [],
+
+  cloneNode = HTMLElementPrototype.cloneNode,
+  setAttribute = HTMLElementPrototype.setAttribute,
+  removeAttribute = HTMLElementPrototype.removeAttribute,
+
+  // replaced later on
+  createElement = document.createElement,
+
+  // shared observer for all attributes
+  attributesObserver = MutationObserver && {
+    attributes: true,
+    characterData: true,
+    attributeOldValue: true
+  },
+
+  // useful to detect only if there's no MutationObserver
+  DOMAttrModified = MutationObserver || function(e) {
+    doesNotSupportDOMAttrModified = false;
+    documentElement.removeEventListener(
+      DOM_ATTR_MODIFIED,
+      DOMAttrModified
+    );
+  },
+
+  // internal flags
+  setListener = false,
+  doesNotSupportDOMAttrModified = true,
+  dropDomContentLoaded = true,
+
+  // optionally defined later on
+  onSubtreeModified,
+  callDOMAttrModified,
+  getAttributesMirror,
+  observer,
+
+  // based on setting prototype capability
+  // will check proto or the expando attribute
+  // in order to setup the node once
+  patchIfNotAlready,
+  patch
+;
+
+if (sPO || hasProto) {
+    patchIfNotAlready = function (node, proto) {
+      if (!iPO.call(proto, node)) {
+        setupNode(node, proto);
+      }
+    };
+    patch = setupNode;
+} else {
+    patchIfNotAlready = function (node, proto) {
+      if (!node[EXPANDO_UID]) {
+        node[EXPANDO_UID] = Object(true);
+        setupNode(node, proto);
+      }
+    };
+    patch = patchIfNotAlready;
+}
+if (IE8) {
+  doesNotSupportDOMAttrModified = false;
+  (function (){
+    var
+      descriptor = gOPD(HTMLElementPrototype, 'addEventListener'),
+      addEventListener = descriptor.value,
+      patchedRemoveAttribute = function (name) {
+        var e = new CustomEvent(DOM_ATTR_MODIFIED, {bubles: true});
+        e.attrName = name;
+        e.prevValue = this.getAttribute(name);
+        e.newValue = null;
+        e[REMOVAL] = e.attrChange = 2;
+        removeAttribute.call(this, name);
+        this.dispatchEvent(e);
+      },
+      patchedSetAttribute = function (name, value) {
+        var
+          had = this.hasAttribute(name),
+          old = had && this.getAttribute(name),
+          e = new CustomEvent(DOM_ATTR_MODIFIED, {bubles: true})
+        ;
+        setAttribute.call(this, name, value);
+        e.attrName = name;
+        e.prevValue = had ? old : null;
+        e.newValue = value;
+        if (had) {
+          e[MODIFICATION] = e.attrChange = 1;
+        } else {
+          e[ADDITION] = e.attrChange = 0;
+        }
+        this.dispatchEvent(e);
+      },
+      onPropertyChange = function (e) {
+        // jshint eqnull:true
+        var
+          node = e.currentTarget,
+          superSecret = node[EXPANDO_UID],
+          propertyName = e.propertyName,
+          event
+        ;
+        if (superSecret.hasOwnProperty(propertyName)) {
+          superSecret = superSecret[propertyName];
+          event = new CustomEvent(DOM_ATTR_MODIFIED, {bubles: true});
+          event.attrName = superSecret.name;
+          event.prevValue = superSecret.value || null;
+          event.newValue = (superSecret.value = node[propertyName] || null);
+          if (event.prevValue == null) {
+            event[ADDITION] = event.attrChange = 0;
+          } else {
+            event[MODIFICATION] = event.attrChange = 1;
+          }
+          node.dispatchEvent(event);
+        }
+      }
+    ;
+    descriptor.value = function (type, handler, capture) {
+      if (
+        type === DOM_ATTR_MODIFIED &&
+        this.attributeChangedCallback &&
+        this.setAttribute !== patchedSetAttribute
+      ) {
+        this[EXPANDO_UID] = {
+          className: {
+            name: 'class',
+            value: this.className
+          }
+        };
+        this.setAttribute = patchedSetAttribute;
+        this.removeAttribute = patchedRemoveAttribute;
+        addEventListener.call(this, 'propertychange', onPropertyChange);
+      }
+      addEventListener.call(this, type, handler, capture);
+    };
+    defineProperty(HTMLElementPrototype, 'addEventListener', descriptor);
+  }());
+} else if (!MutationObserver) {
+  documentElement.addEventListener(DOM_ATTR_MODIFIED, DOMAttrModified);
+  documentElement.setAttribute(EXPANDO_UID, 1);
+  documentElement.removeAttribute(EXPANDO_UID);
+  if (doesNotSupportDOMAttrModified) {
+    onSubtreeModified = function (e) {
+      var
+        node = this,
+        oldAttributes,
+        newAttributes,
+        key
+      ;
+      if (node === e.target) {
+        oldAttributes = node[EXPANDO_UID];
+        node[EXPANDO_UID] = (newAttributes = getAttributesMirror(node));
+        for (key in newAttributes) {
+          if (!(key in oldAttributes)) {
+            // attribute was added
+            return callDOMAttrModified(
+              0,
+              node,
+              key,
+              oldAttributes[key],
+              newAttributes[key],
+              ADDITION
+            );
+          } else if (newAttributes[key] !== oldAttributes[key]) {
+            // attribute was changed
+            return callDOMAttrModified(
+              1,
+              node,
+              key,
+              oldAttributes[key],
+              newAttributes[key],
+              MODIFICATION
+            );
+          }
+        }
+        // checking if it has been removed
+        for (key in oldAttributes) {
+          if (!(key in newAttributes)) {
+            // attribute removed
+            return callDOMAttrModified(
+              2,
+              node,
+              key,
+              oldAttributes[key],
+              newAttributes[key],
+              REMOVAL
+            );
+          }
+        }
+      }
+    };
+    callDOMAttrModified = function (
+      attrChange,
+      currentTarget,
+      attrName,
+      prevValue,
+      newValue,
+      action
+    ) {
+      var e = {
+        attrChange: attrChange,
+        currentTarget: currentTarget,
+        attrName: attrName,
+        prevValue: prevValue,
+        newValue: newValue
+      };
+      e[action] = attrChange;
+      onDOMAttrModified(e);
+    };
+    getAttributesMirror = function (node) {
+      for (var
+        attr, name,
+        result = {},
+        attributes = node.attributes,
+        i = 0, length = attributes.length;
+        i < length; i++
+      ) {
+        attr = attributes[i];
+        name = attr.name;
+        if (name !== 'setAttribute') {
+          result[name] = attr.value;
+        }
+      }
+      return result;
+    };
+  }
 }
 
-function mixinProperties(obj, proto) {
-	for (var prop in proto) {
-		obj[prop] = proto[prop];
-	}
+function loopAndVerify(list, action) {
+  for (var i = 0, length = list.length; i < length; i++) {
+    verifyAndSetupAndAction(list[i], action);
+  }
 }
 
-},{}]},{},[13])(13)
+function loopAndSetup(list) {
+  for (var i = 0, length = list.length, node; i < length; i++) {
+    node = list[i];
+    patch(node, protos[getTypeIndex(node)]);
+  }
+}
+
+function executeAction(action) {
+  return function (node) {
+    if (isValidNode(node)) {
+      verifyAndSetupAndAction(node, action);
+      loopAndVerify(
+        node.querySelectorAll(query),
+        action
+      );
+    }
+  };
+}
+
+function getTypeIndex(target) {
+  var
+    is = target.getAttribute('is'),
+    nodeName = target.nodeName.toUpperCase(),
+    i = indexOf.call(
+      types,
+      is ?
+          PREFIX_IS + is.toUpperCase() :
+          PREFIX_TAG + nodeName
+    )
+  ;
+  return is && -1 < i && !isInQSA(nodeName, is) ? -1 : i;
+}
+
+function isInQSA(name, type) {
+  return -1 < query.indexOf(name + '[is="' + type + '"]');
+}
+
+function onDOMAttrModified(e) {
+  var
+    node = e.currentTarget,
+    attrChange = e.attrChange,
+    prevValue = e.prevValue,
+    newValue = e.newValue
+  ;
+  if (node.attributeChangedCallback &&
+      e.attrName !== 'style') {
+    node.attributeChangedCallback(
+      e.attrName,
+      attrChange === e[ADDITION] ? null : prevValue,
+      attrChange === e[REMOVAL] ? null : newValue
+    );
+  }
+}
+
+function onDOMNode(action) {
+  var executor = executeAction(action);
+  return function (e) {
+    executor(e.target);
+  };
+}
+
+function onReadyStateChange(e) {
+  if (dropDomContentLoaded) {
+    dropDomContentLoaded = false;
+    e.currentTarget.removeEventListener(DOM_CONTENT_LOADED, onReadyStateChange);
+  }
+  loopAndVerify(
+    (e.target || document).querySelectorAll(query),
+    e.detail === DETACHED ? DETACHED : ATTACHED
+  );
+  if (IE8) purge();
+}
+
+function patchedSetAttribute(name, value) {
+  // jshint validthis:true
+  var self = this;
+  setAttribute.call(self, name, value);
+  onSubtreeModified.call(self, {target: self});
+}
+
+function setupNode(node, proto) {
+  setPrototype(node, proto);
+  if (observer) {
+    observer.observe(node, attributesObserver);
+  } else {
+    if (doesNotSupportDOMAttrModified) {
+      node.setAttribute = patchedSetAttribute;
+      node[EXPANDO_UID] = getAttributesMirror(node);
+      node.addEventListener(DOM_SUBTREE_MODIFIED, onSubtreeModified);
+    }
+    node.addEventListener(DOM_ATTR_MODIFIED, onDOMAttrModified);
+  }
+  if (node.createdCallback) {
+    node.created = true;
+    node.createdCallback();
+    node.created = false;
+  }
+}
+
+function purge() {
+  for (var
+    node,
+    i = 0,
+    length = targets.length;
+    i < length; i++
+  ) {
+    node = targets[i];
+    if (!documentElement.contains(node)) {
+      targets.splice(i, 1);
+      verifyAndSetupAndAction(node, DETACHED);
+    }
+  }
+}
+
+function verifyAndSetupAndAction(node, action) {
+  var
+    fn,
+    i = getTypeIndex(node)
+  ;
+  if (-1 < i) {
+    patchIfNotAlready(node, protos[i]);
+    i = 0;
+    if (action === ATTACHED && !node[ATTACHED]) {
+      node[DETACHED] = false;
+      node[ATTACHED] = true;
+      i = 1;
+      if (IE8 && indexOf.call(targets, node) < 0) {
+        targets.push(node);
+      }
+    } else if (action === DETACHED && !node[DETACHED]) {
+      node[ATTACHED] = false;
+      node[DETACHED] = true;
+      i = 1;
+    }
+    if (i && (fn = node[action + 'Callback'])) fn.call(node);
+  }
+}
+
+// set as enumerable, writable and configurable
+document[REGISTER_ELEMENT] = function registerElement(type, options) {
+  upperType = type.toUpperCase();
+  if (!setListener) {
+    // only first time document.registerElement is used
+    // we need to set this listener
+    // setting it by default might slow down for no reason
+    setListener = true;
+    if (MutationObserver) {
+      observer = (function(attached, detached){
+        function checkEmAll(list, callback) {
+          for (var i = 0, length = list.length; i < length; callback(list[i++])){}
+        }
+        return new MutationObserver(function (records) {
+          for (var
+            current, node,
+            i = 0, length = records.length; i < length; i++
+          ) {
+            current = records[i];
+            if (current.type === 'childList') {
+              checkEmAll(current.addedNodes, attached);
+              checkEmAll(current.removedNodes, detached);
+            } else {
+              node = current.target;
+              if (node.attributeChangedCallback &&
+                  current.attributeName !== 'style') {
+                node.attributeChangedCallback(
+                  current.attributeName,
+                  current.oldValue,
+                  node.getAttribute(current.attributeName)
+                );
+              }
+            }
+          }
+        });
+      }(executeAction(ATTACHED), executeAction(DETACHED)));
+      observer.observe(
+        document,
+        {
+          childList: true,
+          subtree: true
+        }
+      );
+    } else {
+      document.addEventListener('DOMNodeInserted', onDOMNode(ATTACHED));
+      document.addEventListener('DOMNodeRemoved', onDOMNode(DETACHED));
+    }
+
+    document.addEventListener(DOM_CONTENT_LOADED, onReadyStateChange);
+    document.addEventListener('readystatechange', onReadyStateChange);
+
+    document.createElement = function (localName, typeExtension) {
+      var
+        node = createElement.apply(document, arguments),
+        name = '' + localName,
+        i = indexOf.call(
+          types,
+          (typeExtension ? PREFIX_IS : PREFIX_TAG) +
+          (typeExtension || name).toUpperCase()
+        ),
+        setup = -1 < i
+      ;
+      if (typeExtension) {
+        node.setAttribute('is', typeExtension = typeExtension.toLowerCase());
+        if (setup) {
+          setup = isInQSA(name.toUpperCase(), typeExtension);
+        }
+      }
+      if (setup) patch(node, protos[i]);
+      return node;
+    };
+
+    HTMLElementPrototype.cloneNode = function (deep) {
+      var
+        node = cloneNode.call(this, !!deep),
+        i = getTypeIndex(node)
+      ;
+      if (-1 < i) patch(node, protos[i]);
+      if (deep) loopAndSetup(node.querySelectorAll(query));
+      return node;
+    };
+  }
+
+  if (-2 < (
+    indexOf.call(types, PREFIX_IS + upperType) +
+    indexOf.call(types, PREFIX_TAG + upperType)
+  )) {
+    throw new Error('A ' + type + ' type is already registered');
+  }
+
+  if (!validName.test(upperType) || -1 < indexOf.call(invalidNames, upperType)) {
+    throw new Error('The type ' + type + ' is invalid');
+  }
+
+  var
+    constructor = function () {
+      return document.createElement(nodeName, extending && upperType);
+    },
+    opt = options || OP,
+    extending = hOP.call(opt, EXTENDS),
+    nodeName = extending ? options[EXTENDS].toUpperCase() : upperType,
+    i = types.push((extending ? PREFIX_IS : PREFIX_TAG) + upperType) - 1,
+    upperType
+  ;
+
+  query = query.concat(
+    query.length ? ',' : '',
+    extending ? nodeName + '[is="' + type.toLowerCase() + '"]' : nodeName
+  );
+
+  constructor.prototype = (
+    protos[i] = hOP.call(opt, 'prototype') ?
+      opt.prototype :
+      create(HTMLElementPrototype)
+  );
+
+  loopAndVerify(
+    document.querySelectorAll(query),
+    ATTACHED
+  );
+
+  return constructor;
+};
+
+}(window, document, Object, 'registerElement'));
+},{}]},{},[17,11])(17)
 });

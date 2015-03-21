@@ -8,7 +8,7 @@ var sizereport = require('gulp-sizereport');
 var wrap = require("gulp-wrap");
 var version = require('./package.json').version;
 var pkg = require('./package.json');
-var jsdoc = require("gulp-jsdoc");
+var markdox = require("gulp-markdox");
 var eslint = require('gulp-eslint')
 
 var through2 = require('through2');
@@ -34,10 +34,12 @@ gulp.task('scriptsTest', [/*'lint'*/], function () {
 
 	return gulp.src('lib/__tests__/index.js')
 		.pipe(through2.obj(function (file, enc, next){
-			browserify(file.path,{
+			browserify({
 				standalone: 'gremlins',
 				debug: false
 			})
+				.add('document-register-element/build/document-register-element.max.js')
+				.add(file.path)
 				.transform('babelify')
 				.bundle(function(err, res){
 					// assumes file.contents is a Buffer
@@ -58,21 +60,21 @@ gulp.task('scriptsTest', [/*'lint'*/], function () {
 
 gulp.task('uglify', ['lint'], function () {
 
-	var b, browserified;
-
-	b = browserify({
-		standalone: 'gremlins',
-		debug: false
-	})
-		.transform(babelify);
-
-	browserified = transform(function (filename) {
-		b.add(filename);
-		return b.bundle();
-	});
-
 	return gulp.src('lib/gremlins.js')
-		.pipe(browserified)
+		.pipe(through2.obj(function (file, enc, next){
+			browserify({
+				standalone: 'gremlins',
+				debug: false
+			})
+				.add('document-register-element')
+				.add(file.path)
+				.transform('babelify')
+				.bundle(function(err, res){
+					// assumes file.contents is a Buffer
+					file.contents = res;
+					next(null, file);
+				});
+		}))
 		.pipe(wrap({src: 'build/licenseHeader.tpl'}, {version: version}, {variable: 'data'}))
 		.pipe(gulp.dest('./dist'))
 		.pipe(uglify({
@@ -109,7 +111,7 @@ gulp.task("reload", function () {
 });
 
 gulp.task('watch', function () {
-	gulp.watch(['lib/**/*'], ['scriptsTest', 'reload'/*, 'doc'*/]);
+	gulp.watch(['lib/**/*'], ['scriptsTest', 'reload', 'doc']);
 });
 
 gulp.task('sizereport', function () {
@@ -139,22 +141,13 @@ var tpl = {
 };
 
 gulp.task("doc", function () {
-	return gulp.src(["index.js", "./lib/**/*.js", '!./lib/**/{__tests__,__tests__/**}', "README.md"])
-		.pipe(jsdoc.parser({
-			plugins: ['plugins/markdown'],
-			name: pkg.name,
-			description: pkg.description,
-			version: pkg.version,
-			licenses: pkg.licenses || [pkg.license],
+	return gulp.src(["./lib/**/*.js", '!./lib/**/{__tests__,__tests__/**}'])
+		.pipe(markdox())
+		.pipe(rename({
+			extname: '.md'
 		}))
-		// Then generate the documentation and
-		.pipe(jsdoc.generator('./doc/', tpl, {
-			'private': false,
-			monospaceLinks: false,
-			cleverLinks: false,
-			outputSourceFiles: true
-		}));
+		.pipe(gulp.dest("./doc"));
 });
 
-gulp.task('default', ['connect', 'scriptsTest', /*'doc',*/ 'watch']);
+gulp.task('default', ['connect', 'scriptsTest', 'doc', 'watch']);
 gulp.task('build', ['uglify', 'sizereport']);

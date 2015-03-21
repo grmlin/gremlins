@@ -1,4 +1,13 @@
 # Release notes
+## v0.8.0
+
+### New
+
+- complete rewrite with ES6 and custom elements
+
+### Removed
+
+- nearly everything
 
 ## v0.6.0 *2013-11-10*
 
