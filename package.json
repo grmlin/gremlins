@@ -32,15 +32,12 @@
     "gulp-eslint": "^0.7.0",
     "gulp-gzip": "0.0.5",
     "gulp-include": "~0.2.1",
-    "gulp-markdox": "^0.1.1",
     "gulp-rename": "~1.0.0",
     "gulp-sizereport": "^1.0.2",
     "gulp-sourcemaps": "^1.5.0",
     "gulp-uglify": "^1.1.0",
     "gulp-util": "^3.0.4",
     "gulp-wrap": "^0.11.0",
-    "jshint-stylish": "^1.0.1",
-    "through2": "^0.6.3",
-    "vinyl-transform": "^1.0.0"
+    "through2": "^0.6.3"
   }
 }

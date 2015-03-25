@@ -14,8 +14,6 @@ var eslint = require('gulp-eslint')
 var through2 = require('through2');
 var browserify = require('browserify');
 var babelify = require("babelify");
-var transform = require('vinyl-transform');
-var sourcemaps = require('gulp-sourcemaps');
 
 
 gulp.task('lint', function () {
@@ -119,33 +117,5 @@ gulp.task('sizereport', function () {
 		}));
 });
 
-var opts = {
-	showPrivate: true,
-	monospaceLinks: true,
-	cleverLinks: true,
-	outputSourceFiles: true
-};
-
-var tpl = {
-	path: 'ink-docstrap',
-	systemName: pkg.name,
-	footer: 'Generated with gulp',
-	copyright: 'Copyright WebItUp 2014',
-	navType: 'vertical',
-	theme: 'spacelab',
-	linenums: true,
-	collapseSymbols: false,
-	inverseNav: false
-};
-
-gulp.task("doc", function () {
-	return gulp.src(["./lib/**/*.js", '!./lib/**/{__tests__,__tests__/**}'])
-		.pipe(markdox())
-		.pipe(rename({
-			extname: '.md'
-		}))
-		.pipe(gulp.dest("./doc"));
-});
-
-gulp.task('default', ['connect', 'scriptsTest', 'doc', 'watch']);
+gulp.task('default', ['connect', 'scriptsTest', 'watch']);
 gulp.task('build', ['uglify', 'sizereport']);
