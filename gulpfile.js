@@ -62,12 +62,10 @@ gulp.task('uglify', ['lint'], function () {
 
 	return gulp.src('lib/gremlins.js')
 		.pipe(through2.obj(function (file, enc, next){
-			browserify({
+			browserify(file.path, {
 				standalone: 'gremlins',
 				debug: false
 			})
-				.add('document-register-element')
-				.add(file.path)
 				.transform('babelify')
 				.bundle(function(err, res){
 					// assumes file.contents is a Buffer

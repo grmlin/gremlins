@@ -66,7 +66,7 @@ If you're mixins and componenet use the same method names, they will be decorate
 #### tagName
 optional tag name. If you omit the `tagName`, the custom element will have the tag `${name}-gremlin`.  
 
-Be aware you have to add a minimum of one hypen! (custom elements work this way).  
+Be aware you have to add a minimum of one hyphen! (custom elements work this way).  
 `tagName: responsive-slider` **ok**  
 `tagName: slider` **error**
 
