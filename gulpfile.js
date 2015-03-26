@@ -32,12 +32,10 @@ gulp.task('scriptsTest', [/*'lint'*/], function () {
 
 	return gulp.src('lib/__tests__/index.js')
 		.pipe(through2.obj(function (file, enc, next){
-			browserify({
+			browserify(file.path, {
 				standalone: 'gremlins',
 				debug: false
 			})
-				.add('document-register-element/build/document-register-element.max.js')
-				.add(file.path)
 				.transform('babelify')
 				.bundle(function(err, res){
 					// assumes file.contents is a Buffer
@@ -71,14 +69,9 @@ gulp.task('uglify', ['lint'], function () {
 					next(null, file);
 				});
 		}))
-		.pipe(wrap({src: 'build/licenseHeader.tpl'}, {version: version}, {variable: 'data'}))
-		.pipe(gulp.dest('./dist'))
 		.pipe(uglify({
 			outSourceMap: false,
 			mangle: true
-		}))
-		.pipe(rename({
-			suffix: ".min"
 		}))
 		.pipe(wrap({src: 'build/licenseHeader.tpl'}, {version: version}, {variable: 'data'}))
 		.pipe(gulp.dest('dist'))
@@ -107,7 +100,7 @@ gulp.task("reload", function () {
 });
 
 gulp.task('watch', function () {
-	gulp.watch(['lib/**/*'], ['scriptsTest', 'reload', 'doc']);
+	gulp.watch(['lib/**/*'], ['scriptsTest', 'reload']);
 });
 
 gulp.task('sizereport', function () {

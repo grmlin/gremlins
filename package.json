@@ -1,8 +1,8 @@
 {
   "name": "gremlins",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A dependency-free library to build Javascript components for all your websites.",
-  "main": "dist/gremlins.min.js",
+  "main": "dist/gremlins.js",
   "keywords": [
     "MutationObserver",
     "components"
