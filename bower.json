@@ -1,0 +1,20 @@
+{
+  "name": "gremlins",
+  "main": "dist/gremlins.js",
+  "version": "0.8.2",
+  "homepage": "http://grml.in",
+  "authors": [
+    "Andreas Wehr"
+  ],
+  "description": "dead simple web components",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "web",
+    "components"
+  ],
+  "license": "MIT"
+}
