@@ -237,10 +237,11 @@ module.exports = {
 },{}],7:[function(require,module,exports){
 "use strict";
 
-var Gremlin = require("../Gremlin");
+var gremlins = require("../../index"),
+    Gremlin = require("../Gremlin");
 
 describe("Gremlin", function () {
-	var Gizmo = Gremlin.create({
+	var Gizmo = gremlins.create({
 		name: "Gizmo",
 		initialize: function initialize() {
 			this.el.innerHTML = "Gizmo created: " + this.foo();
@@ -250,6 +251,14 @@ describe("Gremlin", function () {
 		}
 	});
 
+	it("create inherits all basic methods", function () {
+		var G = gremlins.create({
+			name: "BaseMethods"
+		});
+		Object.keys(Gremlin).forEach(function (key) {
+			expect(G[key]).to.equal(Gremlin[key]);
+		});
+	});
 	it("gremlins can create gremlins", function () {
 		expect(Gizmo.create).to.be.a("function");
 		expect(Gizmo.foo).to.be.a("function");
@@ -276,7 +285,7 @@ describe("Gremlin", function () {
 				return this.foo() + " bar";
 			}
 		};
-		var Stripe = Gremlin.create(proto);
+		var Stripe = gremlins.create(proto);
 		var g = Object.create(Stripe);
 		expect(g.name).to.equal("Stripe");
 		expect(g.hasOwnProperty("name")).to.not.be.ok();
@@ -312,7 +321,7 @@ describe("Gremlin", function () {
 
 		var proto = {};
 		expect(function () {
-			Gremlin.create(proto);
+			gremlins.create(proto);
 		}).to["throw"]();
 	});
 
@@ -333,7 +342,7 @@ describe("Gremlin", function () {
 			},
 			Mixin2: "Mixin2"
 		};
-		Gremlin.create({
+		gremlins.create({
 			mixins: [Mixin, Mixin2],
 			name: "G2",
 			foo: function foo() {
@@ -355,7 +364,7 @@ describe("Gremlin", function () {
 
 	it("binds the correct dom element", function (done) {
 
-		Gremlin.create({
+		gremlins.create({
 			name: "G3",
 			initialize: function initialize() {
 				try {
@@ -375,7 +384,7 @@ describe("Gremlin", function () {
 		this.timeout(5000);
 
 		var count = 0;
-		Gremlin.create({
+		gremlins.create({
 			name: "G4",
 			initialize: function initialize() {
 				count++;
@@ -399,9 +408,51 @@ describe("Gremlin", function () {
 			el.parentNode.removeChild(el);
 		}, 1000);
 	});
+
+	it("destroys nested gremlins on removal", function (done) {
+		this.timeout(5000);
+
+		var count = 0;
+		gremlins.create({
+			name: "G5",
+			initialize: function initialize() {
+				count++;
+			},
+			destroy: function destroy() {
+				count++;
+
+				try {
+					expect(document.documentElement.contains(this.el)).to.not.be.ok();
+				} catch (e) {
+					done(e);
+				}
+
+				if (count === 3) {
+					done();
+				}
+			}
+		});
+
+		gremlins.create({
+			name: "G6",
+			initialize: function initialize() {
+				count++;
+			}
+		});
+
+		var el = document.createElement("g5-gremlin");
+		var nested = document.createElement("g6-gremlin");
+
+		document.body.appendChild(el);
+		el.appendChild(nested);
+
+		setTimeout(function () {
+			el.parentNode.removeChild(el);
+		}, 1000);
+	});
 });
 
-},{"../Gremlin":4}],8:[function(require,module,exports){
+},{"../../index":1,"../Gremlin":4}],8:[function(require,module,exports){
 "use strict";
 
 var nameGenerator = require("./nameGenerator");
@@ -534,7 +585,7 @@ describe("gremlins", function () {
 
 	it("the namespace should exist", function () {
 		expect(gremlins).to.be.an("object");
-		expect(gremlins.create).to.be(Gremlin.create);
+		expect(gremlins.create).to.be.a("function");
 	});
 
 	/*
@@ -908,7 +959,7 @@ module.exports = {
   * @method create
   * @api public
   */
-	create: Gremlin.create
+	create: Gremlin.create.bind(Gremlin)
 };
 
 },{"./Gremlin":4,"./consoleShim":13,"document-register-element":16}],15:[function(require,module,exports){
