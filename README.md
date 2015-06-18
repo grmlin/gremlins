@@ -10,8 +10,7 @@ Throw in some bundled js, add the corresponding tags to your HTML, and you're go
 
 ```javascript
 var gremlins = require('gremlins');
-gremlins.create({
-  name: 'Slider'
+gremlins.create('my-slider', {
   initialize: function(){
     this.initSlider();
   }
@@ -20,9 +19,9 @@ gremlins.create({
 ```
 
 ```html
-<slider-gremlin>
+<my-slider>
   <!-- awesome slider HTML -->
-</slider-gremlin>
+</my-slider>
 ```
 
 ## Installation
@@ -38,7 +37,7 @@ gremlins.create({
     
 ### global
 
-    <script src="gremlin.min.js" />
+    <script src="gremlin.js" />
     
     
 
@@ -60,16 +59,6 @@ Every component will inherit from `Gremlin`, the base prototype of all component
 An object, or an array of objects, used as mixin(s). This way it's easy to extend you're components capabilities in a modular way.  
 If you're mixins and componenet use the same method names, they will be decorated and called in the order they were added to the spec.
 
-#### name
-**required** name of this component
-
-#### tagName
-optional tag name. If you omit the `tagName`, the custom element will have the tag `${name}-gremlin`.  
-
-Be aware you have to add a minimum of one hyphen! (custom elements work this way).  
-`tagName: responsive-slider` **ok**  
-`tagName: slider` **error**
-
 #### el
 The dom element for this component. Available inside the `initialize` call
 
@@ -85,14 +74,12 @@ This is the method `gremlins.create` calls!
 
 ----
 
-### gremlins.create(Spec)
+### gremlins.create(tagName, Spec)
 
-Create a new spec for components with the name `name` 
+Create a new spec for components
 
 ```js
-gremlins.create({
-  name: 'foo', // required name property
-  tagName: 'foo-bar', // optional tagname used for the custom dom element. Defaults to " ${name}-gremlin"
+gremlins.create('foo-bar', {
   initialize: function(){
   	// your constructor function called in the context of every dom element found for this spec
   	this.hello();

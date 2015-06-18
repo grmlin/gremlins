@@ -77,17 +77,12 @@ gulp.task('uglify', ['lint', 'clean-dist'], function () {
 			mangle: true
 		}))
 		.pipe(rename(function (path) {
-			gutil.log(path);
-
 			if (path.extname === '.js' && filenames[path.basename]) {
 				path.basename = filenames[path.basename];
 			}
-			//path.dirname += "/ciao";
-			//path.basename += "-goodbye";
-			//path.extname = ".md"
 		}))
 		.pipe(wrap({src: 'build/licenseHeader.tpl'}, {version: version}, {variable: 'data'}))
-		.pipe(gulp.dest('dist'))
+		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('clean-dist', function () {
@@ -103,11 +98,6 @@ gulp.task('connect', function () {
 	});
 });
 
-
-gulp.task("compress", function () {
-	gulp.src("dist/watched.min.js")
-		.pipe(gulp.dest("dist"));
-});
 
 gulp.task("reload", function () {
 	gulp.src('lib/watched.js')
