@@ -1,20 +1,24 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var rename = require("gulp-rename");
-var gzip = require("gulp-gzip");
 var connect = require('gulp-connect');
 var sizereport = require('gulp-sizereport');
 var wrap = require("gulp-wrap");
 var version = require('./package.json').version;
 var pkg = require('./package.json');
-var markdox = require("gulp-markdox");
 var eslint = require('gulp-eslint')
-
+var clean = require('gulp-clean');
 var through2 = require('through2');
 var browserify = require('browserify');
 var babelify = require("babelify");
+var rename = require("gulp-rename");
 
+var filenames = {
+	'index': 'gremlins',
+	'native': 'gremlins.native'
+};
 
 gulp.task('lint', function () {
 	// Note: To have the process exit with an error code (1) on
@@ -29,15 +33,14 @@ gulp.task('lint', function () {
 gulp.task('scriptsTest', [/*'lint'*/], function () {
 
 
-
 	return gulp.src('lib/__tests__/index.js')
-		.pipe(through2.obj(function (file, enc, next){
+		.pipe(through2.obj(function (file, enc, next) {
 			browserify(file.path, {
 				standalone: 'gremlins',
 				debug: false
 			})
 				.transform('babelify')
-				.bundle(function(err, res){
+				.bundle(function (err, res) {
 					// assumes file.contents is a Buffer
 					file.contents = res;
 					next(null, file);
@@ -54,16 +57,16 @@ gulp.task('scriptsTest', [/*'lint'*/], function () {
 		.pipe(gulp.dest('./test/specs'));
 });
 
-gulp.task('uglify', ['lint'], function () {
+gulp.task('uglify', ['lint', 'clean-dist'], function () {
 
-	return gulp.src('lib/gremlins.js')
-		.pipe(through2.obj(function (file, enc, next){
+	return gulp.src(['index.js', 'native.js'])
+		.pipe(through2.obj(function (file, enc, next) {
 			browserify(file.path, {
 				standalone: 'gremlins',
 				debug: false
 			})
 				.transform('babelify')
-				.bundle(function(err, res){
+				.bundle(function (err, res) {
 					// assumes file.contents is a Buffer
 					file.contents = res;
 					next(null, file);
@@ -73,24 +76,36 @@ gulp.task('uglify', ['lint'], function () {
 			outSourceMap: false,
 			mangle: true
 		}))
+		.pipe(rename(function (path) {
+			gutil.log(path);
+
+			if (path.extname === '.js' && filenames[path.basename]) {
+				path.basename = filenames[path.basename];
+			}
+			//path.dirname += "/ciao";
+			//path.basename += "-goodbye";
+			//path.extname = ".md"
+		}))
 		.pipe(wrap({src: 'build/licenseHeader.tpl'}, {version: version}, {variable: 'data'}))
 		.pipe(gulp.dest('dist'))
-		.pipe(gzip())
-		.pipe(gulp.dest("dist"));
+});
+
+gulp.task('clean-dist', function () {
+	return gulp.src('dist/*', {read: false})
+		.pipe(clean());
 });
 
 gulp.task('connect', function () {
 	connect.server({
-		root: ['test'],
-		port: 8000,
-		livereload: false
-	})();
+		root: 'test',
+		livereload: false,
+		port: 8000
+	});
 });
 
 
 gulp.task("compress", function () {
 	gulp.src("dist/watched.min.js")
-		.pipe(gzip())
 		.pipe(gulp.dest("dist"));
 });
 
@@ -111,4 +126,4 @@ gulp.task('sizereport', function () {
 });
 
 gulp.task('default', ['connect', 'scriptsTest', 'watch']);
-gulp.task('build', ['uglify', 'sizereport']);
+gulp.task('build', ['uglify']);
