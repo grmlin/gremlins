@@ -143,14 +143,20 @@ module.exports = Gremlin;
 
 },{"./GremlinElement":5,"./Mixins":6,"object-assign":16}],5:[function(require,module,exports){
 'use strict';
-var Factory = require('./Factory'),
-    Data = require('./Data');
+var Factory = require('./Factory');
+var Data = require('./Data');
 
 var canRegisterElements = typeof document.registerElement === 'function';
 
 if (!canRegisterElements) {
 	throw new Error('registerElement not available. Did you include the polyfill for older browsers?');
 }
+
+var styleElement = document.createElement('style'),
+    styleSheet;
+
+document.head.appendChild(styleElement);
+styleSheet = styleElement.sheet;
 
 var addInstance = function addInstance(element, Spec) {
 	var gremlin = Factory.createInstance(element, Spec);
@@ -181,6 +187,8 @@ module.exports = {
 			name: tagName,
 			prototype: Object.create(HTMLElement.prototype, proto)
 		});
+
+		styleSheet.insertRule('' + tagName + ' { display: block }', 0);
 		return El;
 	}
 };
@@ -451,6 +459,23 @@ describe('Gremlin', function () {
 		setTimeout(function () {
 			el.parentNode.removeChild(el);
 		}, 1000);
+	});
+
+	it('adds display block to all custom gremlin elements', function (done) {
+		gremlins.create('display-test', {
+			initialize: function initialize() {
+				try {
+					var style = window.getComputedStyle(this.el);
+					expect(style.display).to.equal('block');
+					done();
+				} catch (e) {
+					done(e);
+				}
+			}
+		});
+
+		var el = document.createElement('display-test');
+		document.body.appendChild(el);
 	});
 });
 
