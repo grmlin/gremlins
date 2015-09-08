@@ -1,8 +1,8 @@
 {
   "name": "gremlins",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "dead simple web components",
-  "main": "dist/gremlins.js",
+  "main": "index.js",
   "keywords": [
     "MutationObserver",
     "components"
@@ -24,6 +24,7 @@
     "object-assign": "^3.0.0"
   },
   "devDependencies": {
+    "babel-runtime": "^5.8.19",
     "babelify": "^6.1.2",
     "browserify": "^10.2.4",
     "gulp": "^3.9.0",
