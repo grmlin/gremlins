@@ -1,6 +1,6 @@
 {
   "name": "gremlins",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "dead simple web components",
   "main": "index.js",
   "keywords": [
@@ -40,5 +40,17 @@
     "gulp-util": "^3.0.5",
     "gulp-wrap": "^0.11.0",
     "through2": "^2.0.0"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "optional": [
+            "runtime"
+          ]
+        }
+      ]
+    ]
   }
 }
