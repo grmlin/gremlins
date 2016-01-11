@@ -1,6 +1,6 @@
 {
   "name": "gremlins",
-  "version": "0.11.2",
+  "version": "0.12.0",
   "description": "dead simple web components",
   "main": "index.js",
   "keywords": [
@@ -44,12 +44,7 @@
   "browserify": {
     "transform": [
       [
-        "babelify",
-        {
-          "optional": [
-            "runtime"
-          ]
-        }
+        "babelify"
       ]
     ]
   }
