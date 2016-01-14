@@ -246,8 +246,6 @@ function getMixins(gremlin) {
 }
 
 function decorateProperty(gremlin, propertyName, property) {
-  var _arguments = arguments;
-
   var gremlinProperty = gremlin[propertyName];
   var moduleProperty = property;
   var gremlinPropertyType = typeof gremlinProperty === 'undefined' ? 'undefined' : _typeof(gremlinProperty);
@@ -256,10 +254,10 @@ function decorateProperty(gremlin, propertyName, property) {
 
   if (isSamePropType && modulePropertyType === 'function') {
     gremlin[propertyName] = function () {
-      // eslint-disable-line no-param-reassign
+      // eslint-disable-line no-param-reassign, func-names
       // call the module first
-      var moduleResult = moduleProperty.apply(gremlin, _arguments);
-      var gremlinResult = gremlinProperty.apply(gremlin, _arguments);
+      var moduleResult = moduleProperty.apply(this, arguments);
+      var gremlinResult = gremlinProperty.apply(this, arguments);
 
       try {
         return objectAssign(moduleResult, gremlinResult);
@@ -458,12 +456,16 @@ describe('Gremlin', function () {
         called++;
         if (called !== 3) {
           done(new Error('Mixins not called correctly'));
-        } else {
-          done();
         }
       },
       initialize: function initialize() {
         this.foo();
+        try {
+          expect(this.el).to.be(el);
+          done();
+        } catch (e) {
+          done(e);
+        }
       }
     });
 
