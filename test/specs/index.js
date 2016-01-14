@@ -5,82 +5,77 @@
  * The register element polyfill for older browsers
  *
  */
+
 require('document-register-element');
 
 module.exports = require('./lib/gremlins');
 
-},{"./lib/gremlins":13,"document-register-element":24}],2:[function(require,module,exports){
+},{"./lib/gremlins":13,"document-register-element":15}],2:[function(require,module,exports){
 'use strict';
 
 var uuid = require('./uuid');
 
-var exp = 'gremlins_' + uuid(),
-    cache = {};
+var exp = 'gremlins_' + uuid();
+var cache = {};
 
-var gremlinId = (function () {
-	var id = 1;
-	return function () {
-		return id++;
-	};
-})();
+var gremlinId = function gremlinId() {
+  var id = 1;
+  return function () {
+    return id++;
+  };
+}();
 
 var hasId = function hasId(element) {
-	return element[exp] !== undefined;
-},
-    setId = function setId(element) {
-	return element[exp] = gremlinId();
-},
-    getId = function getId(element) {
-	return hasId(element) ? element[exp] : setId(element);
+  return element[exp] !== undefined;
+};
+var setId = function setId(element) {
+  return element[exp] = gremlinId();
+}; // eslint-disable-line no-param-reassign
+var getId = function getId(element) {
+  return hasId(element) ? element[exp] : setId(element);
 };
 
 module.exports = {
-	addGremlin: function addGremlin(gremlin, element) {
-		var id = getId(element);
+  addGremlin: function addGremlin(gremlin, element) {
+    var id = getId(element);
 
-		if (cache[id] !== undefined) {
-			console.warn('You can\'t add another gremlin to this element, it already uses one!', element);
-		} else {
-			cache[id] = gremlin;
-		}
-	},
+    if (cache[id] !== undefined) {
+      console.warn('You can\'t add another gremlin to this element, it already uses one!', element); // eslint-disable-line no-console, max-len
+    } else {
+        cache[id] = gremlin;
+      }
+  },
+  getGremlin: function getGremlin(element) {
+    var id = getId(element);
+    var gremlin = cache[id];
 
-	getGremlin: function getGremlin(element) {
-		var id = getId(element),
-		    gremlin = cache[id];
-
-		if (gremlin === undefined) {}
-		return gremlin === undefined ? null : gremlin;
-	}
+    if (gremlin === undefined) {
+      // console.warn(`This dom element does not use any gremlins!`, element);
+    }
+    return gremlin === undefined ? null : gremlin;
+  }
 };
-
-//console.warn(`This dom element does not use any gremlins!`, element);
 
 },{"./uuid":14}],3:[function(require,module,exports){
-'use strict';
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
+"use strict";
 
 module.exports = {
-	createInstance: function createInstance(element, Spec) {
-		var gremlin = _Object$create(Spec, {
-			el: {
-				value: element,
-				writable: false
-			}
-		});
-		return gremlin;
-	}
+  createInstance: function createInstance(element, Spec) {
+    return Object.create(Spec, {
+      el: {
+        value: element,
+        writable: false
+      }
+    });
+  }
 };
 
-},{"babel-runtime/core-js/object/create":15}],4:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
-
-var objectAssign = require('object-assign'),
-    Mixins = require('./Mixins'),
-    GremlinElement = require('./GremlinElement');
+var objectAssign = require('object-assign');
+var Mixins = require('./Mixins');
+var GremlinElement = require('./GremlinElement');
 
 /**
  * ## `Gremlin`
@@ -97,60 +92,54 @@ var objectAssign = require('object-assign'),
 var specMap = {};
 
 var addSpec = function addSpec(tagName, Spec) {
-	return specMap[tagName] = Spec;
+  return specMap[tagName] = Spec;
 };
 var hasSpec = function hasSpec(tagName) {
-	return specMap[tagName] !== undefined;
+  return specMap[tagName] !== undefined;
 };
 
 var Gremlin = {
+  initialize: function initialize() {},
+  destroy: function destroy() {},
+  create: function create(tagName) {
+    var Spec = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-	initialize: function initialize() {},
+    var Parent = this;
+    var NewSpec = Object.create(Parent, {
+      name: {
+        value: tagName,
+        writable: true
+      }
+    });
 
-	destroy: function destroy() {},
+    if (typeof tagName !== 'string') {
+      throw new TypeError('Gremlins.create expects the gremlins tag name as a first argument');
+    }
+    if (hasSpec(tagName)) {
+      throw new Error('Trying to add new Gremlin spec, but a spec for ' + tagName + ' already exists.');
+    }
+    if (Spec.create !== undefined) {
+      console.warn( // eslint-disable-line no-console
+      'You are replacing the original create method for the spec of ' + tagName + '. You know what ' + 'you\'re doing, right?');
+    }
 
-	create: function create(tagName) {
-		var Spec = arguments[1] === undefined ? {} : arguments[1];
-
-		var Parent = this,
-		    NewSpec = _Object$create(Parent, {
-			name: {
-				value: tagName,
-				writable: true
-			}
-		});
-
-		if (typeof tagName !== 'string') {
-			throw new TypeError('Gremlins.create expects the gremlins tag name as a first argument');
-		}
-		if (hasSpec(tagName)) {
-			throw new Error('Trying to add new Gremlin spec, but a spec for ' + tagName + ' already exists.');
-		}
-		if (Spec.create !== undefined) {
-			console.warn('You are replacing the original create method for the spec of ' + tagName + '. You know what you\'re doing, right?');
-		}
-
-		// set up the prototype chain
-		objectAssign(NewSpec, Spec);
-		// extend the spec with it's Mixins
-		Mixins.mixinProps(NewSpec);
-		// remember this name
-		addSpec(tagName, NewSpec);
-		// and create the custom element for it
-		GremlinElement.register(tagName, NewSpec);
-		return NewSpec;
-	},
-
-	attributeDidChange: function attributeDidChange() {}
-
+    // set up the prototype chain
+    objectAssign(NewSpec, Spec);
+    // extend the spec with it's Mixins
+    Mixins.mixinProps(NewSpec);
+    // remember this name
+    addSpec(tagName, NewSpec);
+    // and create the custom element for it
+    GremlinElement.register(tagName, NewSpec);
+    return NewSpec;
+  },
+  attributeDidChange: function attributeDidChange() {}
 };
 
 module.exports = Gremlin;
 
-},{"./GremlinElement":5,"./Mixins":6,"babel-runtime/core-js/object/create":15,"object-assign":25}],5:[function(require,module,exports){
+},{"./GremlinElement":5,"./Mixins":6,"object-assign":16}],5:[function(require,module,exports){
 'use strict';
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
 
 var Factory = require('./Factory');
 var Data = require('./Data');
@@ -158,126 +147,139 @@ var Data = require('./Data');
 var canRegisterElements = typeof document.registerElement === 'function';
 
 if (!canRegisterElements) {
-	throw new Error('registerElement not available. Did you include the polyfill for older browsers?');
+  throw new Error('registerElement not available. Did you include the polyfill for older browsers?');
 }
 
-var styleElement = document.createElement('style'),
-    styleSheet;
+var styleElement = document.createElement('style');
+var styleSheet = undefined;
 
 document.head.appendChild(styleElement);
 styleSheet = styleElement.sheet;
 
-var addInstance = function addInstance(element, Spec) {
-	var gremlin = Factory.createInstance(element, Spec);
-	Data.addGremlin(gremlin, element);
-	gremlin.initialize();
-};
+function addInstance(element, Spec) {
+  var gremlin = Factory.createInstance(element, Spec);
+  Data.addGremlin(gremlin, element);
+  gremlin.initialize();
+}
 
-var removeInstance = function removeInstance(element) {
-	Data.getGremlin(element).destroy();
-};
+function removeInstance(element) {
+  Data.getGremlin(element).destroy();
+}
 
-var updateAttr = function updateAttr(element, name, previousValue, value) {
-	var gremlin = Data.getGremlin(element);
+function updateAttr(element, name, previousValue, value) {
+  var gremlin = Data.getGremlin(element);
 
-	if (gremlin !== null) {
-		gremlin.attributeDidChange(name, previousValue, value);
-	}
-};
+  if (gremlin !== null) {
+    gremlin.attributeDidChange(name, previousValue, value);
+  }
+}
 
 module.exports = {
-	register: function register(tagName, Spec) {
-		var proto = {
-			attachedCallback: {
-				value: function value() {
-					addInstance(this, Spec);
-				}
-			},
-			detachedCallback: {
-				value: function value() {
-					removeInstance(this);
-				}
-			},
-			attributeChangedCallback: {
-				value: function value(name, previousValue, _value) {
-					updateAttr(this, name, previousValue, _value);
-				}
-			}
-		};
+  register: function register(tagName, Spec) {
+    var proto = {
+      attachedCallback: {
+        value: function value() {
+          addInstance(this, Spec);
+        }
+      },
+      detachedCallback: {
+        value: function value() {
+          removeInstance(this);
+        }
+      },
+      attributeChangedCallback: {
+        value: function value(name, previousValue, _value) {
+          updateAttr(this, name, previousValue, _value);
+        }
+      }
+    };
 
-		var El = document.registerElement(tagName, {
-			name: tagName,
-			prototype: _Object$create(HTMLElement.prototype, proto)
-		});
+    // insert the rule BEFORE registering the element. This is important because they may be inline
+    // otherwise when first initialized.
+    styleSheet.insertRule(tagName + ' { display: block }', 0);
 
-		styleSheet.insertRule('' + tagName + ' { display: block }', 0);
-		return El;
-	}
+    var El = document.registerElement(tagName, {
+      name: tagName,
+      prototype: Object.create(HTMLElement.prototype, proto)
+    });
+
+    return El;
+  }
 };
 
-},{"./Data":2,"./Factory":3,"babel-runtime/core-js/object/create":15}],6:[function(require,module,exports){
+},{"./Data":2,"./Factory":3}],6:[function(require,module,exports){
 'use strict';
 
-var _Object$keys = require('babel-runtime/core-js/object/keys')['default'];
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+  return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
 
 var objectAssign = require('object-assign');
 
 var getMixins = function getMixins(gremlin) {
-	return Array.isArray(gremlin.mixins) ? gremlin.mixins : gremlin.mixins ? [gremlin.mixins] : [];
+  if (Array.isArray(gremlin.mixins)) {
+    return gremlin.mixins;
+  }
+
+  return gremlin.mixins ? [gremlin.mixins] : [];
 };
 
-function mixinModule(gremlin, Module) {
-
-	_Object$keys(Module).forEach(function (propertyName) {
-		var property = Module[propertyName];
-
-		if (gremlin[propertyName] === undefined) {
-			gremlin[propertyName] = property;
-		} else {
-			decorateProperty(gremlin, propertyName, property);
-		}
-	});
-}
 function decorateProperty(gremlin, propertyName, property) {
-	var gremlinProperty = gremlin[propertyName],
-	    moduleProperty = property,
-	    gremlinPropertyType = typeof gremlinProperty,
-	    modulePropertyType = typeof moduleProperty,
-	    isSamePropType = gremlinPropertyType === modulePropertyType;
+  var _arguments = arguments;
 
-	if (isSamePropType && modulePropertyType === 'function') {
-		gremlin[propertyName] = function () {
-			// call the module first
-			var moduleResult = moduleProperty.apply(this, arguments);
-			var gremlinResult = gremlinProperty.apply(this, arguments);
+  var gremlinProperty = gremlin[propertyName];
+  var moduleProperty = property;
+  var gremlinPropertyType = typeof gremlinProperty === 'undefined' ? 'undefined' : _typeof(gremlinProperty);
+  var modulePropertyType = typeof moduleProperty === 'undefined' ? 'undefined' : _typeof(moduleProperty);
+  var isSamePropType = gremlinPropertyType === modulePropertyType;
 
-			try {
-				return objectAssign(moduleResult, gremlinResult);
-			} catch (e) {
-				return [moduleResult, gremlinResult];
-			}
-		};
-	} else {
-		console.warn('Can\'t decorate gremlin property <' + gremlin.tagName + ' />#' + propertyName + ':' + gremlinPropertyType + '« with »Module#' + propertyName + ':' + modulePropertyType + '«.\n\t\tOnly functions can be decorated!');
-	}
+  if (isSamePropType && modulePropertyType === 'function') {
+    gremlin[propertyName] = function () {
+      // eslint-disable-line no-param-reassign
+      // call the module first
+      var moduleResult = moduleProperty.apply(gremlin, _arguments);
+      var gremlinResult = gremlinProperty.apply(gremlin, _arguments);
+
+      try {
+        return objectAssign(moduleResult, gremlinResult);
+      } catch (e) {
+        return [moduleResult, gremlinResult];
+      }
+    };
+  } else {
+    console.warn( // eslint-disable-line no-console
+    'Can\'t decorate gremlin property ' + ('<' + gremlin.tagName + ' />#' + propertyName + ':' + gremlinPropertyType + '« ') + ('with »Module#' + propertyName + ':' + modulePropertyType + '«. Only functions can be decorated!'));
+  }
+}
+
+function mixinModule(gremlin, Module) {
+  Object.keys(Module).forEach(function (propertyName) {
+    var property = Module[propertyName];
+
+    if (gremlin[propertyName] === undefined) {
+      gremlin[propertyName] = property; // eslint-disable-line no-param-reassign
+    } else {
+        decorateProperty(gremlin, propertyName, property);
+      }
+  });
 }
 
 module.exports = {
-	mixinProps: function mixinProps(gremlin) {
-		var modules = getMixins(gremlin);
-		// reverse the modules array to call decorated functions in the right order
-		modules.reverse().forEach(function (Module) {
-			return mixinModule(gremlin, Module);
-		});
-	}
+  mixinProps: function mixinProps(gremlin) {
+    var modules = getMixins(gremlin);
+    // reverse the modules array to call decorated functions in the right order
+    modules.reverse().forEach(function (Module) {
+      return mixinModule(gremlin, Module);
+    });
+  }
 };
 
-},{"babel-runtime/core-js/object/keys":16,"object-assign":25}],7:[function(require,module,exports){
+},{"object-assign":16}],7:[function(require,module,exports){
 'use strict';
-
-var _Object$keys = require('babel-runtime/core-js/object/keys')['default'];
-
-var _Object$create = require('babel-runtime/core-js/object/create')['default'];
 
 var gremlins = require('../../index'),
     Gremlin = require('../Gremlin');
@@ -294,7 +296,7 @@ describe('Gremlin', function () {
 
 	it('create inherits all basic methods and does not need a spec', function () {
 		var G = gremlins.create('base-methods');
-		_Object$keys(Gremlin).forEach(function (key) {
+		Object.keys(Gremlin).forEach(function (key) {
 			expect(G[key]).to.equal(Gremlin[key]);
 		});
 	});
@@ -308,7 +310,7 @@ describe('Gremlin', function () {
 		Gizmo.create('g-gremlin');
 		expect(function () {
 			Gizmo.create('g-gremlin');
-		}).to['throw']();
+		}).to.throw();
 	});
 
 	// TODO: not in IE<11
@@ -319,7 +321,7 @@ describe('Gremlin', function () {
 			}
 		};
 		var Stripe = gremlins.create('stripe-gremlin', proto);
-		var g = _Object$create(Stripe);
+		var g = Object.create(Stripe);
 		expect(g.name).to.equal('stripe-gremlin');
 		expect(g.hasOwnProperty('tagName')).to.not.be.ok();
 		//expect(proto.isPrototypeOf(Stripe)).to.be.ok();
@@ -356,7 +358,7 @@ describe('Gremlin', function () {
 	it('expects a name', function () {
 		expect(function () {
 			gremlins.create({}); //TODO improve
-		}).to['throw']();
+		}).to.throw();
 	});
 
 	it('has an attribute change callback', function (done) {
@@ -392,6 +394,7 @@ describe('Gremlin', function () {
 			foo: function foo() {
 				called++;
 			},
+
 			Mixin1: 'Mixin1'
 		};
 		var Mixin2 = {
@@ -399,6 +402,7 @@ describe('Gremlin', function () {
 			foo: function foo() {
 				called++;
 			},
+
 			Mixin2: 'Mixin2'
 		};
 		gremlins.create('g2-gremlin', {
@@ -542,7 +546,7 @@ describe('Gremlin', function () {
 	});
 });
 
-},{"../../index":1,"../Gremlin":4,"babel-runtime/core-js/object/create":15,"babel-runtime/core-js/object/keys":16}],8:[function(require,module,exports){
+},{"../../index":1,"../Gremlin":4}],8:[function(require,module,exports){
 'use strict';
 
 var GremlinElement = require('../GremlinElement');
@@ -553,7 +557,7 @@ describe('GremlinElement', function () {
 		expect(GremlinElement.register).to.be.a('function');
 		expect(function () {
 			GremlinElement.register('foo');
-		}).to['throw']();
+		}).to.throw();
 
 		var El = GremlinElement.register('gremlin-element-test-gremlin');
 		var el = document.createElement('gremlin-element-test-gremlin');
@@ -675,19 +679,23 @@ require('./GremlinElement-tests');
 },{"./Gremlin-tests":7,"./GremlinElement-tests":8,"./Mixins-tests":9,"./gremlins-tests":10}],12:[function(require,module,exports){
 (function (global){
 'use strict';
-var noop = function noop() {};
+
+/* eslint-disable no-console */
+
+function noop() {}
 var types = ['log', 'info', 'warn'];
+
 module.exports = {
-	create: function create() {
-		if (console === undefined) {
-			global.console = {};
-		}
-		types.forEach(function (type) {
-			if (typeof console[type] !== 'function') {
-				console[type] = noop();
-			}
-		});
-	}
+  create: function create() {
+    if (console === undefined) {
+      global.console = {};
+    }
+    types.forEach(function (type) {
+      if (typeof console[type] !== 'function') {
+        console[type] = noop();
+      }
+    });
+  }
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -706,9 +714,10 @@ module.exports = {
 /*!
  * Dependencies
  */
-var consoleShim = require('./consoleShim'),
-    Gremlin = require('./Gremlin'),
-    Data = require('./Data');
+
+var consoleShim = require('./consoleShim');
+var Gremlin = require('./Gremlin');
+var Data = require('./Data');
 
 // let's add a branding so we can't include more than one instance of gremlin.js
 var BRANDING = 'gremlins_connected';
@@ -732,7 +741,8 @@ module.exports = {
   *     });
    *
    * @param {Object} Spec The gremlin specification
-   * @return {Object} The final spec created, later used as a prototype for new components of this type
+   * @return {Object} The final spec created, later used as a prototype for new components of this
+   * type
    * @method create
    * @api public
    */
@@ -743,273 +753,52 @@ module.exports = {
 };
 
 },{"./Data":2,"./Gremlin":4,"./consoleShim":12}],14:[function(require,module,exports){
+"use strict";
+
 // see https://gist.github.com/jed/982883
-'use strict';
 
 module.exports = function b(a) {
-	return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([10000000] + -1000 + -4000 + -8000 + -100000000000).replace(/[018]/g, b);
+  return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, b); // eslint-disable-line max-len
 };
 
 },{}],15:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/create"), __esModule: true };
-},{"core-js/library/fn/object/create":17}],16:[function(require,module,exports){
-module.exports = { "default": require("core-js/library/fn/object/keys"), __esModule: true };
-},{"core-js/library/fn/object/keys":18}],17:[function(require,module,exports){
-var $ = require('../../modules/$');
-module.exports = function create(P, D){
-  return $.create(P, D);
-};
-},{"../../modules/$":22}],18:[function(require,module,exports){
-require('../../modules/es6.object.statics-accept-primitives');
-module.exports = require('../../modules/$').core.Object.keys;
-},{"../../modules/$":22,"../../modules/es6.object.statics-accept-primitives":23}],19:[function(require,module,exports){
-var $          = require('./$')
-  , global     = $.g
-  , core       = $.core
-  , isFunction = $.isFunction;
-function ctx(fn, that){
-  return function(){
-    return fn.apply(that, arguments);
-  };
-}
-// type bitmap
-$def.F = 1;  // forced
-$def.G = 2;  // global
-$def.S = 4;  // static
-$def.P = 8;  // proto
-$def.B = 16; // bind
-$def.W = 32; // wrap
-function $def(type, name, source){
-  var key, own, out, exp
-    , isGlobal = type & $def.G
-    , isProto  = type & $def.P
-    , target   = isGlobal ? global : type & $def.S
-        ? global[name] : (global[name] || {}).prototype
-    , exports  = isGlobal ? core : core[name] || (core[name] = {});
-  if(isGlobal)source = name;
-  for(key in source){
-    // contains in native
-    own = !(type & $def.F) && target && key in target;
-    if(own && key in exports)continue;
-    // export native or passed
-    out = own ? target[key] : source[key];
-    // prevent global pollution for namespaces
-    if(isGlobal && !isFunction(target[key]))exp = source[key];
-    // bind timers to global for call from export context
-    else if(type & $def.B && own)exp = ctx(out, global);
-    // wrap global constructors for prevent change them in library
-    else if(type & $def.W && target[key] == out)!function(C){
-      exp = function(param){
-        return this instanceof C ? new C(param) : C(param);
-      };
-      exp.prototype = C.prototype;
-    }(out);
-    else exp = isProto && isFunction(out) ? ctx(Function.call, out) : out;
-    // export
-    exports[key] = exp;
-    if(isProto)(exports.prototype || (exports.prototype = {}))[key] = out;
-  }
-}
-module.exports = $def;
-},{"./$":22}],20:[function(require,module,exports){
-module.exports = function($){
-  $.FW   = false;
-  $.path = $.core;
-  return $;
-};
-},{}],21:[function(require,module,exports){
-// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
-var $ = require('./$')
-  , toString = {}.toString
-  , getNames = $.getNames;
-
-var windowNames = typeof window == 'object' && Object.getOwnPropertyNames
-  ? Object.getOwnPropertyNames(window) : [];
-
-function getWindowNames(it){
-  try {
-    return getNames(it);
-  } catch(e){
-    return windowNames.slice();
-  }
-}
-
-module.exports.get = function getOwnPropertyNames(it){
-  if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
-  return getNames($.toObject(it));
-};
-},{"./$":22}],22:[function(require,module,exports){
-'use strict';
-var global = typeof self != 'undefined' ? self : Function('return this')()
-  , core   = {}
-  , defineProperty = Object.defineProperty
-  , hasOwnProperty = {}.hasOwnProperty
-  , ceil  = Math.ceil
-  , floor = Math.floor
-  , max   = Math.max
-  , min   = Math.min;
-// The engine works fine with descriptors? Thank's IE8 for his funny defineProperty.
-var DESC = !!function(){
-  try {
-    return defineProperty({}, 'a', {get: function(){ return 2; }}).a == 2;
-  } catch(e){ /* empty */ }
-}();
-var hide = createDefiner(1);
-// 7.1.4 ToInteger
-function toInteger(it){
-  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-}
-function desc(bitmap, value){
-  return {
-    enumerable  : !(bitmap & 1),
-    configurable: !(bitmap & 2),
-    writable    : !(bitmap & 4),
-    value       : value
-  };
-}
-function simpleSet(object, key, value){
-  object[key] = value;
-  return object;
-}
-function createDefiner(bitmap){
-  return DESC ? function(object, key, value){
-    return $.setDesc(object, key, desc(bitmap, value));
-  } : simpleSet;
-}
-
-function isObject(it){
-  return it !== null && (typeof it == 'object' || typeof it == 'function');
-}
-function isFunction(it){
-  return typeof it == 'function';
-}
-function assertDefined(it){
-  if(it == undefined)throw TypeError("Can't call method on  " + it);
-  return it;
-}
-
-var $ = module.exports = require('./$.fw')({
-  g: global,
-  core: core,
-  html: global.document && document.documentElement,
-  // http://jsperf.com/core-js-isobject
-  isObject:   isObject,
-  isFunction: isFunction,
-  that: function(){
-    return this;
-  },
-  // 7.1.4 ToInteger
-  toInteger: toInteger,
-  // 7.1.15 ToLength
-  toLength: function(it){
-    return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-  },
-  toIndex: function(index, length){
-    index = toInteger(index);
-    return index < 0 ? max(index + length, 0) : min(index, length);
-  },
-  has: function(it, key){
-    return hasOwnProperty.call(it, key);
-  },
-  create:     Object.create,
-  getProto:   Object.getPrototypeOf,
-  DESC:       DESC,
-  desc:       desc,
-  getDesc:    Object.getOwnPropertyDescriptor,
-  setDesc:    defineProperty,
-  setDescs:   Object.defineProperties,
-  getKeys:    Object.keys,
-  getNames:   Object.getOwnPropertyNames,
-  getSymbols: Object.getOwnPropertySymbols,
-  assertDefined: assertDefined,
-  // Dummy, fix for not array-like ES3 string in es5 module
-  ES5Object: Object,
-  toObject: function(it){
-    return $.ES5Object(assertDefined(it));
-  },
-  hide: hide,
-  def: createDefiner(0),
-  set: global.Symbol ? simpleSet : hide,
-  each: [].forEach
-});
-/* eslint-disable no-undef */
-if(typeof __e != 'undefined')__e = core;
-if(typeof __g != 'undefined')__g = global;
-},{"./$.fw":20}],23:[function(require,module,exports){
-var $        = require('./$')
-  , $def     = require('./$.def')
-  , isObject = $.isObject
-  , toObject = $.toObject;
-$.each.call(('freeze,seal,preventExtensions,isFrozen,isSealed,isExtensible,' +
-  'getOwnPropertyDescriptor,getPrototypeOf,keys,getOwnPropertyNames').split(',')
-, function(KEY, ID){
-  var fn     = ($.core.Object || {})[KEY] || Object[KEY]
-    , forced = 0
-    , method = {};
-  method[KEY] = ID == 0 ? function freeze(it){
-    return isObject(it) ? fn(it) : it;
-  } : ID == 1 ? function seal(it){
-    return isObject(it) ? fn(it) : it;
-  } : ID == 2 ? function preventExtensions(it){
-    return isObject(it) ? fn(it) : it;
-  } : ID == 3 ? function isFrozen(it){
-    return isObject(it) ? fn(it) : true;
-  } : ID == 4 ? function isSealed(it){
-    return isObject(it) ? fn(it) : true;
-  } : ID == 5 ? function isExtensible(it){
-    return isObject(it) ? fn(it) : false;
-  } : ID == 6 ? function getOwnPropertyDescriptor(it, key){
-    return fn(toObject(it), key);
-  } : ID == 7 ? function getPrototypeOf(it){
-    return fn(Object($.assertDefined(it)));
-  } : ID == 8 ? function keys(it){
-    return fn(toObject(it));
-  } : require('./$.get-names').get;
-  try {
-    fn('z');
-  } catch(e){
-    forced = 1;
-  }
-  $def($def.S + $def.F * forced, 'Object', method);
-});
-},{"./$":22,"./$.def":19,"./$.get-names":21}],24:[function(require,module,exports){
 /*! (C) WebReflection Mit Style License */
-(function(e,t,n,r){"use strict";function rt(e,t){for(var n=0,r=e.length;n<r;n++)dt(e[n],t)}function it(e){for(var t=0,n=e.length,r;t<n;t++)r=e[t],nt(r,b[ot(r)])}function st(e){return function(t){j(t)&&(dt(t,e),rt(t.querySelectorAll(w),e))}}function ot(e){var t=e.getAttribute("is"),n=e.nodeName.toUpperCase(),r=S.call(y,t?v+t.toUpperCase():d+n);return t&&-1<r&&!ut(n,t)?-1:r}function ut(e,t){return-1<w.indexOf(e+'[is="'+t+'"]')}function at(e){var t=e.currentTarget,n=e.attrChange,r=e.prevValue,i=e.newValue;Q&&t.attributeChangedCallback&&e.attrName!=="style"&&t.attributeChangedCallback(e.attrName,n===e[a]?null:r,n===e[l]?null:i)}function ft(e){var t=st(e);return function(e){X.push(t,e.target)}}function lt(e){K&&(K=!1,e.currentTarget.removeEventListener(h,lt)),rt((e.target||t).querySelectorAll(w),e.detail===o?o:s),B&&pt()}function ct(e,t){var n=this;q.call(n,e,t),G.call(n,{target:n})}function ht(e,t){D(e,t),et?et.observe(e,z):(J&&(e.setAttribute=ct,e[i]=Z(e),e.addEventListener(p,G)),e.addEventListener(c,at)),e.createdCallback&&Q&&(e.created=!0,e.createdCallback(),e.created=!1)}function pt(){for(var e,t=0,n=F.length;t<n;t++)e=F[t],E.contains(e)||(F.splice(t,1),dt(e,o))}function dt(e,t){var n,r=ot(e);-1<r&&(tt(e,b[r]),r=0,t===s&&!e[s]?(e[o]=!1,e[s]=!0,r=1,B&&S.call(F,e)<0&&F.push(e)):t===o&&!e[o]&&(e[s]=!1,e[o]=!0,r=1),r&&(n=e[t+"Callback"])&&n.call(e))}if(r in t)return;var i="__"+r+(Math.random()*1e5>>0),s="attached",o="detached",u="extends",a="ADDITION",f="MODIFICATION",l="REMOVAL",c="DOMAttrModified",h="DOMContentLoaded",p="DOMSubtreeModified",d="<",v="=",m=/^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$/,g=["ANNOTATION-XML","COLOR-PROFILE","FONT-FACE","FONT-FACE-SRC","FONT-FACE-URI","FONT-FACE-FORMAT","FONT-FACE-NAME","MISSING-GLYPH"],y=[],b=[],w="",E=t.documentElement,S=y.indexOf||function(e){for(var t=this.length;t--&&this[t]!==e;);return t},x=n.prototype,T=x.hasOwnProperty,N=x.isPrototypeOf,C=n.defineProperty,k=n.getOwnPropertyDescriptor,L=n.getOwnPropertyNames,A=n.getPrototypeOf,O=n.setPrototypeOf,M=!!n.__proto__,_=n.create||function vt(e){return e?(vt.prototype=e,new vt):this},D=O||(M?function(e,t){return e.__proto__=t,e}:L&&k?function(){function e(e,t){for(var n,r=L(t),i=0,s=r.length;i<s;i++)n=r[i],T.call(e,n)||C(e,n,k(t,n))}return function(t,n){do e(t,n);while((n=A(n))&&!N.call(n,t));return t}}():function(e,t){for(var n in t)e[n]=t[n];return e}),P=e.MutationObserver||e.WebKitMutationObserver,H=(e.HTMLElement||e.Element||e.Node).prototype,B=!N.call(H,E),j=B?function(e){return e.nodeType===1}:function(e){return N.call(H,e)},F=B&&[],I=H.cloneNode,q=H.setAttribute,R=H.removeAttribute,U=t.createElement,z=P&&{attributes:!0,characterData:!0,attributeOldValue:!0},W=P||function(e){J=!1,E.removeEventListener(c,W)},X,V=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,10)},$=!1,J=!0,K=!0,Q=!0,G,Y,Z,et,tt,nt;O||M?(tt=function(e,t){N.call(t,e)||ht(e,t)},nt=ht):(tt=function(e,t){e[i]||(e[i]=n(!0),ht(e,t))},nt=tt),B?(J=!1,function(){var e=k(H,"addEventListener"),t=e.value,n=function(e){var t=new CustomEvent(c,{bubbles:!0});t.attrName=e,t.prevValue=this.getAttribute(e),t.newValue=null,t[l]=t.attrChange=2,R.call(this,e),this.dispatchEvent(t)},r=function(e,t){var n=this.hasAttribute(e),r=n&&this.getAttribute(e),i=new CustomEvent(c,{bubbles:!0});q.call(this,e,t),i.attrName=e,i.prevValue=n?r:null,i.newValue=t,n?i[f]=i.attrChange=1:i[a]=i.attrChange=0,this.dispatchEvent(i)},s=function(e){var t=e.currentTarget,n=t[i],r=e.propertyName,s;n.hasOwnProperty(r)&&(n=n[r],s=new CustomEvent(c,{bubbles:!0}),s.attrName=n.name,s.prevValue=n.value||null,s.newValue=n.value=t[r]||null,s.prevValue==null?s[a]=s.attrChange=0:s[f]=s.attrChange=1,t.dispatchEvent(s))};e.value=function(e,o,u){e===c&&this.attributeChangedCallback&&this.setAttribute!==r&&(this[i]={className:{name:"class",value:this.className}},this.setAttribute=r,this.removeAttribute=n,t.call(this,"propertychange",s)),t.call(this,e,o,u)},C(H,"addEventListener",e)}()):P||(E.addEventListener(c,W),E.setAttribute(i,1),E.removeAttribute(i),J&&(G=function(e){var t=this,n,r,s;if(t===e.target){n=t[i],t[i]=r=Z(t);for(s in r){if(!(s in n))return Y(0,t,s,n[s],r[s],a);if(r[s]!==n[s])return Y(1,t,s,n[s],r[s],f)}for(s in n)if(!(s in r))return Y(2,t,s,n[s],r[s],l)}},Y=function(e,t,n,r,i,s){var o={attrChange:e,currentTarget:t,attrName:n,prevValue:r,newValue:i};o[s]=e,at(o)},Z=function(e){for(var t,n,r={},i=e.attributes,s=0,o=i.length;s<o;s++)t=i[s],n=t.name,n!=="setAttribute"&&(r[n]=t.value);return r})),t[r]=function(n,r){p=n.toUpperCase(),$||($=!0,P?(et=function(e,t){function n(e,t){for(var n=0,r=e.length;n<r;t(e[n++]));}return new P(function(r){for(var i,s,o=0,u=r.length;o<u;o++)i=r[o],i.type==="childList"?(n(i.addedNodes,e),n(i.removedNodes,t)):(s=i.target,Q&&s.attributeChangedCallback&&i.attributeName!=="style"&&s.attributeChangedCallback(i.attributeName,i.oldValue,s.getAttribute(i.attributeName)))})}(st(s),st(o)),et.observe(t,{childList:!0,subtree:!0})):(X=[],V(function E(){while(X.length)X.shift().call(null,X.shift());V(E)}),t.addEventListener("DOMNodeInserted",ft(s)),t.addEventListener("DOMNodeRemoved",ft(o))),t.addEventListener(h,lt),t.addEventListener("readystatechange",lt),t.createElement=function(e,n){var r=U.apply(t,arguments),i=""+e,s=S.call(y,(n?v:d)+(n||i).toUpperCase()),o=-1<s;return n&&(r.setAttribute("is",n=n.toLowerCase()),o&&(o=ut(i.toUpperCase(),n))),Q=!t.createElement.innerHTMLHelper,o&&nt(r,b[s]),r},H.cloneNode=function(e){var t=I.call(this,!!e),n=ot(t);return-1<n&&nt(t,b[n]),e&&it(t.querySelectorAll(w)),t});if(-2<S.call(y,v+p)+S.call(y,d+p))throw new Error("A "+n+" type is already registered");if(!m.test(p)||-1<S.call(g,p))throw new Error("The type "+n+" is invalid");var i=function(){return f?t.createElement(l,p):t.createElement(l)},a=r||x,f=T.call(a,u),l=f?r[u].toUpperCase():p,c=y.push((f?v:d)+p)-1,p;return w=w.concat(w.length?",":"",f?l+'[is="'+n.toLowerCase()+'"]':l),i.prototype=b[c]=T.call(a,"prototype")?a.prototype:_(H),rt(t.querySelectorAll(w),s),i}})(window,document,Object,"registerElement");
-},{}],25:[function(require,module,exports){
+(function(e,t,n,r){"use strict";function rt(e,t){for(var n=0,r=e.length;n<r;n++)vt(e[n],t)}function it(e){for(var t=0,n=e.length,r;t<n;t++)r=e[t],nt(r,b[ot(r)])}function st(e){return function(t){j(t)&&(vt(t,e),rt(t.querySelectorAll(w),e))}}function ot(e){var t=e.getAttribute("is"),n=e.nodeName.toUpperCase(),r=S.call(y,t?v+t.toUpperCase():d+n);return t&&-1<r&&!ut(n,t)?-1:r}function ut(e,t){return-1<w.indexOf(e+'[is="'+t+'"]')}function at(e){var t=e.currentTarget,n=e.attrChange,r=e.attrName,i=e.target;Q&&(!i||i===t)&&t.attributeChangedCallback&&r!=="style"&e.prevValue!==e.newValue&&t.attributeChangedCallback(r,n===e[a]?null:e.prevValue,n===e[l]?null:e.newValue)}function ft(e){var t=st(e);return function(e){X.push(t,e.target)}}function lt(e){K&&(K=!1,e.currentTarget.removeEventListener(h,lt)),rt((e.target||t).querySelectorAll(w),e.detail===o?o:s),B&&pt()}function ct(e,t){var n=this;q.call(n,e,t),G.call(n,{target:n})}function ht(e,t){D(e,t),et?et.observe(e,z):(J&&(e.setAttribute=ct,e[i]=Z(e),e.addEventListener(p,G)),e.addEventListener(c,at)),e.createdCallback&&Q&&(e.created=!0,e.createdCallback(),e.created=!1)}function pt(){for(var e,t=0,n=F.length;t<n;t++)e=F[t],E.contains(e)||(n--,F.splice(t--,1),vt(e,o))}function dt(e){throw new Error("A "+e+" type is already registered")}function vt(e,t){var n,r=ot(e);-1<r&&(tt(e,b[r]),r=0,t===s&&!e[s]?(e[o]=!1,e[s]=!0,r=1,B&&S.call(F,e)<0&&F.push(e)):t===o&&!e[o]&&(e[s]=!1,e[o]=!0,r=1),r&&(n=e[t+"Callback"])&&n.call(e))}if(r in t)return;var i="__"+r+(Math.random()*1e5>>0),s="attached",o="detached",u="extends",a="ADDITION",f="MODIFICATION",l="REMOVAL",c="DOMAttrModified",h="DOMContentLoaded",p="DOMSubtreeModified",d="<",v="=",m=/^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$/,g=["ANNOTATION-XML","COLOR-PROFILE","FONT-FACE","FONT-FACE-SRC","FONT-FACE-URI","FONT-FACE-FORMAT","FONT-FACE-NAME","MISSING-GLYPH"],y=[],b=[],w="",E=t.documentElement,S=y.indexOf||function(e){for(var t=this.length;t--&&this[t]!==e;);return t},x=n.prototype,T=x.hasOwnProperty,N=x.isPrototypeOf,C=n.defineProperty,k=n.getOwnPropertyDescriptor,L=n.getOwnPropertyNames,A=n.getPrototypeOf,O=n.setPrototypeOf,M=!!n.__proto__,_=n.create||function mt(e){return e?(mt.prototype=e,new mt):this},D=O||(M?function(e,t){return e.__proto__=t,e}:L&&k?function(){function e(e,t){for(var n,r=L(t),i=0,s=r.length;i<s;i++)n=r[i],T.call(e,n)||C(e,n,k(t,n))}return function(t,n){do e(t,n);while((n=A(n))&&!N.call(n,t));return t}}():function(e,t){for(var n in t)e[n]=t[n];return e}),P=e.MutationObserver||e.WebKitMutationObserver,H=(e.HTMLElement||e.Element||e.Node).prototype,B=!N.call(H,E),j=B?function(e){return e.nodeType===1}:function(e){return N.call(H,e)},F=B&&[],I=H.cloneNode,q=H.setAttribute,R=H.removeAttribute,U=t.createElement,z=P&&{attributes:!0,characterData:!0,attributeOldValue:!0},W=P||function(e){J=!1,E.removeEventListener(c,W)},X,V=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,10)},$=!1,J=!0,K=!0,Q=!0,G,Y,Z,et,tt,nt;O||M?(tt=function(e,t){N.call(t,e)||ht(e,t)},nt=ht):(tt=function(e,t){e[i]||(e[i]=n(!0),ht(e,t))},nt=tt),B?(J=!1,function(){var e=k(H,"addEventListener"),t=e.value,n=function(e){var t=new CustomEvent(c,{bubbles:!0});t.attrName=e,t.prevValue=this.getAttribute(e),t.newValue=null,t[l]=t.attrChange=2,R.call(this,e),this.dispatchEvent(t)},r=function(e,t){var n=this.hasAttribute(e),r=n&&this.getAttribute(e),i=new CustomEvent(c,{bubbles:!0});q.call(this,e,t),i.attrName=e,i.prevValue=n?r:null,i.newValue=t,n?i[f]=i.attrChange=1:i[a]=i.attrChange=0,this.dispatchEvent(i)},s=function(e){var t=e.currentTarget,n=t[i],r=e.propertyName,s;n.hasOwnProperty(r)&&(n=n[r],s=new CustomEvent(c,{bubbles:!0}),s.attrName=n.name,s.prevValue=n.value||null,s.newValue=n.value=t[r]||null,s.prevValue==null?s[a]=s.attrChange=0:s[f]=s.attrChange=1,t.dispatchEvent(s))};e.value=function(e,o,u){e===c&&this.attributeChangedCallback&&this.setAttribute!==r&&(this[i]={className:{name:"class",value:this.className}},this.setAttribute=r,this.removeAttribute=n,t.call(this,"propertychange",s)),t.call(this,e,o,u)},C(H,"addEventListener",e)}()):P||(E.addEventListener(c,W),E.setAttribute(i,1),E.removeAttribute(i),J&&(G=function(e){var t=this,n,r,s;if(t===e.target){n=t[i],t[i]=r=Z(t);for(s in r){if(!(s in n))return Y(0,t,s,n[s],r[s],a);if(r[s]!==n[s])return Y(1,t,s,n[s],r[s],f)}for(s in n)if(!(s in r))return Y(2,t,s,n[s],r[s],l)}},Y=function(e,t,n,r,i,s){var o={attrChange:e,currentTarget:t,attrName:n,prevValue:r,newValue:i};o[s]=e,at(o)},Z=function(e){for(var t,n,r={},i=e.attributes,s=0,o=i.length;s<o;s++)t=i[s],n=t.name,n!=="setAttribute"&&(r[n]=t.value);return r})),t[r]=function(n,r){c=n.toUpperCase(),$||($=!0,P?(et=function(e,t){function n(e,t){for(var n=0,r=e.length;n<r;t(e[n++]));}return new P(function(r){for(var i,s,o,u=0,a=r.length;u<a;u++)i=r[u],i.type==="childList"?(n(i.addedNodes,e),n(i.removedNodes,t)):(s=i.target,Q&&s.attributeChangedCallback&&i.attributeName!=="style"&&(o=s.getAttribute(i.attributeName),o!==i.oldValue&&s.attributeChangedCallback(i.attributeName,i.oldValue,o)))})}(st(s),st(o)),et.observe(t,{childList:!0,subtree:!0})):(X=[],V(function E(){while(X.length)X.shift().call(null,X.shift());V(E)}),t.addEventListener("DOMNodeInserted",ft(s)),t.addEventListener("DOMNodeRemoved",ft(o))),t.addEventListener(h,lt),t.addEventListener("readystatechange",lt),t.createElement=function(e,n){var r=U.apply(t,arguments),i=""+e,s=S.call(y,(n?v:d)+(n||i).toUpperCase()),o=-1<s;return n&&(r.setAttribute("is",n=n.toLowerCase()),o&&(o=ut(i.toUpperCase(),n))),Q=!t.createElement.innerHTMLHelper,o&&nt(r,b[s]),r},H.cloneNode=function(e){var t=I.call(this,!!e),n=ot(t);return-1<n&&nt(t,b[n]),e&&it(t.querySelectorAll(w)),t}),-2<S.call(y,v+c)+S.call(y,d+c)&&dt(n);if(!m.test(c)||-1<S.call(g,c))throw new Error("The type "+n+" is invalid");var i=function(){return f?t.createElement(l,c):t.createElement(l)},a=r||x,f=T.call(a,u),l=f?r[u].toUpperCase():c,c,p;return f&&-1<S.call(y,d+l)&&dt(l),p=y.push((f?v:d)+c)-1,w=w.concat(w.length?",":"",f?l+'[is="'+n.toLowerCase()+'"]':l),i.prototype=b[p]=T.call(a,"prototype")?a.prototype:_(H),rt(t.querySelectorAll(w),s),i}})(window,document,Object,"registerElement");
+},{}],16:[function(require,module,exports){
+/* eslint-disable no-unused-vars */
 'use strict';
+var hasOwnProperty = Object.prototype.hasOwnProperty;
 var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
-function ToObject(val) {
-	if (val == null) {
+function toObject(val) {
+	if (val === null || val === undefined) {
 		throw new TypeError('Object.assign cannot be called with null or undefined');
 	}
 
 	return Object(val);
 }
 
-function ownEnumerableKeys(obj) {
-	var keys = Object.getOwnPropertyNames(obj);
-
-	if (Object.getOwnPropertySymbols) {
-		keys = keys.concat(Object.getOwnPropertySymbols(obj));
-	}
-
-	return keys.filter(function (key) {
-		return propIsEnumerable.call(obj, key);
-	});
-}
-
 module.exports = Object.assign || function (target, source) {
 	var from;
-	var keys;
-	var to = ToObject(target);
+	var to = toObject(target);
+	var symbols;
 
 	for (var s = 1; s < arguments.length; s++) {
-		from = arguments[s];
-		keys = ownEnumerableKeys(Object(from));
+		from = Object(arguments[s]);
 
-		for (var i = 0; i < keys.length; i++) {
-			to[keys[i]] = from[keys[i]];
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (Object.getOwnPropertySymbols) {
+			symbols = Object.getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
 		}
 	}
 
