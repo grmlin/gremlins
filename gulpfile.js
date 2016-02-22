@@ -14,6 +14,7 @@ var through2 = require('through2');
 var browserify = require('browserify');
 var babelify = require("babelify");
 var rename = require("gulp-rename");
+var babel = require("gulp-babel");
 
 var filenames = {
 	'index': 'gremlins',
@@ -23,24 +24,29 @@ var filenames = {
 gulp.task('lint', function () {
 	// Note: To have the process exit with an error code (1) on
 	//  lint error, return the stream and pipe to failOnError last.
-	return gulp.src(["index.js", "./lib/**/*.js", '!./lib/**/{__tests__,__tests__/**}'])
+	return gulp.src(["./src/**/*.js", '!./src/**/{__tests__,__tests__/**}'])
 		.pipe(eslint())
 		.pipe(eslint.format())
 		.pipe(eslint.failOnError());
 });
 
+gulp.task("babel", function () {
+	return gulp.src("src/**/*.js")
+		.pipe(babel())
+		.pipe(gulp.dest("lib"));
+});
 
-gulp.task('scriptsTest', [/*'lint'*/], function () {
-
-
+gulp.task('browserify:test', ['babel'], function () {
 	return gulp.src('lib/__tests__/index.js')
 		.pipe(through2.obj(function (file, enc, next) {
 			browserify(file.path, {
 				standalone: 'gremlins',
 				debug: false
 			})
-				.transform('babelify')
 				.bundle(function (err, res) {
+					if (err) {
+						console.log(err);
+					}
 					// assumes file.contents is a Buffer
 					file.contents = res;
 					next(null, file);
@@ -57,15 +63,14 @@ gulp.task('scriptsTest', [/*'lint'*/], function () {
 		.pipe(gulp.dest('./test/specs'));
 });
 
-gulp.task('uglify', ['lint', 'clean-dist'], function () {
+gulp.task('uglify', ['lint', 'clean-dist', 'babel'], function () {
 
-	return gulp.src(['index.js', 'native.js'])
+	return gulp.src(['lib/index.js', 'lib/native.js'])
 		.pipe(through2.obj(function (file, enc, next) {
 			browserify(file.path, {
 				standalone: 'gremlins',
 				debug: false
 			})
-				.transform('babelify')
 				.bundle(function (err, res) {
 					// assumes file.contents is a Buffer
 					file.contents = res;
@@ -100,12 +105,12 @@ gulp.task('connect', function () {
 
 
 gulp.task("reload", function () {
-	gulp.src('lib/watched.js')
+	gulp.src('src/index.js')
 		.pipe(connect.reload());
 });
 
 gulp.task('watch', function () {
-	gulp.watch(['lib/**/*'], ['scriptsTest', 'reload']);
+	gulp.watch(['src/**/*'], ['browserify:test', 'reload']);
 });
 
 gulp.task('sizereport', function () {
@@ -115,5 +120,5 @@ gulp.task('sizereport', function () {
 		}));
 });
 
-gulp.task('default', ['connect', 'scriptsTest', 'watch']);
+gulp.task('default', ['connect', 'browserify:test', 'watch']);
 gulp.task('build', ['uglify']);

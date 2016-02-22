@@ -1,23 +1,23 @@
 'use strict';
-
 var gremlins = require('../index'),
-    Gremlin = require('../Gremlin');
+  Gremlin = require('../Gremlin');
 
 describe('Gremlin', function () {
   var Gizmo = gremlins.create('gizmo-gremlin', {
-    initialize: function initialize() {
+    initialize(){
       this.el.innerHTML = 'Gizmo created: ' + this.foo();
     },
-    foo: function foo() {
+    foo(){
       return 'foo';
     }
   });
+
 
   it('create inherits all basic methods and does not need a spec', function () {
     var G = gremlins.create('base-methods');
     Object.keys(Gremlin).forEach(function (key) {
       expect(G[key]).to.equal(Gremlin[key]);
-    });
+    })
   });
 
   it('gremlins can create gremlins', function () {
@@ -35,7 +35,7 @@ describe('Gremlin', function () {
   // TODO: not in IE<11
   it('sets up a prototype chain', function () {
     var proto = {
-      bar: function bar() {
+      bar() {
         return this.foo() + ' bar';
       }
     };
@@ -49,7 +49,7 @@ describe('Gremlin', function () {
 
   it('inheritance works', function () {
     var Stripe2 = Gizmo.create('stripe2-gremlin', {
-      bar: function bar() {
+      bar() {
         return this.foo() + ' bar';
       }
     });
@@ -61,7 +61,7 @@ describe('Gremlin', function () {
 
   it('uses an initializer', function (done) {
     var G1 = Gizmo.create('g1-gremlin', {
-      initialize: function initialize() {
+      initialize(){
         try {
           done();
         } catch (e) {
@@ -72,18 +72,23 @@ describe('Gremlin', function () {
 
     var el = document.createElement('g1-gremlin');
     document.body.appendChild(el);
+
   });
 
   it('expects a name', function () {
     expect(function () {
-      gremlins.create({}); //TODO improve
+      gremlins.create({});//TODO improve
     }).to.throw();
+
   });
+
 
   it('has an attribute change callback', function (done) {
     Gizmo.create('attr-gremlin', {
-      initialize: function initialize() {},
-      attributeDidChange: function attributeDidChange(attributeName, previousValue, value) {
+      initialize(){
+
+      },
+      attributeDidChange(attributeName, previousValue, value){
         try {
           expect(attributeName).to.be.a('string');
           expect(attributeName).to.equal('id');
@@ -96,6 +101,7 @@ describe('Gremlin', function () {
       }
     });
 
+
     var el = document.createElement('attr-gremlin');
     el.id = 'foo';
     document.body.appendChild(el);
@@ -106,9 +112,10 @@ describe('Gremlin', function () {
   });
 
   it('can have getters and setters in the spec', function (done) {
-    var G = Gizmo.create('gettersetter-gremlin', {
-      initialize: function initialize() {
+    const G = Gizmo.create('gettersetter-gremlin', {
+      initialize() {
         this.foo = 'foo';
+
 
         try {
           expect(this._foo).to.be('foo');
@@ -117,18 +124,18 @@ describe('Gremlin', function () {
           done(e);
         }
       },
-
       get foo() {
         return this._foo;
       },
       set foo(val) {
         this._foo = val;
-      }
+      },
     });
 
-    var desc = Object.getOwnPropertyDescriptor(G, 'foo');
+    const desc = Object.getOwnPropertyDescriptor(G, 'foo');
     expect(desc.get).to.be.a('function');
     expect(desc.set).to.be.a('function');
+
 
     var el = document.createElement('gettersetter-gremlin');
     document.body.appendChild(el);
@@ -138,35 +145,35 @@ describe('Gremlin', function () {
     var called = 0;
 
     var Mixin = {
-      initialize: function initialize() {},
-      foo: function foo() {
+      initialize() {
+      },
+      foo() {
         called++;
       },
-
       Mixin1: 'Mixin1'
     };
     var Mixin2 = {
-      initialize: function initialize() {},
-      foo: function foo() {
+      initialize() {
+      },
+      foo() {
         called++;
       },
-
       Mixin2: 'Mixin2'
     };
     gremlins.create('g2-gremlin', {
       mixins: [Mixin, Mixin2],
-      foo: function foo() {
+      foo() {
         called++;
         if (called !== 3) {
           done(new Error('Mixins not called correctly'));
         }
       },
-      initialize: function initialize() {
+      initialize() {
         this.foo();
         try {
           expect(this.el).to.be(el);
           done();
-        } catch (e) {
+        } catch(e) {
           done(e);
         }
       }
@@ -178,8 +185,9 @@ describe('Gremlin', function () {
 
   it('binds the correct dom element', function (done) {
 
+
     gremlins.create('g3-gremlin', {
-      initialize: function initialize() {
+      initialize() {
         try {
           expect(this.el).to.equal(el);
           done();
@@ -189,8 +197,10 @@ describe('Gremlin', function () {
       }
     });
 
+
     var el = document.createElement('g3-gremlin');
     document.body.appendChild(el);
+
   });
 
   it('finds gremlins with the dom element', function (done) {
@@ -198,7 +208,7 @@ describe('Gremlin', function () {
     var el = document.createElement('find-me');
 
     gremlins.create('find-me', {
-      initialize: function initialize() {
+      initialize() {
         try {
           expect(gremlins.findGremlin(el)).to.equal(this);
           expect(this.el).to.equal(el);
@@ -207,9 +217,10 @@ describe('Gremlin', function () {
           done(e);
         }
       }
-    });
+    })
 
     document.body.appendChild(el);
+
   });
 
   it('destroys removed gremlins', function (done) {
@@ -217,10 +228,10 @@ describe('Gremlin', function () {
 
     var count = 0;
     gremlins.create('g4-gremlin', {
-      initialize: function initialize() {
+      initialize(){
         count++;
       },
-      destroy: function destroy() {
+      destroy(){
         count++;
         try {
           expect(count).to.be(2);
@@ -238,6 +249,7 @@ describe('Gremlin', function () {
     setTimeout(function () {
       el.parentNode.removeChild(el);
     }, 1000);
+
   });
 
   it('destroys nested gremlins on removal', function (done) {
@@ -245,10 +257,10 @@ describe('Gremlin', function () {
 
     var count = 0;
     gremlins.create('g5-gremlin', {
-      initialize: function initialize() {
+      initialize(){
         count++;
       },
-      destroy: function destroy() {
+      destroy(){
         count++;
 
         try {
@@ -260,11 +272,12 @@ describe('Gremlin', function () {
         if (count === 3) {
           done();
         }
+
       }
     });
 
     gremlins.create('g6-gremlin', {
-      initialize: function initialize() {
+      initialize(){
         count++;
       }
     });
@@ -282,9 +295,9 @@ describe('Gremlin', function () {
 
   it('adds display block to all custom gremlin elements', function (done) {
     gremlins.create('display-test', {
-      initialize: function initialize() {
+      initialize() {
         try {
-          var style = window.getComputedStyle(this.el);
+          let style = window.getComputedStyle(this.el)
           expect(style.display).to.equal('block');
           done();
         } catch (e) {
@@ -293,7 +306,10 @@ describe('Gremlin', function () {
       }
     });
 
+
     var el = document.createElement('display-test');
     document.body.appendChild(el);
+
   });
+
 });

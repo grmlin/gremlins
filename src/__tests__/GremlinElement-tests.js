@@ -1,5 +1,3 @@
-'use strict';
-
 var GremlinElement = require('../GremlinElement');
 
 describe('GremlinElement', function () {
@@ -16,4 +14,5 @@ describe('GremlinElement', function () {
 		expect(el).to.be.a(HTMLElement);
 		expect(el.tagName.toUpperCase()).to.equal('gremlin-element-test-gremlin'.toUpperCase());
 	});
+
 });

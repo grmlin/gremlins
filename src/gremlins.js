@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * # gremlin.js
  * dead simple web components
@@ -9,20 +7,22 @@
  *
  */
 
+
 /*!
  * Dependencies
  */
-var consoleShim = require('./consoleShim');
-var Gremlin = require('./Gremlin');
-var Data = require('./Data');
+const consoleShim = require('./consoleShim');
+const Gremlin = require('./Gremlin');
+const Data = require('./Data');
 
 // let's add a branding so we can't include more than one instance of gremlin.js
-var BRANDING = 'gremlins_connected';
+const BRANDING = 'gremlins_connected';
 
 if (document.documentElement[BRANDING]) {
   throw new Error('You tried to include gremlin.js multiple times. This will not work');
 }
 consoleShim.create();
+
 
 document.documentElement[BRANDING] = true;
 
@@ -34,8 +34,8 @@ module.exports = {
    *     var gremlins = require('gremlins');
    *
    *     gremlins.create({
-  *       name: 'Foo'
-  *     });
+ *       name: 'Foo'
+ *     });
    *
    * @param {Object} Spec The gremlin specification
    * @return {Object} The final spec created, later used as a prototype for new components of this
@@ -44,7 +44,7 @@ module.exports = {
    * @api public
    */
   create: Gremlin.create.bind(Gremlin),
-  findGremlin: function findGremlin(element) {
+  findGremlin(element) {
     return Data.getGremlin(element);
-  }
+  },
 };

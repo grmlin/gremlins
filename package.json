@@ -1,6 +1,6 @@
 {
   "name": "gremlins",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "dead simple web components",
   "main": "index.js",
   "keywords": [
@@ -30,6 +30,7 @@
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^3.1.0",
     "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.2",
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.5.2",
     "gulp-connect": "~2.3.1",
@@ -44,10 +45,5 @@
     "through2": "^2.0.0"
   },
   "browserify": {
-    "transform": [
-      [
-        "babelify"
-      ]
-    ]
   }
 }

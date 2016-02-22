@@ -1,5 +1,3 @@
-'use strict';
-
 var gremlins = require('../index');
 var Gremlin = require('../Gremlin');
 describe('gremlins', function () {

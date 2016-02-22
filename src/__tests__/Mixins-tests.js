@@ -1,36 +1,36 @@
-'use strict';
-
 var Mixins = require('../Mixins');
 
 describe('Mixins', function () {
 
   it('mixes Mixins into objects', function () {
     var Module = {
-      foo: function foo() {
+      foo() {
         return 'foo';
       }
     };
     var G = {
-      mixins: Module
+      mixins: Module,
     };
 
     Mixins.mixinProps(G);
 
     expect(G).to.have.property('foo');
     expect(G.foo()).to.equal('foo');
+
   });
+
 
   it('decorates exiting functions', function () {
     var fooCount = 0;
 
     var Module = {
-      foo: function foo() {
+      foo() {
         fooCount++;
       }
     };
     var G = {
       mixins: Module,
-      foo: function foo() {
+      foo() {
         fooCount++;
       }
     };
@@ -40,6 +40,7 @@ describe('Mixins', function () {
     expect(G).to.have.property('foo');
     G.foo();
     expect(fooCount).to.equal(2);
+
   });
 
   it('does not change existing properties that are not functions', function () {
@@ -55,24 +56,25 @@ describe('Mixins', function () {
 
     expect(G).to.have.property('foo');
     expect(G.foo).to.equal('foo');
+
   });
 
   it('respects the order Mixins are included', function () {
     var fooStr = '';
     var Module = {
-      foo: function foo() {
+      foo() {
         fooStr += 'module1';
       }
     };
     var Module2 = {
-      foo: function foo() {
+      foo() {
         fooStr += 'module2';
       }
     };
 
     var G = {
       mixins: [Module, Module2],
-      foo: function foo() {
+      foo() {
         fooStr += 'gremlin';
       }
     };
@@ -82,7 +84,7 @@ describe('Mixins', function () {
     expect(fooStr).to.equal('module1module2gremlin');
   });
 
-  it('supports mixins with getters and setters', function () {
+  it('supports mixins with getters and setters', function(){
     var Module = {
       get foo() {
         return this._foo || 'oldFoo';
@@ -93,11 +95,11 @@ describe('Mixins', function () {
     };
 
     var G = {
-      mixins: Module
+      mixins: Module,
     };
 
     Mixins.mixinProps(G);
-    var desc = Object.getOwnPropertyDescriptor(G, 'foo');
+    const desc = Object.getOwnPropertyDescriptor(G, 'foo');
     expect(G).to.have.property('foo');
     expect(desc.get).to.be.a('function');
     expect(desc.set).to.be.a('function');
@@ -106,5 +108,8 @@ describe('Mixins', function () {
     G.foo = 'newFoo';
     expect(G.foo).to.be('newFoo');
     expect(G._foo).to.be('newFoo');
+
   });
+
 });
+
