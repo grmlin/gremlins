@@ -2,7 +2,7 @@
   "name": "gremlins",
   "version": "1.0.0-0",
   "description": "dead simple web components",
-  "main": "index.js",
+  "main": "lib/index.js",
   "keywords": [
     "MutationObserver",
     "components"
