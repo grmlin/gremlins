@@ -1,6 +1,6 @@
 {
   "name": "gremlins",
-  "version": "0.14.0",
+  "version": "0.14.0-beta1",
   "description": "dead simple web components",
   "main": "index.js",
   "keywords": [
