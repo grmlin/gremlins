@@ -1,4 +1,9 @@
 # Release notes
+## v1.0.0
+
+- first major release
+- now publishing babel compiled version to npm
+
 ## v0.8.0
 
 ### New
