@@ -29,11 +29,7 @@ gremlins.create('my-slider', {
 
 ### npm
     
-    $ npm install gremlins --save
-    
-### bower
-
-    $ bower install gremlins
+    $ npm install --save gremlins
     
 ### global
 
@@ -42,6 +38,8 @@ gremlins.create('my-slider', {
     
 
 ---
+
+*All examples in this documentation use the <a href="https://babeljs.io/docs/learn-es2015/">ES2015/ES6 syntax</a>. Use a compiler like <a href="https://babeljs.io/"> Babel </a>  to compile them into ES5 compatible Javascript.*
 
 ## Creating Components
 
