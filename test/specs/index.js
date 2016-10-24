@@ -102,8 +102,9 @@ var hasSpec = function hasSpec(tagName) {
 };
 
 var Gremlin = {
-  initialize: function initialize() {},
-  destroy: function destroy() {},
+  created: function created() {},
+  attached: function attached() {},
+  detached: function detached() {},
   create: function create(tagName) {
     var Spec = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -158,14 +159,38 @@ var styleSheet = undefined;
 document.head.appendChild(styleElement);
 styleSheet = styleElement.sheet;
 
-function addInstance(element, Spec) {
-  var gremlin = Factory.createInstance(element, Spec);
-  Data.addGremlin(gremlin, element);
-  gremlin.initialize();
+function createInstance(element, Spec) {
+  var existingGremlins = Data.getGremlin(element);
+
+  if (existingGremlins === null) {
+    var gremlin = Factory.createInstance(element, Spec);
+    Data.addGremlin(gremlin, element);
+
+    if (typeof gremlin.initialize === 'function') {
+      console.warn('<' + element.tagName + ' />\n' + 'the use of the `initialize` callback of a gremlin component is deprecated. ' + 'Use the `created` callback instead.');
+      gremlin.initialize();
+    } else {
+      gremlin.created();
+    }
+  } else {
+    // console.warn('exisiting gremlin found');
+  }
 }
 
-function removeInstance(element) {
-  Data.getGremlin(element).destroy();
+function attachInstance(element) {
+  var gremlin = Data.getGremlin(element);
+  gremlin.attached();
+}
+
+function detachInstance(element) {
+  var gremlin = Data.getGremlin(element);
+
+  if (typeof gremlin.destroy === 'function') {
+    console.warn('<' + element.tagName + ' />\n' + 'the use of the `destroy` callback of a gremlin component is deprecated. Use ' + 'the `detached` callback instead.');
+    gremlin.destroy();
+  } else {
+    gremlin.detached();
+  }
 }
 
 function updateAttr(element, name, previousValue, value) {
@@ -179,14 +204,19 @@ function updateAttr(element, name, previousValue, value) {
 module.exports = {
   register: function register(tagName, Spec) {
     var proto = {
+      createdCallback: {
+        value: function value() {
+          createInstance(this, Spec);
+        }
+      },
       attachedCallback: {
         value: function value() {
-          addInstance(this, Spec);
+          attachInstance(this);
         }
       },
       detachedCallback: {
         value: function value() {
-          removeInstance(this);
+          detachInstance(this);
         }
       },
       attributeChangedCallback: {
@@ -279,7 +309,7 @@ var gremlins = require('../index'),
 
 describe('Gremlin', function () {
   var Gizmo = gremlins.create('gizmo-gremlin', {
-    initialize: function initialize() {
+    created: function created() {
       this.el.innerHTML = 'Gizmo created: ' + this.foo();
     },
     foo: function foo() {
@@ -300,9 +330,9 @@ describe('Gremlin', function () {
   });
 
   it('cannot create more than one of a name', function () {
-    Gizmo.create('g-gremlin');
+    Gremlin.create('g-gremlin');
     expect(function () {
-      Gizmo.create('g-gremlin');
+      Gremlin.create('g-gremlin');
     }).to.throw();
   });
 
@@ -333,9 +363,9 @@ describe('Gremlin', function () {
     expect(Stripe2.create).to.be.a('function');
   });
 
-  it('uses an initializer', function (done) {
-    var G1 = Gizmo.create('g1-gremlin', {
-      initialize: function initialize() {
+  it('lifecycle: uses a created callback', function (done) {
+    var G1 = Gremlin.create('g1-gremlin', {
+      created: function created() {
         try {
           done();
         } catch (e) {
@@ -348,24 +378,123 @@ describe('Gremlin', function () {
     document.body.appendChild(el);
   });
 
-  it('expects a name', function () {
-    expect(function () {
-      gremlins.create({}); //TODO improve
-    }).to.throw();
-  });
+  it('lifecycle: uses a attached callback', function (done) {
+    var wasAttached = 0;
+    Gremlin.create('attached-test-gremlin', {
+      attached: function attached() {
+        wasAttached++;
 
-  it('has an attribute change callback', function (done) {
-    Gizmo.create('attr-gremlin', {
-      initialize: function initialize() {},
-      attributeDidChange: function attributeDidChange(attributeName, previousValue, value) {
         try {
-          expect(attributeName).to.be.a('string');
-          expect(attributeName).to.equal('id');
-          expect(previousValue).to.equal('foo');
-          expect(value).to.equal('bar');
-          done();
+          if (wasAttached === 1) {
+            expect(this.el.parentNode).to.equal(document.body);
+          } else if (wasAttached === 2) {
+            expect(this.el.parentNode).to.equal(container);
+            done();
+          }
         } catch (e) {
           done(e);
+        }
+      }
+    });
+
+    var el = document.createElement('attached-test-gremlin');
+    var container = document.createElement('div');
+    document.body.appendChild(el);
+    document.body.appendChild(container);
+    document.body.removeChild(el);
+    container.appendChild(el);
+  });
+
+  it('lifecycle: uses a detached callback', function (done) {
+    this.timeout(5000);
+
+    var count = 0;
+    gremlins.create('g4-gremlin', {
+      created: function created() {
+        count++;
+      },
+      detached: function detached() {
+        count++;
+        try {
+          expect(document.documentElement.contains(this.el)).to.not.be.ok();
+        } catch (e) {
+          done(e);
+        }
+
+        if (count === 3) {
+          done();
+        }
+      }
+    });
+
+    var el = document.createElement('g4-gremlin');
+    document.body.appendChild(el);
+
+    setTimeout(function () {
+      el.parentNode.removeChild(el);
+      setTimeout(function () {
+        document.body.appendChild(el);
+        setTimeout(function () {
+          el.parentNode.removeChild(el);
+        }, 500);
+      }, 500);
+    }, 1000);
+  });
+
+  it('lifecycle: uses a detached callback on nested gremlins', function (done) {
+    this.timeout(5000);
+
+    var count = 0;
+    gremlins.create('g5-gremlin', {
+      created: function created() {
+        count++;
+      },
+      detached: function detached() {
+        count++;
+
+        try {
+          expect(document.documentElement.contains(this.el)).to.not.be.ok();
+        } catch (e) {
+          done(e);
+        }
+
+        if (count === 3) {
+          done();
+        }
+      }
+    });
+
+    gremlins.create('g6-gremlin', {
+      created: function created() {
+        count++;
+      }
+    });
+
+    var el = document.createElement('g5-gremlin');
+    var nested = document.createElement('g6-gremlin');
+
+    document.body.appendChild(el);
+    el.appendChild(nested);
+
+    setTimeout(function () {
+      el.parentNode.removeChild(el);
+    }, 1000);
+  });
+
+  it('lifecycle: uses an attribute change callback', function (done) {
+    Gremlin.create('attr-gremlin', {
+      created: function created() {},
+      attributeDidChange: function attributeDidChange(attributeName, previousValue, value) {
+        if (value === 'bar') {
+          try {
+            expect(attributeName).to.be.a('string');
+            expect(attributeName).to.equal('id');
+            expect(previousValue).to.equal('foo');
+            expect(value).to.equal('bar');
+            done();
+          } catch (e) {
+            done(e);
+          }
         }
       }
     });
@@ -379,10 +508,16 @@ describe('Gremlin', function () {
     }, 500);
   });
 
+  it('expects a name', function () {
+    expect(function () {
+      gremlins.create({}); //TODO improve
+    }).to.throw();
+  });
+
   it('can have getters and setters in the spec', function (done) {
-    var G = Gizmo.create('gettersetter-gremlin', {
-      initialize: function initialize() {
-        this.foo = 'foo';
+    var G = Gremlin.create('gettersetter-gremlin', {
+      created: function created() {
+        this._foo = 'foo';
 
         try {
           expect(this._foo).to.be('foo');
@@ -412,7 +547,6 @@ describe('Gremlin', function () {
     var called = 0;
 
     var Mixin = {
-      initialize: function initialize() {},
       foo: function foo() {
         called++;
       },
@@ -420,7 +554,6 @@ describe('Gremlin', function () {
       Mixin1: 'Mixin1'
     };
     var Mixin2 = {
-      initialize: function initialize() {},
       foo: function foo() {
         called++;
       },
@@ -435,7 +568,7 @@ describe('Gremlin', function () {
           done(new Error('Mixins not called correctly'));
         }
       },
-      initialize: function initialize() {
+      attached: function attached() {
         this.foo();
         try {
           expect(this.el).to.be(el);
@@ -453,7 +586,7 @@ describe('Gremlin', function () {
   it('binds the correct dom element', function (done) {
 
     gremlins.create('g3-gremlin', {
-      initialize: function initialize() {
+      attached: function attached() {
         try {
           expect(this.el).to.equal(el);
           done();
@@ -472,7 +605,7 @@ describe('Gremlin', function () {
     var el = document.createElement('find-me');
 
     gremlins.create('find-me', {
-      initialize: function initialize() {
+      created: function created() {
         try {
           expect(gremlins.findGremlin(el)).to.equal(this);
           expect(this.el).to.equal(el);
@@ -486,77 +619,9 @@ describe('Gremlin', function () {
     document.body.appendChild(el);
   });
 
-  it('destroys removed gremlins', function (done) {
-    this.timeout(5000);
-
-    var count = 0;
-    gremlins.create('g4-gremlin', {
-      initialize: function initialize() {
-        count++;
-      },
-      destroy: function destroy() {
-        count++;
-        try {
-          expect(count).to.be(2);
-          expect(document.documentElement.contains(this.el)).to.not.be.ok();
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }
-    });
-
-    var el = document.createElement('g4-gremlin');
-    document.body.appendChild(el);
-
-    setTimeout(function () {
-      el.parentNode.removeChild(el);
-    }, 1000);
-  });
-
-  it('destroys nested gremlins on removal', function (done) {
-    this.timeout(5000);
-
-    var count = 0;
-    gremlins.create('g5-gremlin', {
-      initialize: function initialize() {
-        count++;
-      },
-      destroy: function destroy() {
-        count++;
-
-        try {
-          expect(document.documentElement.contains(this.el)).to.not.be.ok();
-        } catch (e) {
-          done(e);
-        }
-
-        if (count === 3) {
-          done();
-        }
-      }
-    });
-
-    gremlins.create('g6-gremlin', {
-      initialize: function initialize() {
-        count++;
-      }
-    });
-
-    var el = document.createElement('g5-gremlin');
-    var nested = document.createElement('g6-gremlin');
-
-    document.body.appendChild(el);
-    el.appendChild(nested);
-
-    setTimeout(function () {
-      el.parentNode.removeChild(el);
-    }, 1000);
-  });
-
   it('adds display block to all custom gremlin elements', function (done) {
     gremlins.create('display-test', {
-      initialize: function initialize() {
+      attached: function attached() {
         try {
           var style = window.getComputedStyle(this.el);
           expect(style.display).to.equal('block');
@@ -578,18 +643,21 @@ var GremlinElement = require('../GremlinElement');
 
 describe('GremlinElement', function () {
 
-	it('creates custom elements', function () {
-		expect(GremlinElement.register).to.be.a('function');
-		expect(function () {
-			GremlinElement.register('foo');
-		}).to.throw();
+  it('creates custom elements', function () {
+    expect(GremlinElement.register).to.be.a('function');
+    expect(function () {
+      GremlinElement.register('foo');
+      GremlinElement.register('foo-bar-without-spec');
+    }).to.throw();
 
-		var El = GremlinElement.register('gremlin-element-test-gremlin');
-		var el = document.createElement('gremlin-element-test-gremlin');
-		expect(El).to.be.a('function');
-		expect(el).to.be.a(HTMLElement);
-		expect(el.tagName.toUpperCase()).to.equal('gremlin-element-test-gremlin'.toUpperCase());
-	});
+    var El = GremlinElement.register('gremlin-element-test-gremlin', {
+      created: function created() {}
+    });
+    var el = document.createElement('gremlin-element-test-gremlin');
+    expect(El).to.be.a('function');
+    expect(el).to.be.a(HTMLElement);
+    expect(el.tagName.toUpperCase()).to.equal('gremlin-element-test-gremlin'.toUpperCase());
+  });
 });
 },{"../GremlinElement":4}],8:[function(require,module,exports){
 'use strict';

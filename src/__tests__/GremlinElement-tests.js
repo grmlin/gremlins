@@ -11,7 +11,7 @@ describe('GremlinElement', function () {
 
     var El = GremlinElement.register('gremlin-element-test-gremlin', {
       created() {
-        
+
       }
     });
     var el = document.createElement('gremlin-element-test-gremlin');
