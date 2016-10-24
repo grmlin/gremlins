@@ -1,6 +1,6 @@
 {
   "name": "gremlins",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "dead simple web components",
   "main": "lib/index.js",
   "keywords": [
@@ -20,7 +20,7 @@
   },
   "homepage": "http://grml.in",
   "dependencies": {
-    "document-register-element": "^0.5.3",
+    "document-register-element": "^0.5.4",
     "object-assign": "^4.0.1"
   },
   "devDependencies": {
