@@ -35,10 +35,13 @@ const hasSpec = tagName => specMap[tagName] !== undefined;
 
 const Gremlin = {
 
-  initialize() {
+  created() {
   },
 
-  destroy() {
+  attached() {
+  },
+
+  detached() {
   },
 
   create(tagName, Spec = {}) {

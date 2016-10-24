@@ -4,7 +4,7 @@ var gremlins = require('../index'),
 
 describe('Gremlin', function () {
   var Gizmo = gremlins.create('gizmo-gremlin', {
-    initialize(){
+    created(){
       this.el.innerHTML = 'Gizmo created: ' + this.foo();
     },
     foo(){
@@ -26,9 +26,9 @@ describe('Gremlin', function () {
   });
 
   it('cannot create more than one of a name', function () {
-    Gizmo.create('g-gremlin');
+    Gremlin.create('g-gremlin');
     expect(function () {
-      Gizmo.create('g-gremlin');
+      Gremlin.create('g-gremlin');
     }).to.throw();
   });
 
@@ -59,9 +59,9 @@ describe('Gremlin', function () {
     expect(Stripe2.create).to.be.a('function');
   });
 
-  it('uses an initializer', function (done) {
-    var G1 = Gizmo.create('g1-gremlin', {
-      initialize(){
+  it('lifecycle: uses a created callback', function (done) {
+    var G1 = Gremlin.create('g1-gremlin', {
+      created(){
         try {
           done();
         } catch (e) {
@@ -75,28 +75,128 @@ describe('Gremlin', function () {
 
   });
 
-  it('expects a name', function () {
-    expect(function () {
-      gremlins.create({});//TODO improve
-    }).to.throw();
+  it('lifecycle: uses a attached callback', function (done) {
+    let wasAttached = 0;
+    Gremlin.create('attached-test-gremlin', {
+      attached() {
+        wasAttached++;
 
+        try {
+          if (wasAttached === 1) {
+            expect(this.el.parentNode).to.equal(document.body);
+          } else if (wasAttached === 2) {
+            expect(this.el.parentNode).to.equal(container);
+            done();
+          }
+        } catch (e) {
+          done(e);
+        }
+      }
+    });
+
+    var el = document.createElement('attached-test-gremlin');
+    var container = document.createElement('div');
+    document.body.appendChild(el);
+    document.body.appendChild(container);
+    document.body.removeChild(el);
+    container.appendChild(el);
   });
 
 
-  it('has an attribute change callback', function (done) {
-    Gizmo.create('attr-gremlin', {
-      initialize(){
+  it('lifecycle: uses a detached callback', function (done) {
+    this.timeout(5000);
+
+    var count = 0;
+    gremlins.create('g4-gremlin', {
+      created() {
+        count++;
+      },
+      detached() {
+        count++;
+        try {
+          expect(document.documentElement.contains(this.el)).to.not.be.ok();
+        } catch (e) {
+          done(e);
+        }
+
+        if (count === 3) {
+          done();
+        }
+      }
+    });
+
+    var el = document.createElement('g4-gremlin');
+    document.body.appendChild(el);
+
+    setTimeout(function () {
+      el.parentNode.removeChild(el);
+      setTimeout(function () {
+        document.body.appendChild(el);
+        setTimeout(function () {
+          el.parentNode.removeChild(el);
+        }, 500);
+      }, 500);
+    }, 1000);
+
+  });
+
+  it('lifecycle: uses a detached callback on nested gremlins', function (done) {
+    this.timeout(5000);
+
+    var count = 0;
+    gremlins.create('g5-gremlin', {
+      created() {
+        count++;
+      },
+      detached() {
+        count++;
+
+        try {
+          expect(document.documentElement.contains(this.el)).to.not.be.ok();
+        } catch (e) {
+          done(e);
+        }
+
+        if (count === 3) {
+          done();
+        }
+
+      }
+    });
+
+    gremlins.create('g6-gremlin', {
+      created(){
+        count++;
+      }
+    });
+
+    var el = document.createElement('g5-gremlin');
+    var nested = document.createElement('g6-gremlin');
+
+    document.body.appendChild(el);
+    el.appendChild(nested);
+
+    setTimeout(function () {
+      el.parentNode.removeChild(el);
+    }, 1000);
+  });
+
+  it('lifecycle: uses an attribute change callback', function (done) {
+    Gremlin.create('attr-gremlin', {
+      created(){
 
       },
       attributeDidChange(attributeName, previousValue, value){
-        try {
-          expect(attributeName).to.be.a('string');
-          expect(attributeName).to.equal('id');
-          expect(previousValue).to.equal('foo');
-          expect(value).to.equal('bar');
-          done();
-        } catch (e) {
-          done(e);
+        if (value === 'bar') {
+          try {
+            expect(attributeName).to.be.a('string');
+            expect(attributeName).to.equal('id');
+            expect(previousValue).to.equal('foo');
+            expect(value).to.equal('bar');
+            done();
+          } catch (e) {
+            done(e);
+          }
         }
       }
     });
@@ -111,10 +211,17 @@ describe('Gremlin', function () {
     }, 500);
   });
 
+
+  it('expects a name', function () {
+    expect(function () {
+      gremlins.create({});//TODO improve
+    }).to.throw();
+  });
+
   it('can have getters and setters in the spec', function (done) {
-    const G = Gizmo.create('gettersetter-gremlin', {
-      initialize() {
-        this.foo = 'foo';
+    const G = Gremlin.create('gettersetter-gremlin', {
+      created() {
+        this._foo = 'foo';
 
 
         try {
@@ -145,16 +252,12 @@ describe('Gremlin', function () {
     var called = 0;
 
     var Mixin = {
-      initialize() {
-      },
       foo() {
         called++;
       },
       Mixin1: 'Mixin1'
     };
     var Mixin2 = {
-      initialize() {
-      },
       foo() {
         called++;
       },
@@ -168,12 +271,12 @@ describe('Gremlin', function () {
           done(new Error('Mixins not called correctly'));
         }
       },
-      initialize() {
+      attached() {
         this.foo();
         try {
           expect(this.el).to.be(el);
           done();
-        } catch(e) {
+        } catch (e) {
           done(e);
         }
       }
@@ -187,7 +290,7 @@ describe('Gremlin', function () {
 
 
     gremlins.create('g3-gremlin', {
-      initialize() {
+      attached() {
         try {
           expect(this.el).to.equal(el);
           done();
@@ -208,7 +311,7 @@ describe('Gremlin', function () {
     var el = document.createElement('find-me');
 
     gremlins.create('find-me', {
-      initialize() {
+      created() {
         try {
           expect(gremlins.findGremlin(el)).to.equal(this);
           expect(this.el).to.equal(el);
@@ -223,79 +326,9 @@ describe('Gremlin', function () {
 
   });
 
-  it('destroys removed gremlins', function (done) {
-    this.timeout(5000);
-
-    var count = 0;
-    gremlins.create('g4-gremlin', {
-      initialize(){
-        count++;
-      },
-      destroy(){
-        count++;
-        try {
-          expect(count).to.be(2);
-          expect(document.documentElement.contains(this.el)).to.not.be.ok();
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }
-    });
-
-    var el = document.createElement('g4-gremlin');
-    document.body.appendChild(el);
-
-    setTimeout(function () {
-      el.parentNode.removeChild(el);
-    }, 1000);
-
-  });
-
-  it('destroys nested gremlins on removal', function (done) {
-    this.timeout(5000);
-
-    var count = 0;
-    gremlins.create('g5-gremlin', {
-      initialize(){
-        count++;
-      },
-      destroy(){
-        count++;
-
-        try {
-          expect(document.documentElement.contains(this.el)).to.not.be.ok();
-        } catch (e) {
-          done(e);
-        }
-
-        if (count === 3) {
-          done();
-        }
-
-      }
-    });
-
-    gremlins.create('g6-gremlin', {
-      initialize(){
-        count++;
-      }
-    });
-
-    var el = document.createElement('g5-gremlin');
-    var nested = document.createElement('g6-gremlin');
-
-    document.body.appendChild(el);
-    el.appendChild(nested);
-
-    setTimeout(function () {
-      el.parentNode.removeChild(el);
-    }, 1000);
-  });
-
   it('adds display block to all custom gremlin elements', function (done) {
     gremlins.create('display-test', {
-      initialize() {
+      attached() {
         try {
           let style = window.getComputedStyle(this.el)
           expect(style.display).to.equal('block');
