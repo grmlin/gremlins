@@ -9,9 +9,9 @@ GREMLIN.JS is a highly modularized library to build web components. These compon
 Throw in some bundled js, add the corresponding tags to your HTML, and you're good to go.
 
 ```javascript
-var gremlins = require('gremlins');
+import gremlins from 'gremlins';
 gremlins.create('my-slider', {
-  initialize: function(){
+  created: function(){
     this.initSlider();
   }
   // awesome slider magic
@@ -60,11 +60,15 @@ If you're mixins and componenet use the same method names, they will be decorate
 #### el
 The dom element for this component. Available inside the `initialize` call
 
-##### initialize() 
-constructor function called for all instances. Can safely be overwritten by the component
+#### created()
+called, when the element was created. Best understood as a constructor function that's only called once.  
+This happens if it's an element already existing in the HTML or after using `document.createElement()`
 
-#### destroy()
-called, when the element leaves the dom. Can be used to unbind event handlers and such
+#### attached()
+called, when the element was added to the dom
+
+#### detached()
+called, when the element was removed from the dom
 
 #### create()
 extends the base prototype with a new spec. **Don't overwrite this**, you can't extend from your **new** component anymore if you do so.   
@@ -78,7 +82,7 @@ Create a new spec for components
 
 ```js
 gremlins.create('foo-bar', {
-  initialize: function(){
+  created: function(){
   	// your constructor function called in the context of every dom element found for this spec
   	this.hello();
   },
