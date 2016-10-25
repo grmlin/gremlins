@@ -1,4 +1,14 @@
 # Release notes
+## v1.1.0
+
+- updated handling of a components lifecycle to match the of a custom element
+    - the use of the `initialize` and `destroy` callbacks are deprecated and should not be used anymore from now on
+    - three new callbacks were added to a components spec
+        - `created` — a component/element was created. This callback is called **once** and the element does not have to be part of the document yet
+        - `attached` — called every time when an element was added to the document
+        - `detached` — called every time when an element was removed from the document
+- changed the way `gremlins.findGremlin()` works. It does not return null or a gremlin anymore, as it's not guaranteed, that the component has already been created.  
+`gremlins.findGremlin()` returns a promise now.
 ## v1.0.0
 
 - first major release
