@@ -2,6 +2,7 @@ const uuid = require('./uuid');
 
 const exp = `gremlins_${uuid()}`;
 const cache = {};
+let pendingSearches = [];
 
 const gremlinId = (function gremlinId() {
   let id = 1;
@@ -21,8 +22,16 @@ module.exports = {
     } else {
       cache[id] = gremlin;
     }
-  },
 
+    pendingSearches = pendingSearches.filter((search) => {
+      const wasSearchedFor = search.element === element;
+      if (wasSearchedFor) {
+        search.created(gremlin);
+      }
+
+      return !wasSearchedFor;
+    });
+  },
   getGremlin(element) {
     const id = getId(element);
     const gremlin = cache[id];
@@ -31,5 +40,26 @@ module.exports = {
       // console.warn(`This dom element does not use any gremlins!`, element);
     }
     return gremlin === undefined ? null : gremlin;
+  },
+  getGremlinAsync(element, timeout = null) {
+    return new Promise((resolve) => {
+      const currentGremlin = this.getGremlin(element);
+
+      if (currentGremlin !== null) {
+        resolve(currentGremlin);
+      } else {
+        const gremlinNotFoundTimeout = timeout !== null ? setTimeout(() => {
+          resolve(null);
+        }, timeout) : null;
+
+        pendingSearches.push({
+          element,
+          created(createdGremlin) {
+            clearTimeout(gremlinNotFoundTimeout);
+            resolve(createdGremlin);
+          },
+        });
+      }
+    });
   },
 };

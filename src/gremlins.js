@@ -44,7 +44,7 @@ module.exports = {
    * @api public
    */
   create: Gremlin.create.bind(Gremlin),
-  findGremlin(element) {
-    return Data.getGremlin(element);
+  findGremlin(element, timeout) {
+    return Data.getGremlinAsync(element, timeout);
   },
 };
