@@ -5,6 +5,7 @@ var uuid = require('./uuid');
 
 var exp = 'gremlins_' + uuid();
 var cache = {};
+var pendingSearches = [];
 
 var gremlinId = function gremlinId() {
   var id = 1;
@@ -32,6 +33,15 @@ module.exports = {
     } else {
         cache[id] = gremlin;
       }
+
+    pendingSearches = pendingSearches.filter(function (search) {
+      var wasSearchedFor = search.element === element;
+      if (wasSearchedFor) {
+        search.created(gremlin);
+      }
+
+      return !wasSearchedFor;
+    });
   },
   getGremlin: function getGremlin(element) {
     var id = getId(element);
@@ -41,6 +51,33 @@ module.exports = {
       // console.warn(`This dom element does not use any gremlins!`, element);
     }
     return gremlin === undefined ? null : gremlin;
+  },
+  getGremlinAsync: function getGremlinAsync(element) {
+    var _this = this;
+
+    var timeout = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+    return new Promise(function (resolve) {
+      var currentGremlin = _this.getGremlin(element);
+
+      if (currentGremlin !== null) {
+        resolve(currentGremlin);
+      } else {
+        (function () {
+          var gremlinNotFoundTimeout = timeout !== null ? setTimeout(function () {
+            resolve(null);
+          }, timeout) : null;
+
+          pendingSearches.push({
+            element: element,
+            created: function created(createdGremlin) {
+              clearTimeout(gremlinNotFoundTimeout);
+              resolve(createdGremlin);
+            }
+          });
+        })();
+      }
+    });
   }
 };
 },{"./uuid":14}],2:[function(require,module,exports){
@@ -601,22 +638,50 @@ describe('Gremlin', function () {
   });
 
   it('finds gremlins with the dom element', function (done) {
-
     var el = document.createElement('find-me');
 
-    gremlins.create('find-me', {
-      created: function created() {
-        try {
-          expect(gremlins.findGremlin(el)).to.equal(this);
-          expect(this.el).to.equal(el);
-          done();
-        } catch (e) {
-          done(e);
-        }
+    this.timeout(5000);
+
+    gremlins.findGremlin(el).then(function (component) {
+      try {
+        expect(component.el).to.equal(el);
+        gremlins.findGremlin(el).then(function (componentInside) {
+          try {
+            expect(componentInside.el).to.equal(el);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+      } catch (e) {
+        done(e);
       }
     });
 
-    document.body.appendChild(el);
+    setTimeout(function () {
+      gremlins.create('find-me', {});
+      document.body.appendChild(el);
+    }, 1000);
+  });
+
+  it('finds gremlins with the dom element but returns null if there is none if a timeout is set', function (done) {
+    var el = document.createElement('find-me-not');
+
+    this.timeout(5000);
+
+    gremlins.findGremlin(el, 1000).then(function (component) {
+      try {
+        expect(component).to.be(null);
+        done();
+      } catch (e) {
+        done(e);
+      }
+    });
+
+    setTimeout(function () {
+      gremlins.create('find-me-not', {});
+      document.body.appendChild(el);
+    }, 2000);
   });
 
   it('adds display block to all custom gremlin elements', function (done) {
@@ -858,8 +923,8 @@ module.exports = {
    * @api public
    */
   create: Gremlin.create.bind(Gremlin),
-  findGremlin: function findGremlin(element) {
-    return Data.getGremlin(element);
+  findGremlin: function findGremlin(element, timeout) {
+    return Data.getGremlinAsync(element, timeout);
   }
 };
 },{"./Data":1,"./Gremlin":3,"./consoleShim":11}],13:[function(require,module,exports){
