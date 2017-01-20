@@ -221,24 +221,29 @@ describe('Gremlin', function () {
   it('can have getters and setters in the spec', function (done) {
     const G = Gremlin.create('gettersetter-gremlin', {
       created() {
-        this._foo = 'foo';
+        this._foo = null;
 
 
         try {
-          expect(this._foo).to.be('foo');
+          expect(this.foo).to.be(null);
+          this.foo = 'foo';
+          expect(this.foo).to.be('foo');
           done();
         } catch (e) {
           done(e);
         }
       },
       get foo() {
+        console.log('calling get foo', this._foo)
         return this._foo;
       },
       set foo(val) {
+        console.log('calling set foo', val)
         this._foo = val;
       },
     });
 
+    console.log(G)
     const desc = Object.getOwnPropertyDescriptor(G, 'foo');
     expect(desc.get).to.be.a('function');
     expect(desc.set).to.be.a('function');

@@ -49,6 +49,12 @@ module.exports = {
 
 var Mixins = require('./Mixins');
 var GremlinElement = require('./GremlinElement');
+var Data = require('./Data');
+var uuid = require('./uuid');
+
+var gremlinId = function gremlinId() {
+  return 'gremlins_' + uuid();
+};
 
 /**
  * ## `Gremlin`
@@ -88,52 +94,86 @@ var addSpec = function addSpec(tagName, Spec) {
 var hasSpec = function hasSpec(tagName) {
   return specMap[tagName] !== undefined;
 };
+var gremlinProto = Object.create(HTMLElement.prototype);
 
-var Gremlin = {
-  created: function created() {},
-  attached: function attached() {},
-  detached: function detached() {},
-  create: function create(tagName) {
-    var Spec = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+var Gremlin = Object.create(gremlinProto, {
+  createdCallback: {
+    value: function value() {
+      this._gid = gremlinId();
 
-    var Parent = this;
-    var NewSpec = Object.create(Parent, {
-      name: {
-        value: tagName,
-        writable: true
-      }
-    });
-
-    if (typeof tagName !== 'string') {
-      throw new TypeError('Gremlins.create expects the gremlins tag name as a first argument');
+      Data.addGremlin(this._gid);
+      this.created();
     }
-    if (hasSpec(tagName)) {
-      throw new Error('Trying to add new Gremlin spec, but a spec for ' + tagName + ' already exists.');
-    }
-    if (Spec.create !== undefined) {
-      console.warn( // eslint-disable-line no-console
-      'You are replacing the original create method for the spec of ' + tagName + '. You know what ' + 'you\'re doing, right?');
-    }
-
-    // set up the prototype chain
-    extend(NewSpec, Spec);
-    // extend the spec with it's Mixins
-    Mixins.mixinProps(NewSpec);
-    // remember this name
-    addSpec(tagName, NewSpec);
-    // and create the custom element for it
-    GremlinElement.register(tagName, NewSpec);
-    return NewSpec;
   },
-  attributeDidChange: function attributeDidChange() {}
-};
+  attachedCallback: {
+    value: function value() {
+      this.attached();
+    }
+  },
+  detachedCallback: {
+    value: function value() {
+      this.detached();
+    }
+  },
+  attributeChangedCallback: {
+    value: function value(name, previousValue, _value) {
+      this.attributeDidChange(name, previousValue, _value);
+    }
+  },
+  created: {
+    value: function value() {}
+  },
+  attached: {
+    value: function value() {}
+  },
+  detached: {
+    value: function value() {}
+  },
+  create: {
+    value: function value(tagName) {
+      var Spec = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+      var Parent = this;
+
+      var NewSpec = Object.create(Parent, {
+        name: {
+          value: tagName,
+          writable: true
+        }
+      });
+
+      if (typeof tagName !== 'string') {
+        throw new TypeError('Gremlins.create expects the gremlins tag name as a first argument');
+      }
+      if (hasSpec(tagName)) {
+        throw new Error('Trying to add new Gremlin spec, but a spec for ' + tagName + ' already exists.');
+      }
+      if (Spec.create !== undefined) {
+        console.warn( // eslint-disable-line no-console
+        'You are replacing the original create method for the spec of ' + tagName + '. You know what ' + 'you\'re doing, right?');
+      }
+
+      // set up the prototype chain
+      extend(NewSpec, Spec);
+      // extend the spec with it's Mixins
+      Mixins.mixinProps(NewSpec);
+      // remember this name
+      addSpec(tagName, NewSpec);
+      // and create the custom element for it
+      GremlinElement.register(tagName, NewSpec);
+      return NewSpec;
+    }
+  },
+
+  attributeDidChange: {
+    value: function value() {}
+  }
+
+});
 
 module.exports = Gremlin;
-},{"./GremlinElement":3,"./Mixins":4}],3:[function(require,module,exports){
+},{"./Data":1,"./GremlinElement":3,"./Mixins":4,"./uuid":13}],3:[function(require,module,exports){
 'use strict';
-
-var Data = require('./Data');
-var uuid = require('./uuid');
 
 var canRegisterElements = typeof document.registerElement === 'function';
 
@@ -141,9 +181,6 @@ if (!canRegisterElements) {
   throw new Error('registerElement not available. Did you include the polyfill for older browsers?');
 }
 
-var gremlinId = function gremlinId() {
-  return 'gremlins_' + uuid();
-};
 var styleElement = document.createElement('style');
 var styleSheet = undefined;
 
@@ -152,79 +189,42 @@ styleSheet = styleElement.sheet;
 
 module.exports = {
   register: function register(tagName, Spec) {
-    // TODO test for reserved function names ['createdCallback', 'attachedCallback', '']
-
-    var proto = {
-      createdCallback: {
-        value: function value() {
-          this._gid = gremlinId();
-
-          Data.addGremlin(this._gid);
-          this.created();
-        },
-
-        writable: false
-      },
-      attachedCallback: {
-        value: function value() {
-          this.attached();
-        }
-      },
-      detachedCallback: {
-        value: function value() {
-          this.detached();
-        }
-      },
-      attributeChangedCallback: {
-        value: function value(name, previousValue, _value) {
-          this.attributeDidChange(name, previousValue, _value);
-        }
-      }
-    };
-
-    for (var key in Spec) {
-      // eslint-disable-line guard-for-in
-      proto[key] = {
-        value: Spec[key]
-      };
-    }
-
     // insert the rule BEFORE registering the element. This is important because they may be inline
     // otherwise when first initialized.
     styleSheet.insertRule(tagName + ' { display: block }', 0);
 
     var El = document.registerElement(tagName, {
       name: tagName,
-      prototype: Object.create(HTMLElement.prototype, proto)
+      prototype: Spec
     });
 
     return El;
   }
 };
-},{"./Data":1,"./uuid":13}],4:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var objectAssign = require('object-assign');
 
-function getMixins(gremlin) {
-  if (Array.isArray(gremlin.mixins)) {
-    return gremlin.mixins;
+function getMixins(Spec) {
+  if (Array.isArray(Spec.mixins)) {
+    return Spec.mixins;
   }
 
-  return gremlin.mixins ? [gremlin.mixins] : [];
+  return Spec.mixins ? [Spec.mixins] : [];
 }
 
-function decorateProperty(gremlin, propertyName, property) {
-  var gremlinProperty = gremlin[propertyName];
+function decorateProperty(Spec, propertyName, property) {
+  var gremlinProperty = Spec[propertyName];
   var moduleProperty = property;
   var gremlinPropertyType = typeof gremlinProperty === 'undefined' ? 'undefined' : _typeof(gremlinProperty);
   var modulePropertyType = typeof moduleProperty === 'undefined' ? 'undefined' : _typeof(moduleProperty);
   var isSamePropType = gremlinPropertyType === modulePropertyType;
 
   if (isSamePropType && modulePropertyType === 'function') {
-    gremlin[propertyName] = function () {
+    Spec[propertyName] = function () {
       // eslint-disable-line no-param-reassign, func-names
       // call the module first
       var moduleResult = moduleProperty.apply(this, arguments);
@@ -238,29 +238,29 @@ function decorateProperty(gremlin, propertyName, property) {
     };
   } else {
     console.warn( // eslint-disable-line no-console
-    'Can\'t decorate gremlin property ' + ('<' + gremlin.tagName + ' />#' + propertyName + ':' + gremlinPropertyType + '« ') + ('with »Module#' + propertyName + ':' + modulePropertyType + '«. Only functions can be decorated!'));
+    'Can\'t decorate gremlin property ' + ('<' + Spec.tagName + ' />#' + propertyName + ':' + gremlinPropertyType + '« ') + ('with »Module#' + propertyName + ':' + modulePropertyType + '«. Only functions can be decorated!'));
   }
 }
 
-function mixinModule(gremlin, Module) {
+function mixinModule(Spec, Module) {
   Object.keys(Module).forEach(function (propertyName) {
     var property = Module[propertyName];
 
-    if (gremlin[propertyName] === undefined) {
+    if (Spec[propertyName] === undefined) {
       var descriptor = Object.getOwnPropertyDescriptor(Module, propertyName);
-      Object.defineProperty(gremlin, propertyName, descriptor);
+      Object.defineProperty(Spec, propertyName, descriptor);
     } else {
-      decorateProperty(gremlin, propertyName, property);
+      decorateProperty(Spec, propertyName, property);
     }
   });
 }
 
 module.exports = {
-  mixinProps: function mixinProps(gremlin) {
-    var modules = getMixins(gremlin);
+  mixinProps: function mixinProps(Spec) {
+    var modules = getMixins(Spec);
     // reverse the modules array to call decorated functions in the right order
     modules.reverse().forEach(function (Module) {
-      return mixinModule(gremlin, Module);
+      return mixinModule(Spec, Module);
     });
   }
 };
@@ -480,10 +480,12 @@ describe('Gremlin', function () {
   it('can have getters and setters in the spec', function (done) {
     var G = Gremlin.create('gettersetter-gremlin', {
       created: function created() {
-        this._foo = 'foo';
+        this._foo = null;
 
         try {
-          expect(this._foo).to.be('foo');
+          expect(this.foo).to.be(null);
+          this.foo = 'foo';
+          expect(this.foo).to.be('foo');
           done();
         } catch (e) {
           done(e);
@@ -491,13 +493,16 @@ describe('Gremlin', function () {
       },
 
       get foo() {
+        console.log('calling get foo', this._foo);
         return this._foo;
       },
       set foo(val) {
+        console.log('calling set foo', val);
         this._foo = val;
       }
     });
 
+    console.log(G);
     var desc = Object.getOwnPropertyDescriptor(G, 'foo');
     expect(desc.get).to.be.a('function');
     expect(desc.set).to.be.a('function');
@@ -644,27 +649,38 @@ describe('Gremlin', function () {
 },{"../Gremlin":2,"../index":12}],6:[function(require,module,exports){
 'use strict';
 
-var GremlinElement = require('../GremlinElement');
+var gremlins = require('../index'),
+    GremlinElement = require('../GremlinElement'),
+    Gremlin = require('../Gremlin');
 
 describe('GremlinElement', function () {
 
-  it('creates custom elements', function () {
+  it('creates custom elements', function (done) {
     expect(GremlinElement.register).to.be.a('function');
     expect(function () {
       GremlinElement.register('foo');
       GremlinElement.register('foo-bar-without-spec');
     }).to.throw();
 
-    var El = GremlinElement.register('gremlin-element-test-gremlin', {
-      created: function created() {}
-    });
     var el = document.createElement('gremlin-element-test-gremlin');
+    console.log(el);
+
+    var El = gremlins.create('gremlin-element-test-gremlin', {
+      created: function created() {
+        try {
+          expect(el).to.be.a(HTMLElement);
+          expect(el.tagName.toUpperCase()).to.equal('gremlin-element-test-gremlin'.toUpperCase());
+          done();
+        } catch (e) {
+          done(e);
+        }
+        console.dir(el);
+      }
+    });
     expect(El).to.be.a('function');
-    expect(el).to.be.a(HTMLElement);
-    expect(el.tagName.toUpperCase()).to.equal('gremlin-element-test-gremlin'.toUpperCase());
   });
 });
-},{"../GremlinElement":3}],7:[function(require,module,exports){
+},{"../Gremlin":2,"../GremlinElement":3,"../index":12}],7:[function(require,module,exports){
 'use strict';
 
 var Mixins = require('../Mixins');
