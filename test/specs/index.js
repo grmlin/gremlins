@@ -1,78 +1,42 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.gremlins = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
+"use strict";
 
-var uuid = require('./uuid');
-
-var exp = 'gremlins_' + uuid();
-var cache = {};
 var pendingSearches = [];
 
-var gremlinId = function gremlinId() {
-  var id = 1;
-  return function () {
-    return id++;
-  };
-}();
-
 var hasId = function hasId(element) {
-  return element[exp] !== undefined;
-};
-var setId = function setId(element) {
-  return element[exp] = gremlinId();
-}; // eslint-disable-line no-param-reassign
-var getId = function getId(element) {
-  return hasId(element) ? element[exp] : setId(element);
+  return element._gid !== undefined;
 };
 
 module.exports = {
-  addGremlin: function addGremlin(gremlin, element) {
-    var id = getId(element);
-
-    if (cache[id] !== undefined) {
-      console.warn('You can\'t add another gremlin to this element, it already uses one!', element); // eslint-disable-line no-console, max-len
-    } else {
-        cache[id] = gremlin;
-      }
-
+  addGremlin: function addGremlin(id) {
     pendingSearches = pendingSearches.filter(function (search) {
-      var wasSearchedFor = search.element === element;
+      var wasSearchedFor = search.element._gid === id;
       if (wasSearchedFor) {
-        search.created(gremlin);
+        search.resolve();
       }
 
       return !wasSearchedFor;
     });
   },
-  getGremlin: function getGremlin(element) {
-    var id = getId(element);
-    var gremlin = cache[id];
-
-    if (gremlin === undefined) {
-      // console.warn(`This dom element does not use any gremlins!`, element);
-    }
-    return gremlin === undefined ? null : gremlin;
-  },
   getGremlinAsync: function getGremlinAsync(element) {
-    var _this = this;
-
     var timeout = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-    return new Promise(function (resolve) {
-      var currentGremlin = _this.getGremlin(element);
-
-      if (currentGremlin !== null) {
-        resolve(currentGremlin);
+    return new Promise(function (_resolve) {
+      if (hasId(element)) {
+        setTimeout(function () {
+          return _resolve(element);
+        }, 10);
       } else {
         (function () {
           var gremlinNotFoundTimeout = timeout !== null ? setTimeout(function () {
-            resolve(null);
+            _resolve(null);
           }, timeout) : null;
 
           pendingSearches.push({
             element: element,
-            created: function created(createdGremlin) {
+            resolve: function resolve() {
               clearTimeout(gremlinNotFoundTimeout);
-              resolve(createdGremlin);
+              _resolve(element);
             }
           });
         })();
@@ -80,20 +44,7 @@ module.exports = {
     });
   }
 };
-},{"./uuid":14}],2:[function(require,module,exports){
-"use strict";
-
-module.exports = {
-  createInstance: function createInstance(element, Spec) {
-    return Object.create(Spec, {
-      el: {
-        value: element,
-        writable: false
-      }
-    });
-  }
-};
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 'use strict';
 
 var Mixins = require('./Mixins');
@@ -178,11 +129,11 @@ var Gremlin = {
 };
 
 module.exports = Gremlin;
-},{"./GremlinElement":4,"./Mixins":5}],4:[function(require,module,exports){
+},{"./GremlinElement":3,"./Mixins":4}],3:[function(require,module,exports){
 'use strict';
 
-var Factory = require('./Factory');
 var Data = require('./Data');
+var uuid = require('./uuid');
 
 var canRegisterElements = typeof document.registerElement === 'function';
 
@@ -190,78 +141,53 @@ if (!canRegisterElements) {
   throw new Error('registerElement not available. Did you include the polyfill for older browsers?');
 }
 
+var gremlinId = function gremlinId() {
+  return 'gremlins_' + uuid();
+};
 var styleElement = document.createElement('style');
 var styleSheet = undefined;
 
 document.head.appendChild(styleElement);
 styleSheet = styleElement.sheet;
 
-function createInstance(element, Spec) {
-  var existingGremlins = Data.getGremlin(element);
-
-  if (existingGremlins === null) {
-    var gremlin = Factory.createInstance(element, Spec);
-    Data.addGremlin(gremlin, element);
-
-    if (typeof gremlin.initialize === 'function') {
-      console.warn('<' + element.tagName + ' />\n' + 'the use of the `initialize` callback of a gremlin component is deprecated. ' + 'Use the `created` callback instead.');
-      gremlin.initialize();
-    } else {
-      gremlin.created();
-    }
-  } else {
-    // console.warn('exisiting gremlin found');
-  }
-}
-
-function attachInstance(element) {
-  var gremlin = Data.getGremlin(element);
-  gremlin.attached();
-}
-
-function detachInstance(element) {
-  var gremlin = Data.getGremlin(element);
-
-  if (typeof gremlin.destroy === 'function') {
-    console.warn('<' + element.tagName + ' />\n' + 'the use of the `destroy` callback of a gremlin component is deprecated. Use ' + 'the `detached` callback instead.');
-    gremlin.destroy();
-  } else {
-    gremlin.detached();
-  }
-}
-
-function updateAttr(element, name, previousValue, value) {
-  var gremlin = Data.getGremlin(element);
-
-  if (gremlin !== null) {
-    gremlin.attributeDidChange(name, previousValue, value);
-  }
-}
-
 module.exports = {
   register: function register(tagName, Spec) {
+    // TODO test for reserved function names ['createdCallback', 'attachedCallback', '']
+
     var proto = {
       createdCallback: {
         value: function value() {
-          createInstance(this, Spec);
-        }
+          this._gid = gremlinId();
+
+          Data.addGremlin(this._gid);
+          this.created();
+        },
+
+        writable: false
       },
       attachedCallback: {
         value: function value() {
-          attachInstance(this);
+          this.attached();
         }
       },
       detachedCallback: {
         value: function value() {
-          detachInstance(this);
+          this.detached();
         }
       },
       attributeChangedCallback: {
         value: function value(name, previousValue, _value) {
-          updateAttr(this, name, previousValue, _value);
+          this.attributeDidChange(name, previousValue, _value);
         }
       }
     };
+
+    for (var key in Spec) {
+      // eslint-disable-line guard-for-in
+      proto[key] = {
+        value: Spec[key]
+      };
+    }
 
     // insert the rule BEFORE registering the element. This is important because they may be inline
     // otherwise when first initialized.
@@ -275,7 +201,7 @@ module.exports = {
     return El;
   }
 };
-},{"./Data":1,"./Factory":2}],5:[function(require,module,exports){
+},{"./Data":1,"./uuid":13}],4:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -338,7 +264,7 @@ module.exports = {
     });
   }
 };
-},{"object-assign":16}],6:[function(require,module,exports){
+},{"object-assign":15}],5:[function(require,module,exports){
 'use strict';
 
 var gremlins = require('../index'),
@@ -423,9 +349,9 @@ describe('Gremlin', function () {
 
         try {
           if (wasAttached === 1) {
-            expect(this.el.parentNode).to.equal(document.body);
+            expect(this.parentNode).to.equal(document.body);
           } else if (wasAttached === 2) {
-            expect(this.el.parentNode).to.equal(container);
+            expect(this.parentNode).to.equal(container);
             done();
           }
         } catch (e) {
@@ -453,7 +379,7 @@ describe('Gremlin', function () {
       detached: function detached() {
         count++;
         try {
-          expect(document.documentElement.contains(this.el)).to.not.be.ok();
+          expect(document.documentElement.contains(this)).to.not.be.ok();
         } catch (e) {
           done(e);
         }
@@ -608,7 +534,7 @@ describe('Gremlin', function () {
       attached: function attached() {
         this.foo();
         try {
-          expect(this.el).to.be(el);
+          expect(this).to.be(el);
           done();
         } catch (e) {
           done(e);
@@ -625,7 +551,7 @@ describe('Gremlin', function () {
     gremlins.create('g3-gremlin', {
       attached: function attached() {
         try {
-          expect(this.el).to.equal(el);
+          expect(this).to.equal(el);
           done();
         } catch (e) {
           done(e);
@@ -644,10 +570,11 @@ describe('Gremlin', function () {
 
     gremlins.findGremlin(el).then(function (component) {
       try {
-        expect(component.el).to.equal(el);
+        expect(component).to.equal(el);
         gremlins.findGremlin(el).then(function (componentInside) {
           try {
-            expect(componentInside.el).to.equal(el);
+            expect(componentInside).to.equal(el);
+            el = null;
             done();
           } catch (e) {
             done(e);
@@ -659,7 +586,20 @@ describe('Gremlin', function () {
     });
 
     setTimeout(function () {
-      gremlins.create('find-me', {});
+      gremlins.create('find-me', {
+        created: function created() {
+          console.log('adding event listener');
+          this.style.width = '100px';
+          this.style.height = '100px';
+          this.style.background = 'green';
+          this.addEventListener("click", function () {
+            console.log('clicked');
+          }, false);
+        },
+        now: function now() {
+          console.log('finding find-me now');
+        }
+      });
       document.body.appendChild(el);
     }, 1000);
   });
@@ -688,7 +628,7 @@ describe('Gremlin', function () {
     gremlins.create('display-test', {
       attached: function attached() {
         try {
-          var style = window.getComputedStyle(this.el);
+          var style = window.getComputedStyle(this);
           expect(style.display).to.equal('block');
           done();
         } catch (e) {
@@ -701,7 +641,7 @@ describe('Gremlin', function () {
     document.body.appendChild(el);
   });
 });
-},{"../Gremlin":3,"../index":13}],7:[function(require,module,exports){
+},{"../Gremlin":2,"../index":12}],6:[function(require,module,exports){
 'use strict';
 
 var GremlinElement = require('../GremlinElement');
@@ -724,7 +664,7 @@ describe('GremlinElement', function () {
     expect(el.tagName.toUpperCase()).to.equal('gremlin-element-test-gremlin'.toUpperCase());
   });
 });
-},{"../GremlinElement":4}],8:[function(require,module,exports){
+},{"../GremlinElement":3}],7:[function(require,module,exports){
 'use strict';
 
 var Mixins = require('../Mixins');
@@ -835,7 +775,7 @@ describe('Mixins', function () {
     expect(G._foo).to.be('newFoo');
   });
 });
-},{"../Mixins":5}],9:[function(require,module,exports){
+},{"../Mixins":4}],8:[function(require,module,exports){
 'use strict';
 
 var gremlins = require('../index');
@@ -848,14 +788,14 @@ describe('gremlins', function () {
 		expect(gremlins.findGremlin).to.be.a('function');
 	});
 });
-},{"../Gremlin":3,"../index":13}],10:[function(require,module,exports){
+},{"../Gremlin":2,"../index":12}],9:[function(require,module,exports){
 'use strict';
 
 require('./gremlins-tests');
 require('./Gremlin-tests');
 require('./Mixins-tests');
 require('./GremlinElement-tests');
-},{"./Gremlin-tests":6,"./GremlinElement-tests":7,"./Mixins-tests":8,"./gremlins-tests":9}],11:[function(require,module,exports){
+},{"./Gremlin-tests":5,"./GremlinElement-tests":6,"./Mixins-tests":7,"./gremlins-tests":8}],10:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -876,7 +816,7 @@ module.exports = {
   }
 };
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -927,7 +867,7 @@ module.exports = {
     return Data.getGremlinAsync(element, timeout);
   }
 };
-},{"./Data":1,"./Gremlin":3,"./consoleShim":11}],13:[function(require,module,exports){
+},{"./Data":1,"./Gremlin":2,"./consoleShim":10}],12:[function(require,module,exports){
 'use strict';
 
 /*!
@@ -938,17 +878,17 @@ module.exports = {
 require('document-register-element');
 
 module.exports = require('./gremlins');
-},{"./gremlins":12,"document-register-element":15}],14:[function(require,module,exports){
+},{"./gremlins":11,"document-register-element":14}],13:[function(require,module,exports){
 "use strict";
 
 // see https://gist.github.com/jed/982883
 module.exports = function b(a) {
   return a ? (a ^ Math.random() * 16 >> a / 4).toString(16) : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, b); // eslint-disable-line max-len
 };
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*! (C) WebReflection Mit Style License */
 (function(e,t,n,r){"use strict";function rt(e,t){for(var n=0,r=e.length;n<r;n++)vt(e[n],t)}function it(e){for(var t=0,n=e.length,r;t<n;t++)r=e[t],nt(r,b[ot(r)])}function st(e){return function(t){j(t)&&(vt(t,e),rt(t.querySelectorAll(w),e))}}function ot(e){var t=e.getAttribute("is"),n=e.nodeName.toUpperCase(),r=S.call(y,t?v+t.toUpperCase():d+n);return t&&-1<r&&!ut(n,t)?-1:r}function ut(e,t){return-1<w.indexOf(e+'[is="'+t+'"]')}function at(e){var t=e.currentTarget,n=e.attrChange,r=e.attrName,i=e.target;Q&&(!i||i===t)&&t.attributeChangedCallback&&r!=="style"&&e.prevValue!==e.newValue&&t.attributeChangedCallback(r,n===e[a]?null:e.prevValue,n===e[l]?null:e.newValue)}function ft(e){var t=st(e);return function(e){X.push(t,e.target)}}function lt(e){K&&(K=!1,e.currentTarget.removeEventListener(h,lt)),rt((e.target||t).querySelectorAll(w),e.detail===o?o:s),B&&pt()}function ct(e,t){var n=this;q.call(n,e,t),G.call(n,{target:n})}function ht(e,t){D(e,t),et?et.observe(e,z):(J&&(e.setAttribute=ct,e[i]=Z(e),e.addEventListener(p,G)),e.addEventListener(c,at)),e.createdCallback&&Q&&(e.created=!0,e.createdCallback(),e.created=!1)}function pt(){for(var e,t=0,n=F.length;t<n;t++)e=F[t],E.contains(e)||(n--,F.splice(t--,1),vt(e,o))}function dt(e){throw new Error("A "+e+" type is already registered")}function vt(e,t){var n,r=ot(e);-1<r&&(tt(e,b[r]),r=0,t===s&&!e[s]?(e[o]=!1,e[s]=!0,r=1,B&&S.call(F,e)<0&&F.push(e)):t===o&&!e[o]&&(e[s]=!1,e[o]=!0,r=1),r&&(n=e[t+"Callback"])&&n.call(e))}if(r in t)return;var i="__"+r+(Math.random()*1e5>>0),s="attached",o="detached",u="extends",a="ADDITION",f="MODIFICATION",l="REMOVAL",c="DOMAttrModified",h="DOMContentLoaded",p="DOMSubtreeModified",d="<",v="=",m=/^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+$/,g=["ANNOTATION-XML","COLOR-PROFILE","FONT-FACE","FONT-FACE-SRC","FONT-FACE-URI","FONT-FACE-FORMAT","FONT-FACE-NAME","MISSING-GLYPH"],y=[],b=[],w="",E=t.documentElement,S=y.indexOf||function(e){for(var t=this.length;t--&&this[t]!==e;);return t},x=n.prototype,T=x.hasOwnProperty,N=x.isPrototypeOf,C=n.defineProperty,k=n.getOwnPropertyDescriptor,L=n.getOwnPropertyNames,A=n.getPrototypeOf,O=n.setPrototypeOf,M=!!n.__proto__,_=n.create||function mt(e){return e?(mt.prototype=e,new mt):this},D=O||(M?function(e,t){return e.__proto__=t,e}:L&&k?function(){function e(e,t){for(var n,r=L(t),i=0,s=r.length;i<s;i++)n=r[i],T.call(e,n)||C(e,n,k(t,n))}return function(t,n){do e(t,n);while((n=A(n))&&!N.call(n,t));return t}}():function(e,t){for(var n in t)e[n]=t[n];return e}),P=e.MutationObserver||e.WebKitMutationObserver,H=(e.HTMLElement||e.Element||e.Node).prototype,B=!N.call(H,E),j=B?function(e){return e.nodeType===1}:function(e){return N.call(H,e)},F=B&&[],I=H.cloneNode,q=H.setAttribute,R=H.removeAttribute,U=t.createElement,z=P&&{attributes:!0,characterData:!0,attributeOldValue:!0},W=P||function(e){J=!1,E.removeEventListener(c,W)},X,V=e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.msRequestAnimationFrame||function(e){setTimeout(e,10)},$=!1,J=!0,K=!0,Q=!0,G,Y,Z,et,tt,nt;O||M?(tt=function(e,t){N.call(t,e)||ht(e,t)},nt=ht):(tt=function(e,t){e[i]||(e[i]=n(!0),ht(e,t))},nt=tt),B?(J=!1,function(){var e=k(H,"addEventListener"),t=e.value,n=function(e){var t=new CustomEvent(c,{bubbles:!0});t.attrName=e,t.prevValue=this.getAttribute(e),t.newValue=null,t[l]=t.attrChange=2,R.call(this,e),this.dispatchEvent(t)},r=function(e,t){var n=this.hasAttribute(e),r=n&&this.getAttribute(e),i=new CustomEvent(c,{bubbles:!0});q.call(this,e,t),i.attrName=e,i.prevValue=n?r:null,i.newValue=t,n?i[f]=i.attrChange=1:i[a]=i.attrChange=0,this.dispatchEvent(i)},s=function(e){var t=e.currentTarget,n=t[i],r=e.propertyName,s;n.hasOwnProperty(r)&&(n=n[r],s=new CustomEvent(c,{bubbles:!0}),s.attrName=n.name,s.prevValue=n.value||null,s.newValue=n.value=t[r]||null,s.prevValue==null?s[a]=s.attrChange=0:s[f]=s.attrChange=1,t.dispatchEvent(s))};e.value=function(e,o,u){e===c&&this.attributeChangedCallback&&this.setAttribute!==r&&(this[i]={className:{name:"class",value:this.className}},this.setAttribute=r,this.removeAttribute=n,t.call(this,"propertychange",s)),t.call(this,e,o,u)},C(H,"addEventListener",e)}()):P||(E.addEventListener(c,W),E.setAttribute(i,1),E.removeAttribute(i),J&&(G=function(e){var t=this,n,r,s;if(t===e.target){n=t[i],t[i]=r=Z(t);for(s in r){if(!(s in n))return Y(0,t,s,n[s],r[s],a);if(r[s]!==n[s])return Y(1,t,s,n[s],r[s],f)}for(s in n)if(!(s in r))return Y(2,t,s,n[s],r[s],l)}},Y=function(e,t,n,r,i,s){var o={attrChange:e,currentTarget:t,attrName:n,prevValue:r,newValue:i};o[s]=e,at(o)},Z=function(e){for(var t,n,r={},i=e.attributes,s=0,o=i.length;s<o;s++)t=i[s],n=t.name,n!=="setAttribute"&&(r[n]=t.value);return r})),t[r]=function(n,r){c=n.toUpperCase(),$||($=!0,P?(et=function(e,t){function n(e,t){for(var n=0,r=e.length;n<r;t(e[n++]));}return new P(function(r){for(var i,s,o,u=0,a=r.length;u<a;u++)i=r[u],i.type==="childList"?(n(i.addedNodes,e),n(i.removedNodes,t)):(s=i.target,Q&&s.attributeChangedCallback&&i.attributeName!=="style"&&(o=s.getAttribute(i.attributeName),o!==i.oldValue&&s.attributeChangedCallback(i.attributeName,i.oldValue,o)))})}(st(s),st(o)),et.observe(t,{childList:!0,subtree:!0})):(X=[],V(function E(){while(X.length)X.shift().call(null,X.shift());V(E)}),t.addEventListener("DOMNodeInserted",ft(s)),t.addEventListener("DOMNodeRemoved",ft(o))),t.addEventListener(h,lt),t.addEventListener("readystatechange",lt),t.createElement=function(e,n){var r=U.apply(t,arguments),i=""+e,s=S.call(y,(n?v:d)+(n||i).toUpperCase()),o=-1<s;return n&&(r.setAttribute("is",n=n.toLowerCase()),o&&(o=ut(i.toUpperCase(),n))),Q=!t.createElement.innerHTMLHelper,o&&nt(r,b[s]),r},H.cloneNode=function(e){var t=I.call(this,!!e),n=ot(t);return-1<n&&nt(t,b[n]),e&&it(t.querySelectorAll(w)),t}),-2<S.call(y,v+c)+S.call(y,d+c)&&dt(n);if(!m.test(c)||-1<S.call(g,c))throw new Error("The type "+n+" is invalid");var i=function(){return f?t.createElement(l,c):t.createElement(l)},a=r||x,f=T.call(a,u),l=f?r[u].toUpperCase():c,c,p;return f&&-1<S.call(y,d+l)&&dt(l),p=y.push((f?v:d)+c)-1,w=w.concat(w.length?",":"",f?l+'[is="'+n.toLowerCase()+'"]':l),i.prototype=b[p]=T.call(a,"prototype")?a.prototype:_(H),rt(t.querySelectorAll(w),s),i}})(window,document,Object,"registerElement");
-},{}],16:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /* eslint-disable no-unused-vars */
 'use strict';
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -989,5 +929,5 @@ module.exports = Object.assign || function (target, source) {
 	return to;
 };
 
-},{}]},{},[10])(10)
+},{}]},{},[9])(9)
 });
