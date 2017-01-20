@@ -89,12 +89,13 @@ const Gremlin = Object.create(gremlinProto, {
         throw new TypeError('Gremlins.create expects the gremlins tag name as a first argument');
       }
       if (hasSpec(tagName)) {
-        throw new Error(`Trying to add new Gremlin spec, but a spec for ${tagName} already exists.`);
+        throw new Error(`Trying to add new Gremlin spec, ` +
+        `but a spec for ${tagName} already exists.`);
       }
       if (Spec.create !== undefined) {
         console.warn( // eslint-disable-line no-console
-          `You are replacing the original create method for the spec of ${tagName}. You know what ` +
-          `you're doing, right?`
+          `You are replacing the original create method for the spec of ${tagName}. ` +
+          `You know what you're doing, right?`
         );
       }
 
