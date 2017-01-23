@@ -1,6 +1,6 @@
 let pendingSearches = [];
 
-const hasId = (element) => element._gid !== undefined;
+const hasComponent = (element) => element.__gremlinInstance__ !== undefined;
 
 module.exports = {
   addGremlin(id) {
@@ -15,8 +15,8 @@ module.exports = {
   },
   getGremlinAsync(element, timeout = null) {
     return new Promise((resolve) => {
-      if (hasId(element)) {
-        setTimeout(() => resolve(element), 10);
+      if (hasComponent(element)) {
+        setTimeout(() => resolve(element.__gremlinInstance__), 10);
       } else {
         const gremlinNotFoundTimeout = timeout !== null ? setTimeout(() => {
           resolve(null);
@@ -26,7 +26,7 @@ module.exports = {
           element,
           resolve() {
             clearTimeout(gremlinNotFoundTimeout);
-            resolve(element);
+            resolve(element.__gremlinInstance__);
           },
         });
       }

@@ -5,7 +5,7 @@ var gremlins = require('../index'),
 describe('Gremlin', function () {
   var Gizmo = gremlins.create('gizmo-gremlin', {
     created(){
-      this.el.innerHTML = 'Gizmo created: ' + this.foo();
+      this.innerHTML = 'Gizmo created: ' + this.foo();
     },
     foo(){
       return 'foo';
@@ -17,7 +17,7 @@ describe('Gremlin', function () {
     var G = gremlins.create('base-methods');
     Object.keys(Gremlin).forEach(function (key) {
       expect(G[key]).to.equal(Gremlin[key]);
-    })
+    });
   });
 
   it('gremlins can create gremlins', function () {
@@ -77,15 +77,18 @@ describe('Gremlin', function () {
 
   it('lifecycle: uses a attached callback', function (done) {
     let wasAttached = 0;
-    Gremlin.create('attached-test-gremlin', {
+    gremlins.create('attached-test-gremlin', {
       attached() {
         wasAttached++;
-
+        console.log('was attached')
         try {
           if (wasAttached === 1) {
-            expect(this.parentNode).to.equal(document.body);
+            expect(this.el.parentNode).to.equal(document.body);
+            setTimeout(() => {
+              container.appendChild(this.el);
+            }, 200);
           } else if (wasAttached === 2) {
-            expect(this.parentNode).to.equal(container);
+            expect(this.el.parentNode).to.equal(container);
             done();
           }
         } catch (e) {
@@ -96,10 +99,9 @@ describe('Gremlin', function () {
 
     var el = document.createElement('attached-test-gremlin');
     var container = document.createElement('div');
-    document.body.appendChild(el);
+    // document.body.appendChild(el);
     document.body.appendChild(container);
-    document.body.removeChild(el);
-    container.appendChild(el);
+    document.body.appendChild(el);
   });
 
 
@@ -114,7 +116,7 @@ describe('Gremlin', function () {
       detached() {
         count++;
         try {
-          expect(document.documentElement.contains(this)).to.not.be.ok();
+          expect(document.documentElement.contains(this.el)).to.not.be.ok();
         } catch (e) {
           done(e);
         }
@@ -285,7 +287,7 @@ describe('Gremlin', function () {
       attached() {
         this.foo();
         try {
-          expect(this).to.be(el);
+          expect(this.el).to.be(el);
           done();
         } catch (e) {
           done(e);
@@ -303,7 +305,7 @@ describe('Gremlin', function () {
     gremlins.create('g3-gremlin', {
       attached() {
         try {
-          expect(this).to.equal(el);
+          expect(this.el).to.equal(el);
           done();
         } catch (e) {
           done(e);
@@ -324,10 +326,10 @@ describe('Gremlin', function () {
 
     gremlins.findGremlin(el).then((component) => {
       try {
-        expect(component).to.equal(el);
+        expect(component.el).to.equal(el);
         gremlins.findGremlin(el).then((componentInside) => {
           try {
-            expect(componentInside).to.equal(el);
+            expect(componentInside.el).to.equal(el);
             el = null;
             done();
           } catch (e) {
@@ -344,10 +346,10 @@ describe('Gremlin', function () {
       gremlins.create('find-me', {
         created() {
           console.log('adding event listener')
-          this.style.width = '100px';
-          this.style.height = '100px';
-          this.style.background = 'green';
-          this.addEventListener("click", () => {
+          this.el.style.width = '100px';
+          this.el.style.height = '100px';
+          this.el.style.background = 'green';
+          this.el.addEventListener("click", () => {
             console.log('clicked')
           }, false);
         },
@@ -385,7 +387,7 @@ describe('Gremlin', function () {
     gremlins.create('display-test', {
       attached() {
         try {
-          let style = window.getComputedStyle(this)
+          let style = window.getComputedStyle(this.el)
           expect(style.display).to.equal('block');
           done();
         } catch (e) {
