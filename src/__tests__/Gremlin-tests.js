@@ -257,12 +257,18 @@ describe('Gremlin', function () {
     var called = 0;
 
     var Mixin = {
+      created() {
+        called++;
+      },
       foo() {
         called++;
       },
       Mixin1: 'Mixin1'
     };
     var Mixin2 = {
+      attached() {
+        called++;
+      },
       foo() {
         called++;
       },
@@ -272,7 +278,7 @@ describe('Gremlin', function () {
       mixins: [Mixin, Mixin2],
       foo() {
         called++;
-        if (called !== 3) {
+        if (called !== 5) {
           done(new Error('Mixins not called correctly'));
         }
       },

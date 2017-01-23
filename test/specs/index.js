@@ -121,13 +121,24 @@ var Gremlin = Object.create(gremlinProto, {
     }
   },
   created: {
-    value: function value() {}
+    value: function value() {},
+
+    writable: true
   },
   attached: {
-    value: function value() {}
+    value: function value() {},
+
+    writable: true
   },
   detached: {
-    value: function value() {}
+    value: function value() {},
+
+    writable: true
+  },
+  attributeDidChange: {
+    value: function value() {},
+
+    writable: true
   },
   create: {
     value: function value(tagName) {
@@ -163,12 +174,7 @@ var Gremlin = Object.create(gremlinProto, {
       GremlinElement.register(tagName, NewSpec);
       return NewSpec;
     }
-  },
-
-  attributeDidChange: {
-    value: function value() {}
   }
-
 });
 
 module.exports = Gremlin;
@@ -515,6 +521,9 @@ describe('Gremlin', function () {
     var called = 0;
 
     var Mixin = {
+      created: function created() {
+        called++;
+      },
       foo: function foo() {
         called++;
       },
@@ -522,6 +531,9 @@ describe('Gremlin', function () {
       Mixin1: 'Mixin1'
     };
     var Mixin2 = {
+      attached: function attached() {
+        called++;
+      },
       foo: function foo() {
         called++;
       },
@@ -532,7 +544,7 @@ describe('Gremlin', function () {
       mixins: [Mixin, Mixin2],
       foo: function foo() {
         called++;
-        if (called !== 3) {
+        if (called !== 5) {
           done(new Error('Mixins not called correctly'));
         }
       },

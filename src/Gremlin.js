@@ -65,14 +65,22 @@ const Gremlin = Object.create(gremlinProto, {
   created: {
     value() {
     },
+    writable: true,
   },
   attached: {
     value() {
     },
+    writable: true,
   },
   detached: {
     value() {
     },
+    writable: true,
+  },
+  attributeDidChange: {
+    value() {
+    },
+    writable: true,
   },
   create: {
     value(tagName, Spec = {}) {
@@ -90,7 +98,7 @@ const Gremlin = Object.create(gremlinProto, {
       }
       if (hasSpec(tagName)) {
         throw new Error(`Trying to add new Gremlin spec, ` +
-        `but a spec for ${tagName} already exists.`);
+          `but a spec for ${tagName} already exists.`);
       }
       if (Spec.create !== undefined) {
         console.warn( // eslint-disable-line no-console
@@ -110,12 +118,6 @@ const Gremlin = Object.create(gremlinProto, {
       return NewSpec;
     },
   },
-
-  attributeDidChange: {
-    value() {
-    },
-  },
-
 });
 
 module.exports = Gremlin;
