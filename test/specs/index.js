@@ -88,7 +88,6 @@ var addSpec = function addSpec(tagName, Spec) {
 var hasSpec = function hasSpec(tagName) {
   return specMap[tagName] !== undefined;
 };
-var gremlinProto = Object.create(HTMLElement.prototype);
 
 var Gremlin = {
   created: function created() {},

@@ -33,7 +33,6 @@ const specMap = {};
 
 const addSpec = (tagName, Spec) => specMap[tagName] = Spec;
 const hasSpec = tagName => specMap[tagName] !== undefined;
-const gremlinProto = Object.create(HTMLElement.prototype);
 
 const Gremlin = {
 
